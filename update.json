@@ -1,10 +1,11 @@
 {
-  "homepage": "https://github.com/Stormwind99/ExampleMod",
+  "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "1.0.0",
-    "1.12.2-recommended": "1.0.0"
+    "1.12.2-latest": "2.0.0",
+    "1.12.2-recommended": "2.0.0"
   },
   "1.12.2": {
+    "2.0.0": "Separated library for reuse",
     "1.0.0": "Initial version"
   }
 }
