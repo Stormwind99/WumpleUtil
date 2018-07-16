@@ -15,3 +15,7 @@ Running ```newmod.sh NewMod``` will then create:
       * (expected base Mod files)
       * Modify build.properties and private.properties
    * NewMod.wiki (local git repo for new mod's wiki with remote origin set)
+
+## Notes
+
+* To debug, '''cp build/resources/main/mcmod.info src/resources/mcmod.info''' beforehand since debugger does not run build with gradle string replacement.  Then '''git checkout src/resources/mcmod.info''' afterward to revert back to generated mcmod.info template.
