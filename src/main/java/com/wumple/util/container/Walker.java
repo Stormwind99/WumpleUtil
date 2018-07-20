@@ -20,7 +20,7 @@ public class Walker
         if (object instanceof ICapabilityProvider)
         {
             ICapabilityProvider provider = (ICapabilityProvider)object;
-            capability = CapabilityUtils.getCapability(provider, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+            capability = CapabilityUtils.fetchCapability(provider, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         }
             
         if (object instanceof IItemHandler)
@@ -46,7 +46,7 @@ public class Walker
     
     public static void walkContainer(ICapabilityProvider provider, TriConsumer<Integer, IItemHandler, ItemStack> block)
     {
-        IItemHandler capability = CapabilityUtils.getCapability(provider, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IItemHandler capability = CapabilityUtils.fetchCapability(provider, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         walkContainer(capability, block);
     }
     

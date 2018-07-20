@@ -86,7 +86,7 @@ public abstract class CapabilityContainerListener<HANDLER> implements IContainer
         if (!shouldSyncItem(stack))
             return;
 
-        final HANDLER handler = CapabilityUtils.getCapability(stack, capability, facing);
+        final HANDLER handler = CapabilityUtils.fetchCapability(stack, capability, facing);
         if (handler == null)
             return;
 

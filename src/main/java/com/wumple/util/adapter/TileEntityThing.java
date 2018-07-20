@@ -3,6 +3,8 @@ package com.wumple.util.adapter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.wumple.util.capability.CapabilityUtils;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -36,6 +38,12 @@ public class TileEntityThing implements IThing
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
     	return owner.getCapability(capability, facing);
+    }
+    
+    @Nullable
+    public <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    {
+        return CapabilityUtils.fetchCapability(owner, capability, facing);
     }
     
     public void markDirty()

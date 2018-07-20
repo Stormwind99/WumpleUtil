@@ -30,7 +30,7 @@ public class CapabilityUtils
      * @return The handler, if any.
      */
     @Nullable
-    public static <T> T getCapability(@Nullable ICapabilityProvider provider, Capability<T> capability,
+    public static <T> T fetchCapability(@Nullable ICapabilityProvider provider, Capability<T> capability,
             @Nullable EnumFacing facing)
     {
         return provider != null && provider.hasCapability(capability, facing)

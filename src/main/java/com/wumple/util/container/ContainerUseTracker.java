@@ -163,7 +163,7 @@ public class ContainerUseTracker
         		{
         			// Client doesn't have container contents. so we don't check if 
         			//    ContainerUtil.doesContain(lastUsedEntity, stack)
-        			cap = CapabilityUtils.getCapability(lastUsedEntity, capability, facing);
+        			cap = CapabilityUtils.fetchCapability(lastUsedEntity, capability, facing);
         		}
         		
         		// check TileEntities, such as for Chest
@@ -171,7 +171,7 @@ public class ContainerUseTracker
     			{
         			// Client doesn't have container contents. so wwe don't check if 
         			//    ContainerUtil.doesContain(lastUsedTileEntity, stack)
-    				cap = CapabilityUtils.getCapability(lastUsedTileEntity, capability, facing);
+    				cap = CapabilityUtils.fetchCapability(lastUsedTileEntity, capability, facing);
     			}
         	}
         }

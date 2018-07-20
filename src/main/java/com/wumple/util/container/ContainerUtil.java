@@ -157,7 +157,7 @@ public class ContainerUtil
     static public boolean doesContain(TileEntity tileentity, ItemStack itemToSearchFor)
     {
         // check TileEntity's IItemHandler capability, if provided
-        IItemHandler capability = CapabilityUtils.getCapability(tileentity, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IItemHandler capability = CapabilityUtils.fetchCapability(tileentity, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         
         return doesContain(capability, itemToSearchFor);
     }
@@ -168,7 +168,7 @@ public class ContainerUtil
     static public boolean doesContain(Entity entity, ItemStack itemToSearchFor)
     {
         // check TileEntity's IItemHandler capability, if provided
-        IItemHandler capability = CapabilityUtils.getCapability(entity, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IItemHandler capability = CapabilityUtils.fetchCapability(entity, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         
         return doesContain(capability, itemToSearchFor);
     }

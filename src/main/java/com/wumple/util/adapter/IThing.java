@@ -14,6 +14,8 @@ public interface IThing
 	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing);
     @Nullable
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing);
+    @Nullable
+    public <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing);
     public void markDirty();
     public void invalidate();        
     public boolean sameAs(IThing entity);

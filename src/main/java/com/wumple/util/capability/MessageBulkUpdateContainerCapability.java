@@ -67,7 +67,7 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
         {
             final ItemStack stack = items.get(index);
 
-            final HANDLER handler = CapabilityUtils.getCapability(stack, capability, facing);
+            final HANDLER handler = CapabilityUtils.fetchCapability(stack, capability, facing);
             DATA data = null;
 
             if (handler != null)
@@ -221,13 +221,13 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
 
                 message.capabilityData.forEach((index, data) -> {
                     final ItemStack originalStack = container.getSlot(index).getStack();
-                    final HANDLER originalHandler = CapabilityUtils.getCapability(originalStack, message.capability,
+                    final HANDLER originalHandler = CapabilityUtils.fetchCapability(originalStack, message.capability,
                             message.facing);
                     if (originalHandler != null)
                     {
                         final ItemStack newStack = originalStack.copy();
 
-                        final HANDLER newHandler = CapabilityUtils.getCapability(newStack, message.capability,
+                        final HANDLER newHandler = CapabilityUtils.fetchCapability(newStack, message.capability,
                                 message.facing);
                         assert newHandler != null;
 

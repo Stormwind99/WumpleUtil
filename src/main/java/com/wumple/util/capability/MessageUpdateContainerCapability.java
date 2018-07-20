@@ -200,13 +200,13 @@ public abstract class MessageUpdateContainerCapability<HANDLER, DATA> implements
                 }
 
                 final ItemStack originalStack = container.getSlot(message.slotNumber).getStack();
-                final HANDLER originalHandler = CapabilityUtils.getCapability(originalStack, message.capability,
+                final HANDLER originalHandler = CapabilityUtils.fetchCapability(originalStack, message.capability,
                         message.facing);
                 if (originalHandler != null)
                 {
                     final ItemStack newStack = originalStack.copy();
 
-                    final HANDLER newHandler = CapabilityUtils.getCapability(newStack, message.capability,
+                    final HANDLER newHandler = CapabilityUtils.fetchCapability(newStack, message.capability,
                             message.facing);
                     assert newHandler != null;
 
