@@ -8,11 +8,12 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class TimeUtil
 {
-    // MAYBE re-init on WorldEvent.Load instead of waiting for first world tick to do so via handler
     // the last world time/tick count/timestamp received during world tick
     //    needed since no access to world later
     protected static long lastWorldTimestamp = 0;
@@ -23,7 +24,6 @@ public class TimeUtil
     
     public static void setLastWorldTimestamp(long timestamp)
     {
-        //assert((lastWorldTimestamp == 0) || ((timestamp - lastWorldTimestamp) < 1000));
         if (timestamp > lastWorldTimestamp)
         {
             lastWorldTimestamp = timestamp;
@@ -69,6 +69,7 @@ public class TimeUtil
     /**
      * Update cached current timestamp on client
      */
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event)
     {
