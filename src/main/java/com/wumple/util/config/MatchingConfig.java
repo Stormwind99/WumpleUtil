@@ -1,33 +1,25 @@
 package com.wumple.util.config;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import com.wumple.util.misc.TypeIdentifier;
 import com.wumple.util.misc.Util;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.oredict.OreDictionary;
 
 /*
  * Wrapper around Forge HashMap<String, T> configs for (itemstack, item, entity, string)->value configs
  */
-public class MatchingConfig<T>
+public class MatchingConfig<T> extends MatchingConfigBase
 {
 	protected final Map<String, T> config;
 	public final T FALSE_VALUE;
-    public static final String FOOD_TAG = "minecraft:food";
-    public static final String PLAYER_TAG = "entity:player";
 
 	public MatchingConfig(Map<String, T> configIn, T falseValueIn)
 	{
@@ -39,77 +31,7 @@ public class MatchingConfig<T>
 	 *  If using this class and including default config properties, in mod postInit do:
 	 *  - add all defaults using addDefaultProperty, then
 	 *  - Call ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
-	 */
-	
-	// ----------------------------------------------------------------------
-	// Utility
-	
-	/**
-	 * @see TypeIdentifier for opposite direction but similiar code
-	 * @param itemStack for which to get namekeys for lookup
-	 * @return namekeys to search config for, in order
-	 */
-    static public ArrayList<String> getItemStackNameKeys(ItemStack itemStack)
-    {
-        ArrayList<String> nameKeys = new ArrayList<String>();
-        
-        if (itemStack == null)
-        {
-        	return nameKeys;
-        }
-
-        Item item = itemStack.getItem();
-
-        ResourceLocation loc = Item.REGISTRY.getNameForObject(item);
-        
-        if (loc != null)
-        {
-        	String key2 = loc.toString();
-
-        	nameKeys.add(key2 + "@" + itemStack.getMetadata());
-        	nameKeys.add(key2);
-        }
-
-        if (!itemStack.isEmpty())
-        {
-            int oreIds[] = OreDictionary.getOreIDs(itemStack);
-            for (int oreId : oreIds)
-            {
-                nameKeys.add(OreDictionary.getOreName(oreId));
-            }
-        }
-
-        if (item instanceof ItemFood)
-        {
-            nameKeys.add(FOOD_TAG);
-        }
-        
-        return nameKeys;
-    }
-
-    static public ArrayList<String> getEntityNameKeys(Entity entity)
-    {
-        ArrayList<String> nameKeys = new ArrayList<String>();
-        
-        if (entity == null)
-        {
-        	return nameKeys;
-        }
-
-    	String name = (entity == null) ? null : EntityList.getEntityString(entity);
-
-    	if (name != null)
-    	{
-    		nameKeys.add(name);
-    	}
-    	
-        if (entity instanceof EntityPlayer)
-        {
-        	nameKeys.add(PLAYER_TAG);
-        }
-        
-        return nameKeys;
-    }
+	 */	
     
 	// ----------------------------------------------------------------------
 	// Add default properties to config
