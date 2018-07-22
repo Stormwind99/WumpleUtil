@@ -189,23 +189,28 @@ public class MatchingConfig<T> extends MatchingConfigBase
     // check for non-FALSE_VALUE for different types
    
     /**
-     * Does stack not match FALSE_VALUE?  
-     * aka does stack have no entry or the default value as the entry?
-     * @returns true if stack doesn't match FALSE_VALUE, false if it does
+     * Does thing not match FALSE_VALUE?  
+     * aka does thing have no entry or the default value as the entry?
+     * @returns true if thing doesn't match FALSE_VALUE, false if it does
      */
+    public boolean doesIt(T value)
+    {
+        return value != FALSE_VALUE;
+    }
+
     public boolean doesIt(ItemStack stack)
     {
-        return getValue(stack) != FALSE_VALUE;
+        return doesIt(getValue(stack));
     } 
     
     public boolean doesIt(Entity entity)
     {
-        return getValue(entity) != FALSE_VALUE;
+        return doesIt(getValue(entity));
     } 
 
     public boolean doesIt(TileEntity entity)
     {
-        return getValue(entity) != FALSE_VALUE;
+        return doesIt(getValue(entity));
     } 
 
     public boolean doesIt(ResourceLocation loc)
