@@ -44,7 +44,7 @@ public class ContainerUseTracker
     public static Container lastUsedContainer = null;
     // MAYBE lastIItemHandler
     // MAYBE lastIInventory
-    
+
     public static void forget()
     {
         lastUsedTileEntity = null;
@@ -52,37 +52,37 @@ public class ContainerUseTracker
         lastUsedBy = null;
         lastUsedContainer = null;
     }
-    
+
     @SubscribeEvent
     public static void onWorldLoad(WorldEvent.Load event)
     {
         forget();
     }
-    
+
     @SubscribeEvent
     public static void onWorldUnload(WorldEvent.Unload event)
     {
         forget();
     }
-    
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onInteract(PlayerInteractEvent event)
     {
         if (event.getSide() == Side.CLIENT)
         {
-        	if (event.getFace() != null)
-        	{
-        		BlockPos pos = event.getPos();
-        		TileEntity entity = event.getWorld().getTileEntity(pos);
-        		lastUsedTileEntity = entity;
-        		lastUsedEntity = null;
-        		if (entity != null)
-        		{
-        			lastUsedBy = event.getEntity();
-        		}
-        	}
-        }     
+            if (event.getFace() != null)
+            {
+                BlockPos pos = event.getPos();
+                TileEntity entity = event.getWorld().getTileEntity(pos);
+                lastUsedTileEntity = entity;
+                lastUsedEntity = null;
+                if (entity != null)
+                {
+                    lastUsedBy = event.getEntity();
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -91,19 +91,19 @@ public class ContainerUseTracker
     {
         if (event.getSide() == Side.CLIENT)
         {
-        	Entity target = event.getTarget();
-        	if (target != null)
-        	{
-        		lastUsedEntity = target;
-        		lastUsedTileEntity = null;
-        		if (target != null)
-        		{
-        			lastUsedBy = event.getEntity();
-        		}
-        	}
-        }     
+            Entity target = event.getTarget();
+            if (target != null)
+            {
+                lastUsedEntity = target;
+                lastUsedTileEntity = null;
+                if (target != null)
+                {
+                    lastUsedBy = event.getEntity();
+                }
+            }
+        }
     }
-    
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onOpen(PlayerContainerEvent.Open event)
@@ -113,69 +113,69 @@ public class ContainerUseTracker
             lastUsedContainer = event.getContainer();
         }
     }
-    
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onGuiOpen(GuiOpenEvent event)
     {
-    	GuiScreen screen = event.getGui();
-    	if(screen instanceof GuiContainer)
-    	{
-    		GuiContainer gui = (GuiContainer)event.getGui();
+        GuiScreen screen = event.getGui();
+        if (screen instanceof GuiContainer)
+        {
+            GuiContainer gui = (GuiContainer) event.getGui();
             if (gui.inventorySlots instanceof ContainerPlayer)
             {
-                lastUsedContainer = gui.inventorySlots;  
+                lastUsedContainer = gui.inventorySlots;
                 lastUsedBy = Minecraft.getMinecraft().player; // gui.inventorySlots.player is private
-            	lastUsedEntity = lastUsedBy;
+                lastUsedEntity = lastUsedBy;
             }
-    	}
-    	else if (screen == null)
-    	{
-    		forget();
-    	}
+        }
+        else if (screen == null)
+        {
+            forget();
+        }
     }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onClose(PlayerContainerEvent.Close event)
-    { 
-    	forget();
+    {
+        forget();
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Nullable
     public static <T> T getContainerCapability(EntityPlayer entity, ItemStack stack, Capability<T> capability, @Nullable EnumFacing facing)
     {
-    	T cap = null;
-    	
-    	IThing thing = ContainerUtil.getContainedBy(stack, entity, null);
-    	if (thing != null)
-    	{
-    		cap = thing.getCapability(capability, facing);
-    	}
-    	
+        T cap = null;
+
+        IThing thing = ContainerUtil.getContainedBy(stack, entity, null);
+        if (thing != null)
+        {
+            cap = thing.getCapability(capability, facing);
+        }
+
         if (lastUsedBy == entity)
         {
-        	if (GuiUtil.isOpenContainerSlotUnderMouse(stack))
-        	{
-        		// check Entities, such as for MinecartChest
-        		if (cap == null)
-        		{
-        			// Client doesn't have container contents. so we don't check if 
-        			//    ContainerUtil.doesContain(lastUsedEntity, stack)
-        			cap = CapabilityUtils.fetchCapability(lastUsedEntity, capability, facing);
-        		}
-        		
-        		// check TileEntities, such as for Chest
-        		if (cap == null)
-    			{
-        			// Client doesn't have container contents. so wwe don't check if 
-        			//    ContainerUtil.doesContain(lastUsedTileEntity, stack)
-    				cap = CapabilityUtils.fetchCapability(lastUsedTileEntity, capability, facing);
-    			}
-        	}
+            if (GuiUtil.isOpenContainerSlotUnderMouse(stack))
+            {
+                // check Entities, such as for MinecartChest
+                if (cap == null)
+                {
+                    // Client doesn't have container contents. so we don't check if
+                    // ContainerUtil.doesContain(lastUsedEntity, stack)
+                    cap = CapabilityUtils.fetchCapability(lastUsedEntity, capability, facing);
+                }
+
+                // check TileEntities, such as for Chest
+                if (cap == null)
+                {
+                    // Client doesn't have container contents. so wwe don't check if
+                    // ContainerUtil.doesContain(lastUsedTileEntity, stack)
+                    cap = CapabilityUtils.fetchCapability(lastUsedTileEntity, capability, facing);
+                }
+            }
         }
-           
+
         return cap;
     }
 

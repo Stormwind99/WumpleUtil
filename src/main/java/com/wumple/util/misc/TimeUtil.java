@@ -15,13 +15,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TimeUtil
 {
     // the last world time/tick count/timestamp received during world tick
-    //    needed since no access to world later
+    // needed since no access to world later
     protected static long lastWorldTimestamp = 0;
     protected static long lastClientWorldTimestamp = 0;
     protected static int lastClientWorld = 0;
     protected static long lastServerWorldTimestamp = 0;
     protected static int lastServerWorld = 0;
-    
+
     public static void setLastWorldTimestamp(long timestamp)
     {
         if (timestamp > lastWorldTimestamp)
@@ -32,10 +32,10 @@ public class TimeUtil
 
     public static long getLastWorldTimestamp()
     {
-        assert(lastWorldTimestamp > 0);
+        assert (lastWorldTimestamp > 0);
         return lastWorldTimestamp;
     }
-    
+
     protected static void setTimestamp(World world)
     {
         long timestamp = world.getTotalWorldTime();
@@ -49,10 +49,10 @@ public class TimeUtil
         else
         {
             lastServerWorldTimestamp = timestamp;
-            lastServerWorld = world.provider.getDimension();            
+            lastServerWorld = world.provider.getDimension();
         }
     }
-    
+
     /**
      * Update cached current timestamp on server
      */
@@ -65,7 +65,7 @@ public class TimeUtil
             setTimestamp(world);
         }
     }
-    
+
     /**
      * Update cached current timestamp on client
      */
@@ -79,7 +79,7 @@ public class TimeUtil
             setTimestamp(world);
         }
     }
-    
+
     @SubscribeEvent
     public static void onWorldLoad(WorldEvent.Load event)
     {

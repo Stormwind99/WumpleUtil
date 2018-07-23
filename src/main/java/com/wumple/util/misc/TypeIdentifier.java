@@ -10,18 +10,18 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class TypeIdentifier
 {
-	protected static Random random = new Random();
+    protected static Random random = new Random();
     public String id = null;
     public Integer meta = null;
-    
+
     public static TypeIdentifier build()
     {
-    	return new TypeIdentifier();
+        return new TypeIdentifier();
     }
-    
+
     public static TypeIdentifier build(String idIn)
     {
-    	return new TypeIdentifier(idIn);
+        return new TypeIdentifier(idIn);
     }
 
     public TypeIdentifier()
@@ -32,7 +32,7 @@ public class TypeIdentifier
     {
         setID(idIn);
     }
-    
+
     public TypeIdentifier(String idIn, Integer metaIn)
     {
         setID(idIn);
@@ -61,7 +61,7 @@ public class TypeIdentifier
             meta = null;
         }
     }
-    
+
     public ItemStack create(int count)
     {
         if (id.isEmpty())

@@ -12,56 +12,56 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public class TileEntityThing implements IThing
 {
-	public TileEntity owner = null;
-	
-	public TileEntityThing(TileEntity ownerIn)
-	{
-		owner = ownerIn;
-	}
-	
-	public World getWorld()
-	{
-		return owner.getWorld();
-	}
-	
-	public boolean isInvalid()
-	{
-		return owner.isInvalid();
-	}
-	
-	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    public TileEntity owner = null;
+
+    public TileEntityThing(TileEntity ownerIn)
     {
-    	return owner.hasCapability(capability, facing);
+        owner = ownerIn;
     }
-    
+
+    public World getWorld()
+    {
+        return owner.getWorld();
+    }
+
+    public boolean isInvalid()
+    {
+        return owner.isInvalid();
+    }
+
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    {
+        return owner.hasCapability(capability, facing);
+    }
+
     @Nullable
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
-    	return owner.getCapability(capability, facing);
+        return owner.getCapability(capability, facing);
     }
-    
+
     @Nullable
     public <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
         return CapabilityUtils.fetchCapability(owner, capability, facing);
     }
-    
+
     public void markDirty()
     {
-    	owner.markDirty();
+        owner.markDirty();
     }
-    
+
     public void invalidate()
     {
-    	owner = null;
+        owner = null;
     }
-    
+
     public boolean sameAs(IThing entity)
     {
-    	if (entity instanceof TileEntityThing)
-    	{
-    		return owner == ((TileEntityThing)entity).owner;
-    	}
-    	return false;
+        if (entity instanceof TileEntityThing)
+        {
+            return owner == ((TileEntityThing) entity).owner;
+        }
+        return false;
     }
 }

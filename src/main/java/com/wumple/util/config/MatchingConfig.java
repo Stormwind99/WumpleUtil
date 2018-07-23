@@ -18,26 +18,25 @@ import net.minecraft.util.ResourceLocation;
  */
 public class MatchingConfig<T> extends MatchingConfigBase
 {
-	protected final Map<String, T> config;
-	public final T FALSE_VALUE;
+    protected final Map<String, T> config;
+    public final T FALSE_VALUE;
 
-	public MatchingConfig(Map<String, T> configIn, T falseValueIn)
-	{
-		config = configIn;
-		FALSE_VALUE = falseValueIn;
-	}
-	
-	/*
-	 *  If using this class and including default config properties, in mod postInit do:
-	 *  - add all defaults using addDefaultProperty, then
-	 *  - Call ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
-	 */	
-    
-	// ----------------------------------------------------------------------
-	// Add default properties to config
-	
-	// --- add by String
-	
+    public MatchingConfig(Map<String, T> configIn, T falseValueIn)
+    {
+        config = configIn;
+        FALSE_VALUE = falseValueIn;
+    }
+
+    /*
+     * If using this class and including default config properties, in mod postInit do: - add all defaults using addDefaultProperty, then - Call
+     * ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
+     */
+
+    // ----------------------------------------------------------------------
+    // Add default properties to config
+
+    // --- add by String
+
     public boolean addDefaultProperty(String name, T amountIn)
     {
         if (name == null)
@@ -49,21 +48,21 @@ public class MatchingConfig<T> extends MatchingConfigBase
 
         return true;
     }
-    
+
     public boolean addDefaultProperty(String[] items, T amountIn)
     {
-    	boolean success = true;
-    	
+        boolean success = true;
+
         for (String item : items)
         {
             success &= addDefaultProperty(item, amountIn);
         }
-        
+
         return success;
     }
-    
+
     // --- add by Item
-    
+
     public boolean addDefaultProperty(Item item, T amount)
     {
         // check for null Item in case another mod removes a vanilla item
@@ -96,14 +95,14 @@ public class MatchingConfig<T> extends MatchingConfigBase
 
         return addDefaultProperty(name, amount);
     }
-    
+
     // ----------------------------------------------------------------------
     // Get value for different types
- 
+
     protected T getProperty(String key)
     {
         T amount = null;
-        
+
         if ((key != null) && config.containsKey(key))
         {
             amount = config.get(key);
@@ -111,7 +110,7 @@ public class MatchingConfig<T> extends MatchingConfigBase
 
         return amount;
     }
-           
+
     @Nullable
     protected T getProperty(List<String> keys)
     {
@@ -128,10 +127,10 @@ public class MatchingConfig<T> extends MatchingConfigBase
 
         return amount;
     }
-    
+
     /**
-     * Get the highest priority value we match for stack
-     * Checks all keys for stack - expands to multiple keys in defined order: id@meta, id, minecraft:food
+     * Get the highest priority value we match for stack Checks all keys for stack - expands to multiple keys in defined order: id@meta, id, minecraft:food
+     * 
      * @return highest priority value for stack, or null if key not found (not FALSE_VALUE)
      */
     @Nullable
@@ -139,58 +138,58 @@ public class MatchingConfig<T> extends MatchingConfigBase
     {
         return getProperty(getItemStackNameKeys(itemStack));
     }
-    
+
     public T getProperty(Entity entity)
     {
-    	return getProperty(getEntityNameKeys(entity));
+        return getProperty(getEntityNameKeys(entity));
     }
-    
+
     public T getProperty(ResourceLocation loc)
     {
-	   String key = (loc == null) ? null : loc.toString();
-       return getProperty(key);	
+        String key = (loc == null) ? null : loc.toString();
+        return getProperty(key);
     }
-    
+
     public T getProperty(TileEntity it)
     {
         ResourceLocation loc = (it == null) ? null : TileEntity.getKey(it.getClass());
         return getProperty(loc);
     }
-    
+
     // ----------------------------------------------------------------------
     // get value for different types
-    
+
     /*
-     * Get the highest priority value we match for stack
-     * Checks all keys for stack - expands to multiple keys in defined order: id@meta, id, minecraft:food
+     * Get the highest priority value we match for stack Checks all keys for stack - expands to multiple keys in defined order: id@meta, id, minecraft:food
+     * 
      * @return highest priority value for stack, or FALSE_VALUE if key not found
      */
     public T getValue(ItemStack stack)
     {
-    	return Util.getValueOrDefault(getProperty(stack), FALSE_VALUE);
+        return Util.getValueOrDefault(getProperty(stack), FALSE_VALUE);
     }
 
     public T getValue(Entity entity)
     {
-    	return Util.getValueOrDefault(getProperty(entity), FALSE_VALUE);
+        return Util.getValueOrDefault(getProperty(entity), FALSE_VALUE);
     }
 
     public T getValue(TileEntity entity)
     {
-    	return Util.getValueOrDefault(getProperty(entity), FALSE_VALUE);
+        return Util.getValueOrDefault(getProperty(entity), FALSE_VALUE);
     }
-    
+
     public T getValue(ResourceLocation loc)
     {
-    	return Util.getValueOrDefault(getProperty(loc), FALSE_VALUE);
+        return Util.getValueOrDefault(getProperty(loc), FALSE_VALUE);
     }
-    
+
     // ----------------------------------------------------------------------
     // check for non-FALSE_VALUE for different types
-   
+
     /**
-     * Does thing not match FALSE_VALUE?  
-     * aka does thing have no entry or the default value as the entry?
+     * Does thing not match FALSE_VALUE? aka does thing have no entry or the default value as the entry?
+     * 
      * @returns true if thing doesn't match FALSE_VALUE, false if it does
      */
     public boolean doesIt(T value)
@@ -201,17 +200,17 @@ public class MatchingConfig<T> extends MatchingConfigBase
     public boolean doesIt(ItemStack stack)
     {
         return doesIt(getValue(stack));
-    } 
-    
+    }
+
     public boolean doesIt(Entity entity)
     {
         return doesIt(getValue(entity));
-    } 
+    }
 
     public boolean doesIt(TileEntity entity)
     {
         return doesIt(getValue(entity));
-    } 
+    }
 
     public boolean doesIt(ResourceLocation loc)
     {

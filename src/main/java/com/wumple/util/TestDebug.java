@@ -57,7 +57,7 @@ public class TestDebug
                     Entity entity = mc.objectMouseOver.entityHit;
 
                     ArrayList<String> nameKeys = MatchingConfigBase.getEntityNameKeys(entity);
-                    
+
                     if (nameKeys != null)
                     {
                         for (String nameKey : nameKeys)

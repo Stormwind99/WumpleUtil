@@ -24,7 +24,7 @@ public class ContainerUtil
 {
     // horrid hack - if container contains item we know about, it is the container we are looking for
     public static boolean isPlayerWithContainerOpen(EntityPlayer player, TileEntity container, ItemStack itemToSearchFor)
-    {        
+    {
         boolean add = false;
 
         // horrid hack - if container contains item we know about, it is the container we are looking for
@@ -37,25 +37,25 @@ public class ContainerUtil
                 add = true;
             }
         }
-        
+
         // MAYBE if player.openContainer.listeners if it wasn't private (use AT)?
-        
+
         return add;
     }
 
-    protected static <T extends Entity> List<T> getEntitiesNearby(Class <? extends T > classEntity, BlockPos pos, World world)
+    protected static <T extends Entity> List<T> getEntitiesNearby(Class<? extends T> classEntity, BlockPos pos, World world)
     {
         int i = pos.getX();
         int j = pos.getY();
         int k = pos.getZ();
-        
+
         AxisAlignedBB box = new AxisAlignedBB((double) ((float) i - 5.0F), (double) ((float) j - 5.0F), (double) ((float) k - 5.0F),
                 (double) ((float) (i + 1) + 5.0F), (double) ((float) (j + 1) + 5.0F),
                 (double) ((float) (k + 1) + 5.0F));
 
         return world.getEntitiesWithinAABB(classEntity, box);
     }
-    
+
     // horrible hack - find players with container open, by searching nearby and for
     // a known item in the container
     public static NonNullList<EntityPlayer> getPlayersWithContainerOpen(TileEntity container, ItemStack itemToSearchFor)
@@ -72,7 +72,7 @@ public class ContainerUtil
 
         return users;
     }
-    
+
     // horrible hack - find players with container open, by searching nearby and for
     // a known item in the container
     public static NonNullList<EntityPlayer> getPlayersWithContainerOpen(Entity container, ItemStack itemToSearchFor)
@@ -92,36 +92,36 @@ public class ContainerUtil
 
     // horrible hack - get the TileEntity corresponding to container
     public static List<TileEntity> getTileEntitiesNearby(BlockPos position, World world)
-    {        
+    {
         int i = position.getX();
         int j = position.getY();
         int k = position.getZ();
-        
+
         final int x1 = (int) ((float) i - 5.0F);
         final int y1 = (int) ((float) j - 5.0F);
         final int z1 = (int) ((float) k - 5.0F);
         final int x2 = (int) ((float) (i + 1) + 5.0F);
         final int y2 = (int) ((float) (j + 1) + 5.0F);
         final int z2 = (int) ((float) (k + 1) + 5.0F);
-        
+
         ArrayList<TileEntity> list = new ArrayList<TileEntity>();
-        
+
         // iterate over all tileentities nearby
         for (BlockPos pos : BlockPos.getAllInBoxMutable(x1, y1, z1, x2, y2, z2))
         {
             TileEntity tileentity = world.getTileEntity(pos);
             if (tileentity != null)
             {
-            	list.add(tileentity);
+                list.add(tileentity);
             }
         }
-        
+
         return list;
     }
-    
+
     // horrible hack - get the TileEntity corresponding to container
     public static TileEntity getTileEntityForContainer(Container container, ItemStack itemToSearchFor, BlockPos position, World world)
-    {        
+    {
         // iterate over all tileentities nearby
         for (TileEntity tileentity : getTileEntitiesNearby(position, world))
         {
@@ -130,7 +130,7 @@ public class ContainerUtil
                 return tileentity;
             }
         }
-        
+
         return null;
     }
 
@@ -150,7 +150,7 @@ public class ContainerUtil
 
         return false;
     }
-    
+
     /*
      * Does the tileentity (via its IItemHandler cap) contain itemToSearchFor?
      */
@@ -158,10 +158,10 @@ public class ContainerUtil
     {
         // check TileEntity's IItemHandler capability, if provided
         IItemHandler capability = CapabilityUtils.fetchCapability(tileentity, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        
+
         return doesContain(capability, itemToSearchFor);
     }
-    
+
     /*
      * Does the tileentity (via its IItemHandler cap) contain itemToSearchFor?
      */
@@ -169,68 +169,65 @@ public class ContainerUtil
     {
         // check TileEntity's IItemHandler capability, if provided
         IItemHandler capability = CapabilityUtils.fetchCapability(entity, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        
+
         return doesContain(capability, itemToSearchFor);
     }
-    
+
     // horrible hack - find the thing containing stack
     static public IThing getContainedBy(ItemStack stack, Entity entityHint, TileEntity tileEntityHint)
     {
-    	if (doesContain(entityHint, stack))
-    	{
-    		return new EntityThing(entityHint);
-    	}
-    	
-    	if (doesContain(tileEntityHint, stack))
-    	{
-    		return new TileEntityThing(tileEntityHint);
-    	}
-    	
-    	BlockPos posGuess = null;
-    	World worldGuess = null;
-    	if (entityHint != null)
-    	{
-    		posGuess = entityHint.getPosition();
-    		worldGuess = entityHint.getEntityWorld();
-    	}
-    	else if (tileEntityHint != null)
-    	{
-    		posGuess = tileEntityHint.getPos();
-    		worldGuess = tileEntityHint.getWorld();
-    	}
-    	/*
-    	else
-    	{
-    		posGuess = FoodFunk.proxy.getClientPlayer().getPos();
-    	}
-    	*/
-    	
-    	// TODO open TileEntity container
-    	// TODO open Entity container
-    	
-    	if ((posGuess == null) || (worldGuess == null))
-    	{
-    		return null;
-    	}
-    	
-    	// other Entities nearby
-        for (Entity entity : getEntitiesNearby(Entity.class, posGuess, worldGuess))
+        if (doesContain(entityHint, stack))
         {
-        	if (doesContain(entity, stack))
-        	{
-        		return new EntityThing(entity);
-        	}
+            return new EntityThing(entityHint);
         }
 
-    	// other TileEntities nearby
+        if (doesContain(tileEntityHint, stack))
+        {
+            return new TileEntityThing(tileEntityHint);
+        }
+
+        BlockPos posGuess = null;
+        World worldGuess = null;
+        if (entityHint != null)
+        {
+            posGuess = entityHint.getPosition();
+            worldGuess = entityHint.getEntityWorld();
+        }
+        else if (tileEntityHint != null)
+        {
+            posGuess = tileEntityHint.getPos();
+            worldGuess = tileEntityHint.getWorld();
+        }
+        /*
+         * else { posGuess = FoodFunk.proxy.getClientPlayer().getPos(); }
+         */
+
+        // TODO open TileEntity container
+        // TODO open Entity container
+
+        if ((posGuess == null) || (worldGuess == null))
+        {
+            return null;
+        }
+
+        // other Entities nearby
+        for (Entity entity : getEntitiesNearby(Entity.class, posGuess, worldGuess))
+        {
+            if (doesContain(entity, stack))
+            {
+                return new EntityThing(entity);
+            }
+        }
+
+        // other TileEntities nearby
         for (TileEntity entity : getTileEntitiesNearby(posGuess, worldGuess))
         {
-        	if (doesContain(entity, stack))
-        	{
-        		return new TileEntityThing(entity);
-        	}
+            if (doesContain(entity, stack))
+            {
+                return new TileEntityThing(entity);
+            }
         }
-        
-    	return null;
+
+        return null;
     }
 }

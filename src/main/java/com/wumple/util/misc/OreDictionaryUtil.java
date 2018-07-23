@@ -8,7 +8,9 @@ public class OreDictionaryUtil
     public static boolean hasOreName(ItemStack stack, String oreName)
     {
         if (stack.isEmpty())
+        {
             return false;
+        }
 
         if (stack.getItem() == null)
         {
@@ -19,20 +21,27 @@ public class OreDictionaryUtil
         for (int i : OreDictionary.getOreIDs(stack))
         {
             if (i == id)
+            {
                 return true;
+            }
         }
         return false;
     }
-    
+
     // from https://github.com/MinecraftModDevelopment/Modding-Resources/blob/master/dev_pins.md
-    public static boolean oreDictMatches(ItemStack stack1, ItemStack stack2){
-        if (OreDictionary.itemMatches(stack1, stack2, true)){
+    public static boolean oreDictMatches(ItemStack stack1, ItemStack stack2)
+    {
+        if (OreDictionary.itemMatches(stack1, stack2, true))
+        {
             return true;
         }
-        else {
+        else
+        {
             int[] oreIds = OreDictionary.getOreIDs(stack1);
-            for (int i = 0; i < oreIds.length; i ++){
-                if (OreDictionary.containsMatch(true, OreDictionary.getOres(OreDictionary.getOreName(oreIds[i])), stack2)){
+            for (int i = 0; i < oreIds.length; i++)
+            {
+                if (OreDictionary.containsMatch(true, OreDictionary.getOres(OreDictionary.getOreName(oreIds[i])), stack2))
+                {
                     return true;
                 }
             }

@@ -16,40 +16,48 @@ public class Walker
     public static void walkAnyContainer(Object object, TriConsumer<Integer, Object, ItemStack> block)
     {
         IItemHandler capability = null;
-        
+
         if (object instanceof ICapabilityProvider)
         {
-            ICapabilityProvider provider = (ICapabilityProvider)object;
+            ICapabilityProvider provider = (ICapabilityProvider) object;
             capability = CapabilityUtils.fetchCapability(provider, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         }
-            
+
         if (object instanceof IItemHandler)
         {
-            IItemHandler handler = (IItemHandler)object;
-            walkContainer(handler, (index, container, stack) -> { block.accept(index, container, stack); });            
+            IItemHandler handler = (IItemHandler) object;
+            walkContainer(handler, (index, container, stack) -> {
+                block.accept(index, container, stack);
+            });
         }
         else if (capability != null)
         {
-            walkContainer(capability, (index, container, stack) -> { block.accept(index, container, stack); });
+            walkContainer(capability, (index, container, stack) -> {
+                block.accept(index, container, stack);
+            });
         }
         else if (object instanceof Container)
         {
-            Container cont = (Container)object;
-            walkContainer(cont, (index, container, stack) -> { block.accept(index, container, stack); });
+            Container cont = (Container) object;
+            walkContainer(cont, (index, container, stack) -> {
+                block.accept(index, container, stack);
+            });
         }
         else if (object instanceof IInventory)
         {
-            IInventory inventory = (IInventory)object;
-            walkContainer(inventory, (index, container, stack) -> { block.accept(index, container, stack); });
+            IInventory inventory = (IInventory) object;
+            walkContainer(inventory, (index, container, stack) -> {
+                block.accept(index, container, stack);
+            });
         }
     }
-    
+
     public static void walkContainer(ICapabilityProvider provider, TriConsumer<Integer, IItemHandler, ItemStack> block)
     {
         IItemHandler capability = CapabilityUtils.fetchCapability(provider, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         walkContainer(capability, block);
     }
-    
+
     public static void walkContainer(IItemHandler inventory, TriConsumer<Integer, IItemHandler, ItemStack> block)
     {
         int slots = (inventory == null) ? 0 : inventory.getSlots();

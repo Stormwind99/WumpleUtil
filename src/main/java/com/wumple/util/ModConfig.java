@@ -22,20 +22,21 @@ public class ModConfig
         @Config.Comment("Enable debug features on this menu, display extra debug info.")
         public boolean debug = false;
     }
-    
+
     @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
     private static class EventHandler
-    { 
+    {
         /**
          * Inject the new values and save to the config file when the config has been changed from the GUI.
          *
-         * @param event The event
+         * @param event
+         *            The event
          */
         @SubscribeEvent
         public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event)
-	{
+        {
             if (event.getModID().equals(Reference.MOD_ID))
-	    {
+            {
                 ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
             }
         }

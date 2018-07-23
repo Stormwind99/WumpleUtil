@@ -12,55 +12,55 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public class EntityThing implements IThing
 {
-	public Entity owner = null;
-	
-	public EntityThing(Entity ownerIn)
-	{
-		owner = ownerIn;
-	}
-	
-	public World getWorld()
-	{
-		return owner.getEntityWorld();
-	}
-	
-	public boolean isInvalid()
-	{
-		return owner.isDead;
-	}
-	
-	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    public Entity owner = null;
+
+    public EntityThing(Entity ownerIn)
     {
-    	return owner.hasCapability(capability, facing);
+        owner = ownerIn;
     }
-    
+
+    public World getWorld()
+    {
+        return owner.getEntityWorld();
+    }
+
+    public boolean isInvalid()
+    {
+        return owner.isDead;
+    }
+
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    {
+        return owner.hasCapability(capability, facing);
+    }
+
     @Nullable
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
-    	return owner.getCapability(capability, facing);
+        return owner.getCapability(capability, facing);
     }
-    
+
     @Nullable
     public <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
         return CapabilityUtils.fetchCapability(owner, capability, facing);
     }
-    
+
     public void markDirty()
     {
     }
-    
+
     public void invalidate()
     {
-    	owner = null;
+        owner = null;
     }
-    
+
     public boolean sameAs(IThing entity)
     {
-    	if (entity instanceof EntityThing)
-    	{
-    		return owner == ((EntityThing)entity).owner;
-    	}
-    	return false;
+        if (entity instanceof EntityThing)
+        {
+            return owner == ((EntityThing) entity).owner;
+        }
+        return false;
     }
 }

@@ -6,15 +6,15 @@ public class Util
     {
         return t.isInstance(o) ? t.cast(o) : null;
     }
-    
+
     public static <T> T getValueOrDefault(T value, T defaultValue)
     {
         return value == null ? defaultValue : value;
     }
-    
+
     public static boolean checkBoth(boolean one, boolean two)
     {
-    	boolean ret = true;
+        boolean ret = true;
         ret &= one;
         ret &= two;
         return ret;

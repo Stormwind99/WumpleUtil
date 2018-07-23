@@ -1,10 +1,11 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "2.4.0",
-    "1.12.2-recommended": "2.4.0"
+    "1.12.2-latest": "2.5.0",
+    "1.12.2-recommended": "2.5.0"
   },
   "1.12.2": {
+    "2.5.0": "Added SUtil.canAddOrGrowCount",
     "2.4.0": "Easy to use doesIt for MatchingConfig FALSE_VALUE",
     "2.3.1": "Easy to use doesIt for MatchingConfig FALSE_VALUE",
     "2.3.0": "MatchingConfig NameKey support for class names of ItemStacks and TileEntities, debug/test info for them",

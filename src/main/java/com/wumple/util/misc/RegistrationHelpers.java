@@ -21,7 +21,7 @@ public class RegistrationHelpers
 {
     public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing)
     {
-    	assert(thing != null);
+        assert (thing != null);
 
         registry.register(thing);
         return thing;
@@ -29,42 +29,42 @@ public class RegistrationHelpers
 
     public static Item registerOreNames(Item thing, String[] oreNames)
     {
-    	assert(thing != null);
-    	
+        assert (thing != null);
+
         for (String oreName : oreNames)
         {
-        	OreDictionary.registerOre(oreName, thing);
+            OreDictionary.registerOre(oreName, thing);
         }
-        
+
         return thing;
     }
-    
+
     public static ItemStack registerOreNames(ItemStack thing, String[] oreNames)
     {
-    	assert(thing != null);
-    	
+        assert (thing != null);
+
         for (String oreName : oreNames)
         {
-        	OreDictionary.registerOre(oreName, thing);
+            OreDictionary.registerOre(oreName, thing);
         }
-        
+
         return thing;
     }
-    
+
     public static Item regHelperOre(IForgeRegistry<Item> registry, Item thing, String[] oreNames)
     {
-    	assert(thing != null);
-    	
+        assert (thing != null);
+
         registry.register(thing);
-        
+
         return registerOreNames(thing, oreNames);
     }
-    
+
     public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing,
             String name)
     {
-    	assert(thing != null);
-    	assert(name != null);
+        assert (thing != null);
+        assert (name != null);
 
         nameHelper(thing, name);
 
@@ -74,9 +74,9 @@ public class RegistrationHelpers
     public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing,
             ResourceLocation loc)
     {
-    	assert(thing != null);
-    	assert(loc != null);
-    	
+        assert (thing != null);
+        assert (loc != null);
+
         nameHelper(thing, loc);
 
         return regHelper(registry, thing);
@@ -84,8 +84,8 @@ public class RegistrationHelpers
 
     public static <T extends IForgeRegistryEntry<T>> void nameHelper(T thing, ResourceLocation loc)
     {
-    	assert(thing != null);
-    	assert(loc != null);
+        assert (thing != null);
+        assert (loc != null);
 
         thing.setRegistryName(loc);
         String dotname = loc.getNamespace() + "." + loc.getPath();
@@ -102,17 +102,17 @@ public class RegistrationHelpers
 
     public static <T extends IForgeRegistryEntry<T>> void nameHelper(T thing, String name)
     {
-    	assert(thing != null);
-    	assert(name != null);
-    	
+        assert (thing != null);
+        assert (name != null);
+
         ResourceLocation loc = GameData.checkPrefix(name);
         nameHelper(thing, loc);
     }
 
     public static SoundEvent registerSound(IForgeRegistry<SoundEvent> registry, String name)
     {
-    	assert(name != null);
-    	
+        assert (name != null);
+
         ResourceLocation loc = GameData.checkPrefix(name);
 
         SoundEvent event = new SoundEvent(loc);
@@ -125,47 +125,47 @@ public class RegistrationHelpers
     @SideOnly(Side.CLIENT)
     public static void registerRender(Item item)
     {
-    	assert(item != null);
+        assert (item != null);
         ModelResourceLocation loc = new ModelResourceLocation(item.getRegistryName(), "inventory");
         ModelLoader.setCustomModelResourceLocation(item, 0, loc);
     }
-    
+
     @SideOnly(Side.CLIENT)
     public static void registerRender(Block block)
     {
-    	assert(block != null);
-    	Item item = Item.getItemFromBlock(block);
-    	registerRender(block, item);
+        assert (block != null);
+        Item item = Item.getItemFromBlock(block);
+        registerRender(block, item);
     }
-    
+
     @SideOnly(Side.CLIENT)
     public static void registerRender(Block block, Item item)
     {
-    	assert(block != null);
-    	assert(item != null);
+        assert (block != null);
+        assert (item != null);
         ModelResourceLocation loc = new ModelResourceLocation(item.getRegistryName(), "inventory");
         ModelLoader.setCustomModelResourceLocation(item, 0, loc);
     }
 
     public static ItemBlock registerItemBlock(IForgeRegistry<Item> registry, Block block)
     {
-    	assert(block != null);
+        assert (block != null);
         ItemBlock item = new ItemBlock(block);
         regHelper(registry, item, block.getRegistryName());
         // regHelper(registry, Item.getItemFromBlock(block), block.getRegistryName());
 
         return item;
     }
-    
+
     public static ItemBlock registerItemBlockOre(IForgeRegistry<Item> registry, Block block, String[] oreNames)
     {
-    	assert(block != null);
+        assert (block != null);
         ItemBlock item = registerItemBlock(registry, block);
-        
+
         for (String oreName : oreNames)
         {
-        	OreDictionary.registerOre(oreName, item);
-        	OreDictionary.registerOre(oreName, block);
+            OreDictionary.registerOre(oreName, item);
+            OreDictionary.registerOre(oreName, block);
         }
 
         return item;
@@ -173,10 +173,10 @@ public class RegistrationHelpers
 
     public static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String key)
     {
-    	assert(key != null);
+        assert (key != null);
         ResourceLocation loc = GameData.checkPrefix(key);
 
-        assert(loc != null);
+        assert (loc != null);
         GameRegistry.registerTileEntity(tileEntityClass, loc);
     }
 }
