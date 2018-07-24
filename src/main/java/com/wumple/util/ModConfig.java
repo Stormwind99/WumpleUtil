@@ -11,6 +11,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ModConfig
 {
+    @Name("Matching config")
+    @Config.Comment("Options for the MatchingConfig classes that match strings to item types, etc.")
+    public static MatchingConfig matchingConfig = new MatchingConfig();
+
+    public static class MatchingConfig
+    {
+        @Name("Add OreDict names to nameKeys")
+        @Config.Comment("Add the OreDict names for object to nameKeys for matching.")
+        public boolean addOreDictNames = true;
+        
+        @Name("Add class names to nameKeys")
+        @Config.Comment("Add the class names for entire class hierarchy of object to nameKeys for matching.")
+        public boolean addClassNames = false;
+    }    
 
     @Name("Debugging")
     @Config.Comment("Debugging options")

@@ -2,6 +2,7 @@ package com.wumple.util.config;
 
 import java.util.ArrayList;
 
+import com.wumple.util.ModConfig;
 import com.wumple.util.misc.TypeIdentifier;
 
 import net.minecraft.entity.Entity;
@@ -76,6 +77,18 @@ public class MatchingConfigBase
     
     static public ArrayList<String> addNameKeys(ArrayList<String> nameKeys, ItemStack itemStack)
     {
+        addNameKeysResLoc(nameKeys, itemStack);
+
+        if (ModConfig.matchingConfig.addOreDictNames)
+        {
+            addNameKeysOreDict(nameKeys, itemStack);
+        }
+        
+        return nameKeys;
+    }
+    
+    static public ArrayList<String> addNameKeysResLoc(ArrayList<String> nameKeys, ItemStack itemStack)
+    {
         Item item = itemStack.getItem();
 
         ResourceLocation loc = Item.REGISTRY.getNameForObject(item);
@@ -87,7 +100,12 @@ public class MatchingConfigBase
             nameKeys.add(key2 + "@" + itemStack.getMetadata());
             nameKeys.add(key2);
         }
-
+        
+        return nameKeys;
+    }
+    
+    static public ArrayList<String> addNameKeysOreDict(ArrayList<String> nameKeys, ItemStack itemStack)
+    {
         if (!itemStack.isEmpty())
         {
             int oreIds[] = OreDictionary.getOreIDs(itemStack);
@@ -100,7 +118,20 @@ public class MatchingConfigBase
         return nameKeys;
     }
     
+    
     static public ArrayList<String> addNameKeys(ArrayList<String> nameKeys, Object object)
+    {   
+        addNameKeysSpecial(nameKeys, object);
+        
+        if (ModConfig.matchingConfig.addClassNames)
+        {
+            addNameKeysClasses(nameKeys, object);
+        }
+        
+        return nameKeys;
+    }
+    
+    static public ArrayList<String> addNameKeysClasses(ArrayList<String> nameKeys, Object object)
     {   
         // class names for dynamic matching
         Class<?> c = object.getClass();
@@ -111,6 +142,11 @@ public class MatchingConfigBase
             c = c.getSuperclass();
         }
         
+        return nameKeys;
+    }
+
+    static public ArrayList<String> addNameKeysSpecial(ArrayList<String> nameKeys, Object object)
+    {   
         // special tags for backwards compatibility 
         if (object instanceof ItemFood)
         {
