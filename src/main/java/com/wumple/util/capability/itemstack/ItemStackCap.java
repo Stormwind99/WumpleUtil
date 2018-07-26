@@ -1,4 +1,4 @@
-package com.wumple.util.capability.base;
+package com.wumple.util.capability.itemstack;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,27 +39,18 @@ abstract public class ItemStackCap implements IItemStackCap
         forceId = other.forceId;
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IItemStackCap#getForceId()
-     */
     @Override
     public byte getForceId()
     {
         return this.forceId;
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IItemStackCap#setForceId(byte)
-     */
     @Override
     public void setForceId(byte newid)
     {
         this.forceId = newid;
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IItemStackCap#forceUpdate()
-     */
     @Override
     public void forceUpdate()
     {
@@ -80,9 +71,6 @@ abstract public class ItemStackCap implements IItemStackCap
     /*
      * Set the owner of this capability, and init based on that owner
      */
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IItemStackCap#setOwner(net.minecraft.item.ItemStack)
-     */
     @Override
     public void setOwner(ItemStack ownerIn)
     {
@@ -98,9 +86,6 @@ abstract public class ItemStackCap implements IItemStackCap
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IItemStackCap#getOwner()
-     */
     @Override
     public ItemStack getOwner()
     {

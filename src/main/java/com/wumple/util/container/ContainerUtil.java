@@ -230,4 +230,18 @@ public class ContainerUtil
 
         return null;
     }
+    
+    public static void checkUpdateSlot(Integer index, IItemHandler itemhandler, ItemStack stack, int count, ItemStack rotItem)
+    {
+        if (rotItem == null || rotItem.isEmpty() || (rotItem != stack))
+        {
+            if (rotItem == null)
+            {
+                rotItem = ItemStack.EMPTY;
+            }
+            // Equivalent to inventory.setInventorySlotContents(i, rotItem);
+            itemhandler.extractItem(index, count, false);
+            itemhandler.insertItem(index, rotItem, false);
+        }
+    }
 }

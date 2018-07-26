@@ -1,18 +1,17 @@
-package com.wumple.util.capability.base;
+package com.wumple.util.capability.tickingthing;
 
 import com.wumple.util.adapter.IThing;
+import com.wumple.util.capability.thing.ThingCap;
 import com.wumple.util.misc.TimeUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@EventBusSubscriber
 abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> implements ITickingThingCap<T>
 {
     /*
@@ -32,6 +31,10 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
     }
     */
     
+    abstract protected void cache(); 
+    abstract protected long getEvaluationInterval();
+    abstract protected void doIt(long timeSinceLast);
+    
     // transient data
     // ticks since last evaluation - special value 0 means need to cache any settings
     protected int tick = 0;
@@ -42,29 +45,24 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
     // ----------------------------------------------------------------------
     // Init
     
-    TickingThingCap()
+    public TickingThingCap()
     {
         super();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    TickingThingCap(T ownerIn)
+    public TickingThingCap(T ownerIn)
     {
         super(ownerIn);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.ITickingThingCap#getLastCheckTime()
-     */
     @Override
     public long getLastCheckTime()
     {
         return lastCheckTime;
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.ITickingThingCap#setLastCheckTime(long)
-     */
     @Override
     public void setLastCheckTime(long time)
     {
@@ -75,22 +73,19 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
      * Set the owner of this capability, and init based on that owner
      */
     @Override
-    protected void checkInit(T ownerIn)
+    public void checkInit(T ownerIn)
     {
         if (!ownerIn.sameAs(owner))
         {
             owner = ownerIn;
             lastCheckTime = TimeUtil.getLastWorldTimestamp();
+            initialize();
         }
     }
-    
-    abstract protected void cache();
-    
-    abstract protected long getEvaluationInterval();
-    
+        
     protected boolean isTimeToEvaluate()
     {
-        return (tick < getEvaluationInterval());
+        return (tick >= getEvaluationInterval());
     }
 
     /**
@@ -117,9 +112,6 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.ITickingThingCap#evaluate()
-     */
     @Override
     public void evaluate()
     {
@@ -142,8 +134,6 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
         doIt(timeSinceLast);
     }
     
-    abstract protected void doIt(long timeSinceLast);
-
     /**
      * Automatically adjust the use-by date on food items stored within the chest so don't rot
      */

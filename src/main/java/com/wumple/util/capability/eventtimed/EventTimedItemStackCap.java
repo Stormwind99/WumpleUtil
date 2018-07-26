@@ -1,13 +1,17 @@
-package com.wumple.util.capability.base;
+package com.wumple.util.capability.eventtimed;
 
 import java.util.List;
 
+import com.wumple.util.capability.itemstack.ItemStackCap;
+import com.wumple.util.container.ContainerUtil;
 import com.wumple.util.misc.CraftingUtil;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 
 abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemStackCap implements IEventTimedItemStackCap<T>
 {
@@ -29,6 +33,17 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
         CapabilityContainerListenerManager.registerListenerFactory(ContainerListenerRot::new);
     }
     */
+    
+    @Override
+    abstract public T newT();
+    @Override
+    abstract public IEventTimedItemStackCap<T> getCap(ItemStack stack);
+    @Override
+    abstract public ItemStack expired(World world, ItemStack stack);
+    @Override
+    abstract public boolean isEnabled();
+    @Override
+    abstract public boolean isDebugging();
 
     // info holds the expiration data (composition due to cap network serialization classes)
     protected T info;
@@ -44,57 +59,37 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
         super(other);
         info = other.info;
     }
-    
-    abstract protected T newT();
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#getDate()
-     */
     @Override
     public long getDate()
     {
         return info.getDate();
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#getTime()
-     */
     @Override
     public long getTime()
     {
         return info.getTime();
     }
     
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#setDate(long)
-     */
     @Override
     public void setDate(long dateIn)
     {
         info.setDate(dateIn);
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#setTime(long)
-     */
     @Override
     public void setTime(long timeIn)
     {
         info.setTime(timeIn);
     }
     
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#setExpiration(long, long)
-     */
     @Override
     public void setExpiration(long dateIn, long timeIn)
     {
         info.set(dateIn, timeIn);
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#reschedule(long)
-     */
     @Override
     public void reschedule(long timeIn)
     {
@@ -102,9 +97,6 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
         forceUpdate();
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#setInfo(T)
-     */
     @Override
     public T setInfo(T infoIn)
     {
@@ -112,18 +104,12 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
         return info;
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#getInfo()
-     */
     @Override
     public T getInfo()
     {
         return info;
     }
 
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#checkInitialized(net.minecraft.world.World)
-     */
     @Override
     public boolean checkInitialized(World world)
     {
@@ -132,12 +118,6 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
 
     // ----------------------------------------------------------------------
     // Functionality
-    
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#expired(net.minecraft.world.World, net.minecraft.item.ItemStack)
-     */
-    @Override
-    abstract public ItemStack expired(World world, ItemStack stack);
     
     /*
     public ItemStack expired(World world, ItemStack stack)
@@ -148,12 +128,16 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
         return (rotProps != null) ? rotProps.forceRot(stack) : null;
     }
     */
+    
+    public void evaluate(World world, Integer index, IItemHandler itemhandler, ItemStack stack)
+    {
+        int count = stack.getCount();
+        ItemStack newStack = evaluate(world, stack);
+        ContainerUtil.checkUpdateSlot(index, itemhandler, stack, count, newStack);
+    }
 
     /*
      * Evaluate this timer, which belongs to stack
-     */
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#evaluate(net.minecraft.world.World, net.minecraft.item.ItemStack)
      */
     @Override
     public ItemStack evaluate(World world, ItemStack stack)
@@ -174,34 +158,8 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
         return stack;
     }
     
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#isEnabled()
-     */
-    @Override
-    abstract public boolean isEnabled();
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#isDebugging()
-     */
-    @Override
-    abstract public boolean isDebugging();
-    
-    /*
-    public boolean isEnabled()
-    {
-        return ConfigContainer.enabled;
-    }
-    
-    public boolean isDebugging()
-    {
-        return ConfigContainer.zdebugging.debug;
-    }
-     */
-
     /*
      * Build tooltip info based on this timer
-     */
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#doTooltip(net.minecraft.item.ItemStack, net.minecraft.entity.player.EntityPlayer, boolean, java.util.List)
      */
     @Override
     public void doTooltip(ItemStack stack, EntityPlayer entity, boolean advanced, List<String> tips)
@@ -268,13 +226,38 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
         return key;
     }
     
-    /* (non-Javadoc)
-     * @see com.wumple.util.capability.base.IEventTimedItemStackCap#ratioShift(int, int)
-     */
     @Override
     public void ratioShift(int fromRatio, int toRatio)
     {
         info.ratioShift(fromRatio, toRatio, owner);
         forceUpdate();
+    }
+    
+    /*
+     * Set timer on crafted items dependent on the ingredients
+     */
+    public void handleCraftedTimers(World world, IInventory craftMatrix, ItemStack crafting)
+    {
+        long lowestDate = world.getTotalWorldTime();
+
+        int slots = craftMatrix.getSizeInventory();
+        for (int i = 0; i < slots; i++)
+        {
+            ItemStack stack = craftMatrix.getStackInSlot(i);
+
+            if (stack == null || stack.isEmpty() || stack.getItem() == null)
+            {
+                continue;
+            }
+
+            IEventTimedItemStackCap<T> cap = getCap(stack);
+
+            if ((cap != null) && (cap.getDate() < lowestDate))
+            {
+                lowestDate = cap.getDate();
+            }
+        }
+
+        info.setDateSafe(lowestDate);
     }
 }

@@ -1,4 +1,4 @@
-package com.wumple.util.capability.base;
+package com.wumple.util.capability.thing;
 
 import com.wumple.util.adapter.EntityThing;
 import com.wumple.util.adapter.IThing;
@@ -6,7 +6,7 @@ import com.wumple.util.misc.Util;
 
 import net.minecraft.entity.EntityLiving;
 
-abstract public class ThingCap<T extends IThing>
+abstract public class ThingCap<T extends IThing> implements IThingCap<T>
 {
     /*
     // In derived class, do:
@@ -26,11 +26,13 @@ abstract public class ThingCap<T extends IThing>
     */
     
     /// Data
-    T owner = null;
+    protected T owner = null;
     
-    abstract protected void initialize();
+    protected void initialize()
+    {
+    }
 
-    protected void checkInit(T ownerIn)
+    public void checkInit(T ownerIn)
     {
         if (owner != ownerIn)
         {
@@ -40,7 +42,8 @@ abstract public class ThingCap<T extends IThing>
         }
     }
 
-    protected EntityLiving getOwner()
+    @Override
+    public EntityLiving getOwner()
     {
         if (owner instanceof EntityThing)
         {
@@ -55,11 +58,11 @@ abstract public class ThingCap<T extends IThing>
     // ----------------------------------------------------------------------
     // Init
 
-    ThingCap()
+    public ThingCap()
     {
     }
 
-    ThingCap(T ownerIn)
+    public ThingCap(T ownerIn)
     {
         this();
         checkInit(ownerIn);

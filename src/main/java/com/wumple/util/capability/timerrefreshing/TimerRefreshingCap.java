@@ -1,23 +1,18 @@
-package com.wumple.util.capability.base;
+package com.wumple.util.capability.timerrefreshing;
 
 import com.wumple.util.adapter.IThing;
+import com.wumple.util.capability.eventtimed.Expiration;
+import com.wumple.util.capability.eventtimed.IEventTimedItemStackCap;
+import com.wumple.util.capability.tickingthing.TickingThingCap;
 import com.wumple.util.container.Walker;
 import com.wumple.util.misc.SUtil;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-@Mod.EventBusSubscriber
-abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration> extends TickingThingCap<T>
+abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration> extends TickingThingCap<T> implements ITimerRefreshingCap<T, W>
 {
     /*
     // The {@link Capability} instance
@@ -33,6 +28,11 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration>
         CapabilityManager.INSTANCE.register(IPreserving.class, new PreservingStorage(), () -> new Preserving());
     }
     */
+    
+    abstract protected IEventTimedItemStackCap<W> getCap(ItemStack stack);
+    /*
+     * return RotCapHelper.getRot(stack)
+     */
 
     // transient data
     // ticks since last refresh of contents - special value 0 means need to cache preserving settings
@@ -41,17 +41,19 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration>
     // ----------------------------------------------------------------------
     // Init
 
-    TimerRefreshingCap()
+    public TimerRefreshingCap()
     {
+        super();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    TimerRefreshingCap(T ownerIn)
+    public TimerRefreshingCap(T ownerIn)
     {
-        this();
-        owner = ownerIn;
+        super(ownerIn);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
+    @Override
     public int getRatio()
     {
         return refreshingRatio;
@@ -87,11 +89,6 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration>
 
         owner.markDirty();
     }
-    
-    abstract protected IEventTimedItemStackCap<W> getCap(ItemStack stack);
-    /*
-     * return RotCapHelper.getRot(stack)
-     */
 
     protected boolean freshenStack(int index, IItemHandler itemhandler, ItemStack stack, long time)
     {
@@ -102,11 +99,12 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration>
     
     protected boolean rescheduleAndCheck(IEventTimedItemStackCap<W> cap, int index, IItemHandler itemhandler, ItemStack stack, long time)
     {
+        assert (cap != null);
+        
         cap.reschedule(time);
         
-        // we're here, might as well see if reschedule caused expirationt
-        // TODO could check timer
-        //    RotHandler.evaluateRot(owner.getWorld(), cap, index, itemhandler, stack);
+        // we're here, might as well see if reschedule caused expiration
+        cap.evaluate(owner.getWorld(), index, itemhandler, stack);
         
         return true;
     }
@@ -117,46 +115,5 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration>
     protected long getExpirationTime(long time)
     {
         return (time * refreshingRatio) / 100;
-    }
-
-    protected void handleOnTick(World world)
-    {
-        if (owner != null)
-        {
-            if (owner.isInvalid())
-            {
-                MinecraftForge.EVENT_BUS.unregister(this);
-                owner.invalidate();
-                owner = null;
-            }
-            else
-            {
-                boolean freshen = updateAndCache();
-                if (freshen)
-                {
-                    evaluate();
-                }
-            }
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    // Event Handlers
-
-    @SubscribeEvent
-    public void onTick(TickEvent.WorldTickEvent event)
-    {
-        handleOnTick(event.world);
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onClientTick(TickEvent.ClientTickEvent event)
-    {
-        World world = Minecraft.getMinecraft().world;
-        if ((world != null) && (world.isRemote == true))
-        {
-            handleOnTick(world);
-        }
     }
 }

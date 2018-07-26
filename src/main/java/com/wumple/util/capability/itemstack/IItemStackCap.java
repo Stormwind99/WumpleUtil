@@ -1,4 +1,4 @@
-package com.wumple.util.capability.base;
+package com.wumple.util.capability.itemstack;
 
 import net.minecraft.item.ItemStack;
 
