@@ -28,4 +28,7 @@ public interface IThing
     public void invalidate();
 
     public boolean sameAs(IThing entity);
+    
+    Object object();
+    public <T> T as(Class<T> t);
 }

@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.wumple.util.capability.CapabilityUtils;
+import com.wumple.util.misc.Util;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -69,5 +70,15 @@ public class TileEntityThing implements IThing
             return owner == ((TileEntityThing) entity).owner;
         }
         return false;
+    }
+    
+    public Object object()
+    {
+        return owner;
+    }
+    
+    public <T> T as(Class<T> t)
+    {
+        return Util.as(owner, t);
     }
 }
