@@ -5,7 +5,7 @@
     "1.12.2-recommended": "2.5.0"
   },
   "1.12.2": {
-    "2.6.8": "Bug fixes to base capabilities.",
+    "2.6.9": "Bug fixes and additions to base capabilities and adapters.",
     "2.6.0": "nameKey OreDict (defauts true) and class names (defaults false) optional.  Added base capabilities.",
     "2.5.0": "Added SUtil.canAddOrGrowCount",
     "2.4.0": "Easy to use doesIt for MatchingConfig FALSE_VALUE",

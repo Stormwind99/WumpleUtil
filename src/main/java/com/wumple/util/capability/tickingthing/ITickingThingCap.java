@@ -13,8 +13,12 @@ public interface ITickingThingCap<T extends IThing> extends IThingCap<T>
     void setLastCheckTime(long time);
 
     /**
-     * Automatically adjust the use-by date on food items stored within to slow or stop rot
+     * Do every tick
+     */
+    void always();
+    
+    /**
+     * Do only so often
      */
     void evaluate();
-
 }

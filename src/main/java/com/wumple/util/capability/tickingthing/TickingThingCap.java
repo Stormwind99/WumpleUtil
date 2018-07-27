@@ -111,6 +111,11 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
         tick = 1;
         return true;
     }
+    
+    @Override
+    public void always()
+    {
+    }
 
     @Override
     public void evaluate()
@@ -150,6 +155,7 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
             else
             {
                 boolean eval = updateAndCache();
+                always();
                 if (eval)
                 {
                     evaluate();
