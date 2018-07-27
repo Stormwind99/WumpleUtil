@@ -149,8 +149,11 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
             if (owner.isInvalid())
             {
                 MinecraftForge.EVENT_BUS.unregister(this);
-                owner.invalidate();
-                owner = null;
+                if (owner != null)
+                {
+                    owner.invalidate();
+                    owner = null;
+                }
             }
             else
             {
