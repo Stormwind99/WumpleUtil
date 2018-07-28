@@ -3,7 +3,7 @@ package com.wumple.util.basechest;
 import javax.annotation.Nullable;
 
 import com.wumple.util.container.ContainerUtil;
-import com.wumple.util.tileentity.CustomNamedTileEntity;
+import com.wumple.util.nameable.NameableTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +22,7 @@ import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.walkers.ItemStackDataLists;
 import net.minecraftforge.items.IItemHandler;
 
-public abstract class TileEntityBaseChest extends CustomNamedTileEntity implements IInventory, ITickable
+public abstract class TileEntityBaseChest extends NameableTileEntity implements IInventory, ITickable
 {
 
     public TileEntityBaseChest()

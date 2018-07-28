@@ -2,7 +2,8 @@ package com.wumple.util.basechest;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockContainer;
+import com.wumple.util.nameable.NameableBlockContainer;
+
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
@@ -17,7 +18,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /*
  * Basically a copy and adaptation of vanilla BlockChest class
  */
-public abstract class BlockBaseChest extends BlockContainer implements ITileEntityProvider {
+public abstract class BlockBaseChest extends NameableBlockContainer implements ITileEntityProvider {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
@@ -180,15 +180,8 @@ public abstract class BlockBaseChest extends BlockContainer implements ITileEnti
 	 */
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
 			ItemStack stack) {
+	    super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
-
-		if (stack.hasDisplayName()) {
-			TileEntity tileentity = worldIn.getTileEntity(pos);
-
-			if (tileentity instanceof TileEntityChest) {
-				((TileEntityChest) tileentity).setCustomName(stack.getDisplayName());
-			}
-		}
 	}
 
 	/**

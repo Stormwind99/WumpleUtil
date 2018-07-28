@@ -1,4 +1,4 @@
-package com.wumple.util.tileentity;
+package com.wumple.util.nameable;
 
 import javax.annotation.Nullable;
 
@@ -11,31 +11,26 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IWorldNameable;
 
-abstract public class CustomNamedTileEntity extends TileEntity implements IWorldNameable
+abstract public class NameableTileEntity extends TileEntity implements IWorldNameable, INameable
 {
     protected String customName;
 
     // ----------------------------------------------------------------------
     // IWorldNameable
 
-    /**
-     * Get the name of this object. For players this returns their username
-     */
     @Override
     public String getName()
     {
         return this.hasCustomName() ? this.customName : getRealName();
     }
 
-    /**
-     * Returns true if this thing is named
-     */
     @Override
     public boolean hasCustomName()
     {
         return this.customName != null && !this.customName.isEmpty();
     }
 
+    @Override
     public void setCustomName(String nameIn)
     {
         this.customName = nameIn;
@@ -47,6 +42,7 @@ abstract public class CustomNamedTileEntity extends TileEntity implements IWorld
         return (ITextComponent) (this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName()));
     }
 
+    @Override
     abstract public String getRealName();
 
     // ----------------------------------------------------------------------
