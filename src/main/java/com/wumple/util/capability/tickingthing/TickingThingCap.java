@@ -126,7 +126,7 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
             return;
         }
 
-        long worldTime = owner.getWorld().getTotalWorldTime();
+        long worldTime = TimeUtil.getLastWorldTimestamp();
 
         if (lastCheckTime <= TIME_NOT_SET)
         {
