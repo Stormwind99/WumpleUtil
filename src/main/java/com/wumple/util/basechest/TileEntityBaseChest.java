@@ -3,6 +3,7 @@ package com.wumple.util.basechest;
 import javax.annotation.Nullable;
 
 import com.wumple.util.container.ContainerUtil;
+import com.wumple.util.tileentity.CustomNamedTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +12,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
@@ -20,11 +20,9 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.walkers.ItemStackDataLists;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.items.IItemHandler;
 
-public abstract class TileEntityBaseChest extends TileEntity implements IInventory, ITickable
+public abstract class TileEntityBaseChest extends CustomNamedTileEntity implements IInventory, ITickable
 {
 
     public TileEntityBaseChest()
@@ -66,17 +64,6 @@ public abstract class TileEntityBaseChest extends TileEntity implements IInvento
         return true;
     }
 
-    /**
-     * Get the name of this object. For players this returns their username
-     */
-    @Override
-    public String getName()
-    {
-        return this.hasCustomName() ? this.customName : getRealName();
-    }
-
-    abstract public String getRealName();
-
     public static void registerFixesChest(DataFixer fixer)
     {
         fixer.registerWalker(FixTypes.BLOCK_ENTITY,
@@ -89,11 +76,6 @@ public abstract class TileEntityBaseChest extends TileEntity implements IInvento
         this.chestContents = NonNullList.<ItemStack> withSize(this.getSizeInventory(), ItemStack.EMPTY);
 
         ItemStackHelper.loadAllItems(compound, this.chestContents);
-
-        if (compound.hasKey("CustomName", 8))
-        {
-            this.customName = compound.getString("CustomName");
-        }
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
@@ -101,11 +83,6 @@ public abstract class TileEntityBaseChest extends TileEntity implements IInvento
         super.writeToNBT(compound);
 
         ItemStackHelper.saveAllItems(compound, this.chestContents);
-
-        if (this.hasCustomName())
-        {
-            compound.setString("CustomName", this.customName);
-        }
 
         return compound;
     }
@@ -229,7 +206,7 @@ public abstract class TileEntityBaseChest extends TileEntity implements IInvento
         }
     }
 
-    public net.minecraftforge.items.IItemHandler getSingleChestHandler()
+    public IItemHandler getSingleChestHandler()
     {
         return super.getCapability(net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
     }
@@ -261,21 +238,6 @@ public abstract class TileEntityBaseChest extends TileEntity implements IInvento
     // -------------------------------------------------------------------------------------
     // from TileEntityLockableLoot extends TileEntityLockable implements
     // ILootContainer
-
-    protected String customName;
-
-    /**
-     * Returns true if this thing is named
-     */
-    public boolean hasCustomName()
-    {
-        return this.customName != null && !this.customName.isEmpty();
-    }
-
-    public void setCustomName(String name)
-    {
-        this.customName = name;
-    }
 
     /**
      * Returns the stack in the given slot.
@@ -368,15 +330,6 @@ public abstract class TileEntityBaseChest extends TileEntity implements IInvento
 
     // -----------------------------------------------------------------------------------------------------
     // from TileEntityLockable extends TileEntity implements ILockableContainer
-
-    /**
-     * Get the formatted ChatComponent that will be used for the sender's username in chat
-     */
-    public ITextComponent getDisplayName()
-    {
-        return (ITextComponent) (this.hasCustomName() ? new TextComponentString(this.getName())
-                : new TextComponentTranslation(this.getName(), new Object[0]));
-    }
 
     private net.minecraftforge.items.IItemHandler itemHandler;
 
