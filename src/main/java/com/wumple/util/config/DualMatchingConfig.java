@@ -3,9 +3,10 @@ package com.wumple.util.config;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.wumple.util.misc.Util;
 
-import akka.japi.Pair;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -62,11 +63,11 @@ public class DualMatchingConfig<T, U>
     {
         ArrayList<String> nameKeys = MatchingConfig.getItemStackNameKeys(itemStack);
 
-        return new Pair<T, U>(config1.getProperty(nameKeys), config2.getProperty(nameKeys));
+        return Pair.of(config1.getProperty(nameKeys), config2.getProperty(nameKeys));
     }
 
     public Pair<T, U> getProperty(String name)
     {
-        return new Pair<T, U>(config1.getProperty(name), config2.getProperty(name));
+        return Pair.of(config1.getProperty(name), config2.getProperty(name));
     }
 }
