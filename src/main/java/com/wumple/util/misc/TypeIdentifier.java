@@ -2,6 +2,9 @@ package com.wumple.util.misc;
 
 import java.util.Random;
 
+import com.wumple.util.adapter.IThing;
+import com.wumple.util.adapter.ItemStackThing;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -64,7 +67,7 @@ public class TypeIdentifier
 
     public ItemStack create(int count)
     {
-        if (id.isEmpty())
+        if ((id == null) || (id.isEmpty()))
         {
             return ItemStack.EMPTY;
         }
@@ -88,5 +91,10 @@ public class TypeIdentifier
 
         return (meta == null) ? new ItemStack(item, count)
                 : new ItemStack(item, count, meta.intValue());
+    }
+    
+    public IThing createThing(int count)
+    {
+        return new ItemStackThing( create(count) );
     }
 }

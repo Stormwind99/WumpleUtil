@@ -2,7 +2,9 @@ package com.wumple.util.capability.eventtimed;
 
 import java.util.List;
 
-import com.wumple.util.capability.itemstack.ItemStackCap;
+import com.wumple.util.adapter.IThing;
+import com.wumple.util.adapter.ItemStackThing;
+import com.wumple.util.capability.thing.ThingCap;
 import com.wumple.util.container.ContainerUtil;
 import com.wumple.util.misc.CraftingUtil;
 
@@ -11,9 +13,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
 
-abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemStackCap implements IEventTimedItemStackCap<T>
+abstract public class EventTimedThingCap<W extends IThing, T extends Expiration> extends ThingCap<W> implements IEventTimedThingCap<W,T>
 {
     /*
     // in derived class, do:
@@ -37,9 +40,9 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
     @Override
     abstract public T newT();
     @Override
-    abstract public IEventTimedItemStackCap<T> getCap(ItemStack stack);
+    abstract public IEventTimedThingCap<W,T> getCap(ICapabilityProvider stack);
     @Override
-    abstract public ItemStack expired(World world, ItemStack stack);
+    abstract public W expired(World world, W stack);
     @Override
     abstract public boolean isEnabled();
     @Override
@@ -48,15 +51,15 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
     // info holds the expiration data (composition due to cap network serialization classes)
     protected T info;
 
-    public EventTimedItemStackCap()
+    public EventTimedThingCap()
     {
         super();
         info = newT();
     }
 
-    public EventTimedItemStackCap(EventTimedItemStackCap<T> other)
+    public EventTimedThingCap(EventTimedThingCap<W,T> other)
     {
-        super(other);
+        super();
         info = other.info;
     }
 
@@ -120,7 +123,7 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
     // Functionality
     
     /*
-    public ItemStack expired(World world, ItemStack stack)
+    public W expired(World world, W stack)
     {
         RotProperty rotProps = ConfigHandler.rotting.getRotProperty(stack);
         // forget owner to eliminate dependency
@@ -129,18 +132,18 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
     }
     */
     
-    public void evaluate(World world, Integer index, IItemHandler itemhandler, ItemStack stack)
+    public void evaluate(World world, Integer index, IItemHandler itemhandler, W stack)
     {
         int count = stack.getCount();
-        ItemStack newStack = evaluate(world, stack);
-        ContainerUtil.checkUpdateSlot(index, itemhandler, stack, count, newStack);
+        W newStack = evaluate(world, stack);
+        ContainerUtil.checkUpdateSlot(index, itemhandler, stack.as(ItemStack.class), count, newStack.as(ItemStack.class));
     }
 
     /*
      * Evaluate this timer, which belongs to stack
      */
     @Override
-    public ItemStack evaluate(World world, ItemStack stack)
+    public W evaluate(World world, W stack)
     {
         if (!info.checkInitialized(world, stack))
         {
@@ -238,8 +241,9 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
      */
     public void handleCraftedTimers(World world, IInventory craftMatrix, ItemStack crafting)
     {
-        long lowestDate = world.getTotalWorldTime();
-
+        //long lowestDate = world.getTotalWorldTime();
+        //info.setDateSafe(lowestDate);
+        
         int slots = craftMatrix.getSizeInventory();
         for (int i = 0; i < slots; i++)
         {
@@ -250,14 +254,14 @@ abstract public class EventTimedItemStackCap<T extends Expiration> extends ItemS
                 continue;
             }
 
-            IEventTimedItemStackCap<T> cap = getCap(stack);
+            @SuppressWarnings("unchecked")
+            W thing = (W)new ItemStackThing(stack);
+            IEventTimedThingCap<W,T> cap = getCap(thing);
 
-            if ((cap != null) && (cap.getDate() < lowestDate))
+            if (cap != null)
             {
-                lowestDate = cap.getDate();
+                copyFrom(cap);
             }
         }
-
-        info.setDateSafe(lowestDate);
     }
 }

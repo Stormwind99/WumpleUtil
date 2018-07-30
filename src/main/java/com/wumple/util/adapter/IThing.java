@@ -7,28 +7,33 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public interface IThing
+public interface IThing extends ICapabilityProvider
 {
-    public World getWorld();
-    public BlockPos getPos();
+    World getWorld();
+    BlockPos getPos();
 
-    public boolean isInvalid();
+    boolean isInvalid();
 
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing);
-
-    @Nullable
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing);
+    boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing);
 
     @Nullable
-    public <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing);
+    <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing);
 
-    public void markDirty();
+    @Nullable
+    <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing);
 
-    public void invalidate();
+    void markDirty();
 
-    public boolean sameAs(IThing entity);
+    void invalidate();
+
+    boolean sameAs(IThing entity);
     
     Object object();
-    public <T> T as(Class<T> t);
+    <T> T as(Class<T> t);
+    
+    default int getCount()
+    { return 1; }
+    
 }

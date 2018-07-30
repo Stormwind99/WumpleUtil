@@ -1,18 +1,20 @@
 package com.wumple.util.capability.timerrefreshing;
 
 import com.wumple.util.adapter.IThing;
+import com.wumple.util.adapter.ItemStackThing;
 import com.wumple.util.capability.eventtimed.Expiration;
-import com.wumple.util.capability.eventtimed.IEventTimedItemStackCap;
+import com.wumple.util.capability.eventtimed.IEventTimedThingCap;
 import com.wumple.util.capability.tickingthing.TickingThingCap;
 import com.wumple.util.container.Walker;
 import com.wumple.util.misc.SUtil;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration> extends TickingThingCap<T> implements ITimerRefreshingCap<T, W>
+abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration, X extends IThing> extends TickingThingCap<T> implements ITimerRefreshingCap<T, W>
 {
     /*
     // The {@link Capability} instance
@@ -29,7 +31,11 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration>
     }
     */
     
-    abstract protected IEventTimedItemStackCap<W> getCap(ItemStack stack);
+    abstract protected IEventTimedThingCap<X,W> getCap(ICapabilityProvider stack);
+    protected IEventTimedThingCap<X,W> getCap(ItemStack stack)
+    {
+        return getCap(new ItemStackThing(stack));
+    }
     /*
      * return RotCapHelper.getRot(stack)
      */
@@ -92,19 +98,20 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration>
 
     protected boolean freshenStack(int index, IItemHandler itemhandler, ItemStack stack, long time)
     {
-        IEventTimedItemStackCap<W> cap = (!SUtil.isEmpty(stack)) ? getCap(stack) : null;
+        IEventTimedThingCap<X,W> cap = (!SUtil.isEmpty(stack)) ? getCap(stack) : null;
 
         return (cap != null) ? rescheduleAndCheck(cap, index, itemhandler, stack, time) : false;
     }
     
-    protected boolean rescheduleAndCheck(IEventTimedItemStackCap<W> cap, int index, IItemHandler itemhandler, ItemStack stack, long time)
+    @SuppressWarnings("unchecked")
+    protected boolean rescheduleAndCheck(IEventTimedThingCap<X,W> cap, int index, IItemHandler itemhandler, ItemStack stack, long time)
     {
         assert (cap != null);
         
         cap.reschedule(time);
         
         // we're here, might as well see if reschedule caused expiration
-        cap.evaluate(owner.getWorld(), index, itemhandler, stack);
+        cap.evaluate(owner.getWorld(), index, itemhandler, (X) new ItemStackThing(stack));
         
         return true;
     }

@@ -1,8 +1,8 @@
 package com.wumple.util.capability.eventtimed;
 
+import com.wumple.util.adapter.IThing;
 import com.wumple.util.misc.TimeUtil;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -158,12 +158,12 @@ abstract public class Expiration
         return (time == NO_EXPIRATION);
     }
 
-    public void setRelative(int dimensionRatio, ItemStack owner)
+    public void setRelative(int dimensionRatio, IThing owner)
     {
         ratioShiftInternal(DIMENSIONRATIO_DEFAULT, dimensionRatio, owner);
     }
 
-    protected long getDefaultTime(ItemStack owner)
+    protected long getDefaultTime(IThing owner)
     {
         long defaultTime = 0;
         long prop = getTimerLength(owner);
@@ -189,7 +189,7 @@ abstract public class Expiration
     }
     */
 
-    public void ratioShift(int fromRatio, int toRatio, ItemStack owner)
+    public void ratioShift(int fromRatio, int toRatio, IThing owner)
     {
         // if fromRatio is 0 then time value info was lost, so restore from props and apply toRatio
         if ((fromRatio == 0) && (toRatio != 0))
@@ -201,7 +201,7 @@ abstract public class Expiration
         ratioShiftInternal(fromRatio, toRatio, owner);
     }
 
-    protected void ratioShiftInternal(int fromRatio, int toRatio, ItemStack owner)
+    protected void ratioShiftInternal(int fromRatio, int toRatio, IThing owner)
     {
         if (toRatio == 0)
         {
@@ -235,7 +235,7 @@ abstract public class Expiration
         ratioShiftBase(dimensionRatioShift, owner);
     }
 
-    protected void ratioShiftBase(int dimensionRatioShift, ItemStack owner)
+    protected void ratioShiftBase(int dimensionRatioShift, IThing owner)
     {
         long localTime = alterTime(dimensionRatioShift, getCurTime(), date, time);
 
@@ -270,7 +270,7 @@ abstract public class Expiration
         return (long) y;
     }
     
-    abstract protected long getTimerLength(ItemStack stack);
+    abstract protected long getTimerLength(IThing stack);
     
     /*
     protected long getTimerLength(ItemStack owner)
@@ -286,14 +286,14 @@ abstract public class Expiration
     }
     */
     
-    protected void initTime(int dimensionRatio, ItemStack stack)
+    protected void initTime(int dimensionRatio, IThing stack)
     {
         long timerLength = getTimerLength(stack);
 
         initTime(timerLength, dimensionRatio, stack);
     }
 
-    protected void initTime(long timerLength, int dimensionRatio, ItemStack stack)
+    protected void initTime(long timerLength, int dimensionRatio, IThing stack)
     {
         if (timerLength != NO_EXPIRATION)
         {
@@ -331,7 +331,7 @@ abstract public class Expiration
     }
     */
 
-    public boolean checkInitialized(World world, ItemStack stack)
+    public boolean checkInitialized(World world, IThing stack)
     {
         // if initialization not yet done (stack just created or was missed somehow), then do/fix it
         if (date == 0)

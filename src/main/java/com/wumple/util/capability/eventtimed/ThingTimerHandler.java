@@ -1,5 +1,7 @@
 package com.wumple.util.capability.eventtimed;
 
+import com.wumple.util.adapter.IThing;
+import com.wumple.util.adapter.ItemStackThing;
 import com.wumple.util.capability.CapabilityUtils;
 import com.wumple.util.container.Walker;
 
@@ -12,20 +14,54 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-abstract public class TimerHandler<T extends IEventTimedItemStackCap<? extends Expiration> >
+abstract public class ThingTimerHandler<W extends IThing, T extends IEventTimedThingCap<W, ? extends Expiration> >
 {
-    abstract protected T getCap(ItemStack stack);
+    abstract protected T getCap(ICapabilityProvider stack);
     abstract protected boolean isEnabled();
     abstract public int getADimensionRatio(int dim);
     
+    @SuppressWarnings("unchecked")
+    protected T getCap(ItemStack stack)
+    {
+        return getCap((W)new ItemStackThing(stack));
+    }
+    
+    public boolean evaluateTimer(World world, W thing)
+    {
+        ItemStack stack = thing.as(ItemStack.class);
+        Entity entity = thing.as(Entity.class);
+        TileEntity tileentity = thing.as(TileEntity.class);
+        
+        if (stack != null)
+        {
+            ItemStack newStack = evaluateTimer(world, stack);
+            return (newStack != stack);
+        }
+        else if (tileentity != null)
+        {
+            return evaluateTimer(world, tileentity);
+        }
+        else if (entity != null)
+        {
+            return evaluateTimer(world, entity);
+        }
+        
+        return false;
+    }
+    
+    @SuppressWarnings("unchecked")
     public ItemStack evaluateTimer(World world, ItemStack stack)
     {
-        T cap = getCap(stack);
+        W thing = (W)new ItemStackThing(stack);
+        T cap = getCap(thing);
+        
+        W newThing = (cap != null) ? cap.evaluate(world, thing) : null;
 
-        return (cap != null) ? cap.evaluate(world, stack) : stack;
+        return (newThing != null) ? newThing.as(ItemStack.class)  : stack;
     }
     
     public boolean evaluateTimer(World world, Entity entity)
@@ -34,6 +70,8 @@ abstract public class TimerHandler<T extends IEventTimedItemStackCap<? extends E
         {
             return false;
         }
+        
+        // TODO evaluate self after contents?
 
         if (entity instanceof EntityPlayer)
         {
@@ -79,12 +117,14 @@ abstract public class TimerHandler<T extends IEventTimedItemStackCap<? extends E
         return false;
     }
 
-    public void evaluateTimer(World world, TileEntity tile)
+    public boolean  evaluateTimer(World world, TileEntity tile)
     {
         if ((world.isRemote) || !isEnabled())
         {
-            return;
+            return false;
         }
+        
+        // TODO evaluate self after contents?
 
         IItemHandler capability = CapabilityUtils.fetchCapability(tile, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
@@ -98,6 +138,8 @@ abstract public class TimerHandler<T extends IEventTimedItemStackCap<? extends E
 
             evaluateTimerContents(world, invo);
         }
+        
+        return false;
     }
 
     public void evaluateTimer(World world, Container container)
@@ -139,9 +181,10 @@ abstract public class TimerHandler<T extends IEventTimedItemStackCap<? extends E
         } );
     }
 
+    @SuppressWarnings("unchecked")
     public void evaluateTimer(World world, T cap, Integer index, IItemHandler itemhandler, ItemStack stack)
     {
-        if (cap != null) { cap.evaluate(world, index, itemhandler, stack); }
+        if (cap != null) { cap.evaluate(world, index, itemhandler, (W)new ItemStackThing(stack)); }
     }
     
     // ----------------------------------------------------------------------
