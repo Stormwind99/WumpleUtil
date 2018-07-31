@@ -36,4 +36,6 @@ public interface IThingBase extends ICapabilityProvider
     default int getCount()
     { return 1; }
     
+    
+    public <T> boolean is(Class<T> t);
 }

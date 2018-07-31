@@ -139,6 +139,16 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
         doIt(timeSinceLast);
     }
     
+    public void invalidate()
+    {
+        MinecraftForge.EVENT_BUS.unregister(this);
+        if (owner != null)
+        {
+            owner.invalidate();
+            owner = null;
+        }        
+    }
+    
     /**
      * Automatically adjust the use-by date on food items stored within the chest so don't rot
      */
@@ -148,12 +158,7 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
         {
             if (owner.isInvalid())
             {
-                MinecraftForge.EVENT_BUS.unregister(this);
-                if (owner != null)
-                {
-                    owner.invalidate();
-                    owner = null;
-                }
+                invalidate();
             }
             else
             {

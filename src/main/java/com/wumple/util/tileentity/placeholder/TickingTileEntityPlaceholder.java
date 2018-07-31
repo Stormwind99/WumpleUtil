@@ -2,17 +2,28 @@ package com.wumple.util.tileentity.placeholder;
 
 import com.wumple.util.ModConfig;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-abstract public class TickingTileEntityPlaceholder extends TileEntityPlaceholder
+abstract public class TickingTileEntityPlaceholder extends TileEntityPlaceholder implements ITickable
 {
-    protected long ticks;
+    protected long ticks = 0;
+  
+    /*
+    public TickingTileEntityPlaceholder()
+    {
+        super();
+        MinecraftForge.EVENT_BUS.register(this);
+    }
     
+    @Override
+    public void invalidate()
+    {
+        MinecraftForge.EVENT_BUS.unregister(this);
+        super.invalidate();
+    }
+    */
+
     protected void handleOnTick(World world)
     {
         ticks++;
@@ -29,7 +40,18 @@ abstract public class TickingTileEntityPlaceholder extends TileEntityPlaceholder
     {
         return ModConfig.tileEntityPlaceholderEvaluationInterval;
     }
+
+    @Override
+    public void update()
+    {
+        World world = getWorld();
+        if ((world != null) && (world.isRemote != true))
+        {
+            handleOnTick(world);
+        }
+    }
     
+    /*
     @SubscribeEvent
     public void onTick(TickEvent.WorldTickEvent event)
     {
@@ -46,4 +68,7 @@ abstract public class TickingTileEntityPlaceholder extends TileEntityPlaceholder
             handleOnTick(world);
         }
     }
+    */
+    
+    
 }

@@ -21,48 +21,68 @@ public class TileEntityThingBase implements IThingBase
         owner = ownerIn;
     }
 
+    @Override
     public World getWorld()
     {
         return (owner != null) ? owner.getWorld() : null;
     }
     
+    @Override
     public BlockPos getPos()
     {
         return (owner != null) ? owner.getPos() : null;
     }
 
+    @Override
     public boolean isInvalid()
     {
         return (owner == null) || owner.isInvalid();
     }
 
+    @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
         return (owner != null) ? owner.hasCapability(capability, facing) : false;
     }
 
+    @Override
     @Nullable
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
         return (owner != null) ? owner.getCapability(capability, facing) : null;
     }
 
+    @Override
     @Nullable
     public <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
         return CapabilityUtils.fetchCapability(owner, capability, facing);
     }
 
+    @Override
     public void markDirty()
     {
         if (owner != null) { owner.markDirty(); }
     }
 
+    @Override
     public void invalidate()
     {
+        if (owner != null)
+        {
+            World world = getWorld();
+            BlockPos pos = getPos();
+            if ((world != null) && (pos != null))
+            {
+                world.setBlockToAir(pos);
+                world.removeTileEntity(pos);
+            }
+            owner.invalidate();
+        }
         owner = null;
     }
 
+    @Override
     public boolean sameAs(IThing entity)
     {
         if (entity instanceof TileEntityThingBase)
@@ -72,13 +92,21 @@ public class TileEntityThingBase implements IThingBase
         return false;
     }
     
+    @Override
     public Object object()
     {
         return owner;
     }
     
+    @Override
     public <T> T as(Class<T> t)
     {
         return Util.as(owner, t);
+    }
+    
+    @Override
+    public <T> boolean is(Class<T> t)
+    {
+        return t.isInstance(owner);
     }
 }

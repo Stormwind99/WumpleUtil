@@ -97,4 +97,10 @@ public class ItemStackThingBase implements IThingBase
     {
         return (owner != null) ? owner.getCount() : 0;
     }
+    
+    @Override
+    public <T> boolean is(Class<T> t)
+    {
+        return t.isInstance(owner);
+    }
 }
