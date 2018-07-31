@@ -1,83 +1,20 @@
 package com.wumple.util.adapter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.ArrayList;
 
-import com.wumple.util.capability.CapabilityUtils;
-import com.wumple.util.misc.Util;
+import com.wumple.util.config.MatchingConfig;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 
-public class EntityThing implements IThing
+public class EntityThing extends EntityThingBase implements IThing
 {
-    public Entity owner = null;
-
-    public EntityThing(Entity ownerIn)
+    public EntityThing(Entity entity)
     {
-        owner = ownerIn;
-    }
-
-    public World getWorld()
-    {
-        return owner.getEntityWorld();
+        super(entity);
     }
     
-    public BlockPos getPos()
+    public ArrayList<String> getNameKeys()
     {
-        return owner.getPosition();
-    }
-
-    public boolean isInvalid()
-    {
-        return owner.isDead;
-    }
-
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
-    {
-        return owner.hasCapability(capability, facing);
-    }
-
-    @Nullable
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        return owner.getCapability(capability, facing);
-    }
-
-    @Nullable
-    public <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        return CapabilityUtils.fetchCapability(owner, capability, facing);
-    }
-
-    public void markDirty()
-    {
-    }
-
-    public void invalidate()
-    {
-        owner = null;
-    }
-
-    public boolean sameAs(IThing entity)
-    {
-        if (entity instanceof EntityThing)
-        {
-            return owner == ((EntityThing) entity).owner;
-        }
-        return false;
-    }
-    
-    public Object object()
-    {
-        return owner;
-    }
-    
-    public <T> T as(Class<T> t)
-    {
-        return Util.as(owner, t);
+        return MatchingConfig.getNameKeys(owner);
     }
 }

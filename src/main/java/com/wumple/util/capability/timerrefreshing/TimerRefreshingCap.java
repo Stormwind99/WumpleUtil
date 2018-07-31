@@ -1,7 +1,7 @@
 package com.wumple.util.capability.timerrefreshing;
 
 import com.wumple.util.adapter.IThing;
-import com.wumple.util.adapter.ItemStackThing;
+import com.wumple.util.adapter.TUtil;
 import com.wumple.util.capability.eventtimed.Expiration;
 import com.wumple.util.capability.eventtimed.IEventTimedThingCap;
 import com.wumple.util.capability.tickingthing.TickingThingCap;
@@ -34,7 +34,7 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
     abstract protected IEventTimedThingCap<X,W> getCap(ICapabilityProvider stack);
     protected IEventTimedThingCap<X,W> getCap(ItemStack stack)
     {
-        return getCap(new ItemStackThing(stack));
+        return getCap(TUtil.to(stack));
     }
     /*
      * return RotCapHelper.getRot(stack)
@@ -111,7 +111,7 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
         cap.reschedule(time);
         
         // we're here, might as well see if reschedule caused expiration
-        cap.evaluate(owner.getWorld(), index, itemhandler, (X) new ItemStackThing(stack));
+        cap.evaluate(owner.getWorld(), index, itemhandler, (X)TUtil.to(stack));
         
         return true;
     }

@@ -3,7 +3,7 @@ package com.wumple.util.capability.eventtimed;
 import java.util.List;
 
 import com.wumple.util.adapter.IThing;
-import com.wumple.util.adapter.ItemStackThing;
+import com.wumple.util.adapter.TUtil;
 import com.wumple.util.capability.thing.ThingCap;
 import com.wumple.util.container.ContainerUtil;
 import com.wumple.util.misc.CraftingUtil;
@@ -255,7 +255,7 @@ abstract public class EventTimedThingCap<W extends IThing, T extends Expiration>
             }
 
             @SuppressWarnings("unchecked")
-            W thing = (W)new ItemStackThing(stack);
+            W thing = (W)TUtil.to(stack);
             IEventTimedThingCap<W,T> cap = getCap(thing);
 
             if (cap != null)

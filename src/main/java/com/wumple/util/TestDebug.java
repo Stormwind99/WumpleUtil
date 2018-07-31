@@ -28,7 +28,7 @@ public class TestDebug
         if (ModConfig.zdebugging.debug == true)
         {
             ItemStack itemStack = event.getItemStack();
-            ArrayList<String> nameKeys = MatchingConfigBase.getItemStackNameKeys(itemStack);
+            ArrayList<String> nameKeys = MatchingConfigBase.getNameKeys(itemStack);
 
             if (nameKeys != null)
             {
@@ -56,7 +56,7 @@ public class TestDebug
                 {
                     Entity entity = mc.objectMouseOver.entityHit;
 
-                    ArrayList<String> nameKeys = MatchingConfigBase.getEntityNameKeys(entity);
+                    ArrayList<String> nameKeys = MatchingConfigBase.getNameKeys(entity);
 
                     if (nameKeys != null)
                     {

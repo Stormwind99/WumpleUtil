@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.wumple.util.adapter.EntityThing;
 import com.wumple.util.adapter.IThing;
-import com.wumple.util.adapter.TileEntityThing;
+import com.wumple.util.adapter.TUtil;
 import com.wumple.util.capability.CapabilityUtils;
 
 import net.minecraft.entity.Entity;
@@ -178,12 +178,12 @@ public class ContainerUtil
     {
         if (doesContain(entityHint, stack))
         {
-            return new EntityThing(entityHint);
+            return TUtil.to(entityHint);
         }
 
         if (doesContain(tileEntityHint, stack))
         {
-            return new TileEntityThing(tileEntityHint);
+            return TUtil.to(tileEntityHint);
         }
 
         BlockPos posGuess = null;
@@ -224,7 +224,7 @@ public class ContainerUtil
         {
             if (doesContain(entity, stack))
             {
-                return new TileEntityThing(entity);
+                return TUtil.to(entity);
             }
         }
 

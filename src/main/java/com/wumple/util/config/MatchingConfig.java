@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.wumple.util.adapter.IThing;
 import com.wumple.util.misc.Util;
 
 import net.minecraft.entity.Entity;
@@ -136,24 +137,32 @@ public class MatchingConfig<T> extends MatchingConfigBase
     @Nullable
     public T getProperty(ItemStack itemStack)
     {
-        return getProperty(getItemStackNameKeys(itemStack));
+        return getProperty(getNameKeys(itemStack));
     }
 
+    @Nullable
     public T getProperty(Entity entity)
     {
-        return getProperty(getEntityNameKeys(entity));
+        return getProperty(getNameKeys(entity));
+    }
+    
+    @Nullable
+    public T getProperty(TileEntity it)
+    {
+        return getProperty(getNameKeys(it));
+    }
+    
+    @Nullable
+    public T getProperty(IThing it)
+    {
+        return getProperty(it.getNameKeys());
     }
 
+    @Nullable
     public T getProperty(ResourceLocation loc)
     {
         String key = (loc == null) ? null : loc.toString();
         return getProperty(key);
-    }
-
-    public T getProperty(TileEntity it)
-    {
-        ResourceLocation loc = (it == null) ? null : TileEntity.getKey(it.getClass());
-        return getProperty(loc);
     }
 
     // ----------------------------------------------------------------------
@@ -177,6 +186,11 @@ public class MatchingConfig<T> extends MatchingConfigBase
     public T getValue(TileEntity entity)
     {
         return Util.getValueOrDefault(getProperty(entity), FALSE_VALUE);
+    }
+    
+    public T getValue(IThing it)
+    {
+        return Util.getValueOrDefault(getProperty(it), FALSE_VALUE);
     }
 
     public T getValue(ResourceLocation loc)
@@ -210,6 +224,11 @@ public class MatchingConfig<T> extends MatchingConfigBase
     public boolean doesIt(TileEntity entity)
     {
         return doesIt(getValue(entity));
+    }
+    
+    public boolean doesIt(IThing it)
+    {
+        return doesIt(getValue(it));
     }
 
     public boolean doesIt(ResourceLocation loc)

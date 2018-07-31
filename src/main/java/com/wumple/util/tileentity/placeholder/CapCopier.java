@@ -31,6 +31,11 @@ public interface CapCopier<T extends ICopyableCap<T> >
     TileEntity setLastTileEntity(TileEntity other);
     T getCap(ICapabilityProvider provider);
     
+    default ItemStack check(World world, ItemStack stack)
+    {
+        return stack;
+    }
+    
     default void onHarvest(BlockEvent.HarvestDropsEvent event)
     {
         World world = event.getWorld();
@@ -43,9 +48,18 @@ public interface CapCopier<T extends ICopyableCap<T> >
         T srcCap = getCap(tileentity);
         if (srcCap != null)
         {
-            for (ItemStack stack : drops)
+            for (int i = 0; i < drops.size(); ++i)
             {
-                T destCap = getCap(stack);
+                ItemStack before = drops.get(i);
+                
+                ItemStack after = check(world, before);
+                // in case check changes the stack
+                if (before != after)
+                {
+                    drops.set(i, after);
+                }
+                
+                T destCap = getCap(after);
                 
                 if ((destCap != null) && (srcCap != null))
                 {
@@ -68,8 +82,13 @@ public interface CapCopier<T extends ICopyableCap<T> >
         TileEntity tileentity = world.getTileEntity(pos);
         setLastTileEntity(tileentity);
     }
+    
+    default TileEntity getNewTE()
+    {
+        return new TileEntityPlaceholder();
+    }
 
-    default void onPlace(BlockEvent.PlaceEvent event)
+    default void onPlaceBlock(BlockEvent.PlaceEvent event)
     {
         World world = event.getWorld();
         
@@ -88,7 +107,7 @@ public interface CapCopier<T extends ICopyableCap<T> >
             
             if (tileentity == null)
             {
-                tileentity = new TileEntityPlaceholder();
+                tileentity = getNewTE();
                 Chunk chunk = world.getChunk(pos);
                 // Obvious method doesn't work: world.setTileEntity(pos, tileentity);
                 // Block.hasTileEntity() false would cause Chunk.addTileEntity() to reject

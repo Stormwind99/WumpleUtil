@@ -1,12 +1,19 @@
 package com.wumple.util.capability.eventtimed;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.wumple.util.adapter.IThing;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -16,6 +23,8 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
@@ -46,6 +55,12 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     }
 
     @SubscribeEvent
+    public void onPlaceBlock(BlockEvent.PlaceEvent event)
+    {    
+        evaluateTimer(event.getWorld(), event.getPos());
+    }
+
+    @SubscribeEvent
     public void onEntityItemPickup(EntityItemPickupEvent event)
     {
         evaluateTimer(event.getEntity().getEntityWorld(), event.getEntity());
@@ -56,9 +71,7 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     {
         if (event instanceof RightClickBlock)
         {
-            TileEntity tile = event.getEntityPlayer().world.getTileEntity(event.getPos());
-
-            evaluateTimer(event.getEntityPlayer().world, tile);
+            evaluateTimer(event.getEntityPlayer().world, event.getPos());
         }
     }
 
@@ -75,7 +88,10 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     public void onPlayerContainerOpen(PlayerContainerEvent.Open event)
     {
         // think it is safe to rot even if (event.isCanceled())
-        evaluateTimer(event.getEntityPlayer().world, event.getContainer());
+        //ContainerWrapper wrapper = new ContainerWrapper(event.getContainer());
+        //evaluateTimerContents(event.getEntityPlayer().world, wrapper);
+        //wrapper.detectAndSendChanges();
+        evaluateTimerContents(event.getEntityPlayer().world, event.getContainer());
     }
 
     @SubscribeEvent
@@ -149,4 +165,48 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
             ccap.handleCraftedTimers(world, craftMatrix, crafting);
         } // else crafted item doesn't rot
     }
+    
+    static final Minecraft mc = Minecraft.getMinecraft();
+    
+    /*
+     * Draw debug screen extras
+     */
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onDrawOverlay(final RenderGameOverlayEvent.Text e)
+    {
+        if (mc.gameSettings.showDebugInfo == true)
+        {
+            if (isDebugging())
+            {
+                addTileEntityDebug(e);
+            }
+        }
+    }
+    
+    /*
+     * Add TileEntity debug text to debug screen if looking at Block with a TileEntity
+     */
+    @SideOnly(Side.CLIENT)
+    public void addTileEntityDebug(RenderGameOverlayEvent.Text e)
+    {
+        // tile entity
+        if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos() != null)
+        {
+            BlockPos blockpos = (mc.objectMouseOver == null) ? null : mc.objectMouseOver.getBlockPos();
+            TileEntity te = (blockpos == null) ? null : mc.world.getTileEntity(blockpos);
+            T rot = getCap(te);
+            if (rot != null)
+            {
+                List<String> tips = new ArrayList<String>();
+                rot.doTooltip(null, mc.player, true, tips);
+                
+                for (String tip : tips)
+                {
+                    e.getRight().add(tip);
+                }
+            }
+        }
+    }
+
 }

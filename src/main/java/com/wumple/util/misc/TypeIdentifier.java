@@ -3,7 +3,7 @@ package com.wumple.util.misc;
 import java.util.Random;
 
 import com.wumple.util.adapter.IThing;
-import com.wumple.util.adapter.ItemStackThing;
+import com.wumple.util.adapter.TUtil;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -95,6 +95,7 @@ public class TypeIdentifier
     
     public IThing createThing(int count)
     {
-        return new ItemStackThing( create(count) );
+        // TODO - if breaking block or entity, needs to be an EntityItem not an ItemStack
+        return TUtil.to( create(count) );
     }
 }

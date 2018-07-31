@@ -2,6 +2,7 @@ package com.wumple.util;
 
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Name;
+import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,6 +12,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class ModConfig
 {
+    @Name("TileEntityPlaceholder default evaluation interval")
+    @Config.Comment("Default number of ticks between TileEntityPlaceholder evaluations")
+    @RangeInt(min=0)
+    public static int tileEntityPlaceholderEvaluationInterval = 20;
+          
     @Name("Matching config")
     @Config.Comment("Options for the MatchingConfig classes that match strings to item types, etc.")
     public static MatchingConfig matchingConfig = new MatchingConfig();

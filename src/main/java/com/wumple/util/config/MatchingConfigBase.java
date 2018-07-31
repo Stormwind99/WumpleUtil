@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -30,7 +31,7 @@ public class MatchingConfigBase
      * @param itemStack for which to get namekeys for lookup
      * @return namekeys to search config for, in order
      */
-    static public ArrayList<String> getItemStackNameKeys(ItemStack itemStack)
+    static public ArrayList<String> getNameKeys(ItemStack itemStack)
     {
         ArrayList<String> nameKeys = new ArrayList<String>();
         
@@ -48,7 +49,22 @@ public class MatchingConfigBase
         return nameKeys;
     }
 
-    static public ArrayList<String> getEntityNameKeys(Entity entity)
+    static public ArrayList<String> getNameKeys(Entity entity)
+    {
+        ArrayList<String> nameKeys = new ArrayList<String>();
+        
+        if (entity == null)
+        {
+            return nameKeys;
+        }
+
+        addNameKeys(nameKeys, entity);
+        addNameKeys(nameKeys, (Object)entity);
+        
+        return nameKeys;
+    }
+    
+    static public ArrayList<String> getNameKeys(TileEntity entity)
     {
         ArrayList<String> nameKeys = new ArrayList<String>();
         
@@ -87,6 +103,13 @@ public class MatchingConfigBase
         return nameKeys;
     }
     
+    static public ArrayList<String> addNameKeys(ArrayList<String> nameKeys, TileEntity it)
+    {
+        addNameKeysResLoc(nameKeys, it);
+
+        return nameKeys;
+    }
+    
     static public ArrayList<String> addNameKeysResLoc(ArrayList<String> nameKeys, ItemStack itemStack)
     {
         Item item = itemStack.getItem();
@@ -98,6 +121,18 @@ public class MatchingConfigBase
             String key2 = loc.toString();
 
             nameKeys.add(key2 + "@" + itemStack.getMetadata());
+            nameKeys.add(key2);
+        }
+        
+        return nameKeys;
+    }
+    
+    static public ArrayList<String> addNameKeysResLoc(ArrayList<String> nameKeys, TileEntity te)
+    {
+        ResourceLocation loc = (te == null) ? null : TileEntity.getKey(te.getClass());
+        if (loc != null)
+        {
+            String key2 = loc.toString();
             nameKeys.add(key2);
         }
         

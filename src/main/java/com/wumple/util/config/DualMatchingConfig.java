@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.wumple.util.adapter.IThing;
 import com.wumple.util.misc.Util;
 
 import net.minecraft.item.Item;
@@ -61,7 +62,14 @@ public class DualMatchingConfig<T, U>
 
     public Pair<T, U> getProperty(ItemStack itemStack)
     {
-        ArrayList<String> nameKeys = MatchingConfig.getItemStackNameKeys(itemStack);
+        ArrayList<String> nameKeys = MatchingConfig.getNameKeys(itemStack);
+
+        return Pair.of(config1.getProperty(nameKeys), config2.getProperty(nameKeys));
+    }
+    
+    public Pair<T, U> getProperty(IThing thing)
+    {
+        ArrayList<String> nameKeys = thing.getNameKeys();
 
         return Pair.of(config1.getProperty(nameKeys), config2.getProperty(nameKeys));
     }
