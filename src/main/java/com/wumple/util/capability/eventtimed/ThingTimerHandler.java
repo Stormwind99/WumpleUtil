@@ -29,31 +29,6 @@ abstract public class ThingTimerHandler<W extends IThing, T extends IEventTimedT
         return getCap((W)TUtil.to(stack));
     }
     
-    /*
-    public boolean evaluateTimer(World world, W thing)
-    {
-        ItemStack stack = thing.as(ItemStack.class);
-        Entity entity = thing.as(Entity.class);
-        TileEntity tileentity = thing.as(TileEntity.class);
-        
-        if (stack != null)
-        {
-            ItemStack newStack = evaluateTimer(world, stack);
-            return (newStack != stack);
-        }
-        else if (tileentity != null)
-        {
-            return evaluateTimer(world, tileentity);
-        }
-        else if (entity != null)
-        {
-            return evaluateTimer(world, entity);
-        }
-        
-        return false;
-    }
-    */
-        
     public W evaluateTimer(World world, W thing)
     {
         evaluateTimerContents(world, thing);
@@ -84,14 +59,6 @@ abstract public class ThingTimerHandler<W extends IThing, T extends IEventTimedT
             }
         }
 
-        /*
-        IInventory invo = thing.as(IInventory.class);
-        if (invo != null)
-        {
-            evaluateTimerContents(world, invo);
-        }
-        */
-        
         IItemHandler capability = thing.fetchCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
         if (capability != null)
@@ -127,90 +94,6 @@ abstract public class ThingTimerHandler<W extends IThing, T extends IEventTimedT
         return (newThing != null);
     }
     
-    /*
-    public boolean evaluateTimer(World world, Entity entity)
-    {
-        if (world.isRemote || !isEnabled())
-        {
-            return false;
-        }
-        
-        // evaluate contents, then self
-
-        if (entity instanceof EntityPlayer)
-        {
-            EntityPlayer player = (EntityPlayer) entity;
-            // check open container so user sees updates in open container
-            // container listener would not handle this
-            if ((player.openContainer != null) && !(player.openContainer instanceof ContainerPlayer))
-            {
-                evaluateTimerContents(world, player.openContainer);
-            }
-        }
-        
-        boolean retval = false;
-
-        IItemHandler capability = CapabilityUtils.fetchCapability(entity, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-
-        if (capability != null)
-        {
-            evaluateTimerContents(world, capability);
-        }
-        else if (entity instanceof EntityItem)
-        {
-            EntityItem item = (EntityItem) entity;
-
-            ItemStack timerStack = evaluateTimer(world, item.getItem());
-
-            if (item.getItem() != timerStack)
-            {
-                item.setItem(timerStack);
-                retval = true;
-            }
-        }
-        else if (entity instanceof EntityPlayer)
-        {
-            EntityPlayer player = (EntityPlayer) entity;
-            IInventory invo = player.inventory;
-            evaluateTimerContents(world, invo);
-        }
-        else if (entity instanceof IInventory)
-        {
-            IInventory invo = (IInventory) entity;
-            evaluateTimerContents(world, invo);
-        }
-        
-        evaluateTimerSelf(world, (W)TUtil.to(entity));
-
-        return retval;
-    }
-
-    public boolean  evaluateTimer(World world, TileEntity tile)
-    {
-        if ((world.isRemote) || !isEnabled())
-        {
-            return false;
-        }
-        
-        // TODO evaluate self after contents?
-
-        IItemHandler capability = CapabilityUtils.fetchCapability(tile, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-
-        if (capability != null)
-        {
-            evaluateTimerContents(world, capability);
-        }
-        else if (tile instanceof IInventory)
-        {
-            IInventory invo = (IInventory) tile; // as(tile, IInventory.class);
-
-            evaluateTimerContents(world, invo);
-        }
-        
-        return false;
-    }
-    */
-
     public void evaluateTimer(World world, Container container)
     {
         if ((world.isRemote) || !isEnabled())
@@ -311,7 +194,4 @@ abstract public class ThingTimerHandler<W extends IThing, T extends IEventTimedT
             ((TileEntity) inventory).markDirty();
         }
     }
-    
-
 }
-

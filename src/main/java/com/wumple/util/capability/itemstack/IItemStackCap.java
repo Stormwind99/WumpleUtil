@@ -4,12 +4,6 @@ import net.minecraft.item.ItemStack;
 
 public interface IItemStackCap
 {
-    /*
-    byte getForceId();
-
-    void setForceId(byte newid);
-    */
-
     void forceUpdate();
 
     /*
@@ -18,5 +12,4 @@ public interface IItemStackCap
     void setOwner(ItemStack ownerIn);
 
     ItemStack getOwner();
-
 }

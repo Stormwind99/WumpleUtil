@@ -108,16 +108,19 @@ public interface CapCopier<T extends ICopyableCap<T> >
             if (tileentity == null)
             {
                 tileentity = getNewTE();
-                Chunk chunk = world.getChunk(pos);
-                // Obvious method doesn't work: world.setTileEntity(pos, tileentity);
-                // Block.hasTileEntity() false would cause Chunk.addTileEntity() to reject
-                tileentity.setWorld(world);
-                tileentity.setPos(pos);
-                tileentity.validate();
-                chunk.getTileEntityMap().put(pos, tileentity);
-                chunk.markDirty();
-                world.addTileEntity(tileentity);
-                // TODO: tileentity will not persist - loading/saving will strip it out since Block.hasTileEntity() false
+                if (tileentity != null)
+                {
+                    Chunk chunk = world.getChunk(pos);
+                    // Obvious method doesn't work: world.setTileEntity(pos, tileentity);
+                    // Block.hasTileEntity() false would cause Chunk.addTileEntity() to reject
+                    tileentity.setWorld(world);
+                    tileentity.setPos(pos);
+                    tileentity.validate();
+                    chunk.getTileEntityMap().put(pos, tileentity);
+                    chunk.markDirty();
+                    world.addTileEntity(tileentity);
+                    // TODO: tileentity will not persist - loading/saving will strip it out since Block.hasTileEntity() false
+                }
             }
             
             T destCap = getCap(tileentity);

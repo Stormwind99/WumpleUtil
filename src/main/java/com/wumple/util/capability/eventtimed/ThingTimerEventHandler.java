@@ -88,10 +88,11 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     public void onPlayerContainerOpen(PlayerContainerEvent.Open event)
     {
         // think it is safe to rot even if (event.isCanceled())
+        evaluateTimerContents(event.getEntityPlayer().world, event.getContainer());
+        // ContainerWrapper isn't working:
         //ContainerWrapper wrapper = new ContainerWrapper(event.getContainer());
         //evaluateTimerContents(event.getEntityPlayer().world, wrapper);
         //wrapper.detectAndSendChanges();
-        evaluateTimerContents(event.getEntityPlayer().world, event.getContainer());
     }
 
     @SubscribeEvent

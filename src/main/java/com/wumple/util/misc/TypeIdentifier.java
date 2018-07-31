@@ -95,7 +95,7 @@ public class TypeIdentifier
     
     public IThing createThing(int count)
     {
-        // TODO - if breaking block or entity, needs to be an EntityItem not an ItemStack
+        // TODO - support creating blocks and entities
         return TUtil.to( create(count) );
     }
 }

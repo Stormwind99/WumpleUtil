@@ -75,6 +75,11 @@ public class ItemStackThingBase implements IThingBase
     { 
         if (owner != null)
         {
+            // HACK to force Container.detectAndSendChanges to detect change and notify ContainerListener
+            // In past used to just serialize current cap NBT data, but this seemed to be making client not
+            //   stack all new items if client receives new item before this tag set - making it not match other
+            //   items it will match after NBT arrives.
+
             NBTTagCompound tag = owner.getOrCreateSubCompound("Update");
             byte sendid = tag.getByte("i");
             sendid++;

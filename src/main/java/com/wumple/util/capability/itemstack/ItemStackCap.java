@@ -39,20 +39,6 @@ abstract public class ItemStackCap implements IItemStackCap
         forceId = other.forceId;
     }
 
-    /*
-    @Override
-    public byte getForceId()
-    {
-        return this.forceId;
-    }
-
-    @Override
-    public void setForceId(byte newid)
-    {
-        this.forceId = newid;
-    }
-    */
-
     @Override
     public void forceUpdate()
     {
@@ -67,14 +53,6 @@ abstract public class ItemStackCap implements IItemStackCap
         tag.setByte("i", sendid);
     }
     
-    /*
-    protected void setForceIdNBT(byte sendid)
-    {
-        NBTTagCompound tag = owner.getOrCreateSubCompound("Update");
-        tag.setByte("i", sendid);        
-    }
-    */
-
     /*
      * Set the owner of this capability, and init based on that owner
      */

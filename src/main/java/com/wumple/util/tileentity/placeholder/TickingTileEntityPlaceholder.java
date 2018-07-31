@@ -9,21 +9,6 @@ abstract public class TickingTileEntityPlaceholder extends TileEntityPlaceholder
 {
     protected long ticks = 0;
   
-    /*
-    public TickingTileEntityPlaceholder()
-    {
-        super();
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-    
-    @Override
-    public void invalidate()
-    {
-        MinecraftForge.EVENT_BUS.unregister(this);
-        super.invalidate();
-    }
-    */
-
     protected void handleOnTick(World world)
     {
         ticks++;
@@ -50,25 +35,4 @@ abstract public class TickingTileEntityPlaceholder extends TileEntityPlaceholder
             handleOnTick(world);
         }
     }
-    
-    /*
-    @SubscribeEvent
-    public void onTick(TickEvent.WorldTickEvent event)
-    {
-        handleOnTick(event.world);
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onClientTick(TickEvent.ClientTickEvent event)
-    {
-        World world = Minecraft.getMinecraft().world;
-        if ((world != null) && (world.isRemote == true))
-        {
-            handleOnTick(world);
-        }
-    }
-    */
-    
-    
 }

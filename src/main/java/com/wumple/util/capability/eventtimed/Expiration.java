@@ -35,13 +35,6 @@ abstract public class Expiration
         set(date, time);
     }
 
-    /*
-    public RotInfo(IRot tank)
-    {
-        set(tank.getDate(), tank.getTime());
-    }
-    */
-
     public Expiration(Expiration other)
     {
         set(other.date, other.time);
@@ -175,20 +168,6 @@ abstract public class Expiration
         return defaultTime;
     }
 
-    /*
-    protected long getDefaultTime(ItemStack owner)
-    {
-        long defaultTime = 0;
-        RotProperty rotProps = ConfigHandler.rotting.getRotProperty(owner);
-
-        if ((rotProps != null) && rotProps.doesRot())
-        {
-            defaultTime = rotProps.getRotTime();
-        }
-        return defaultTime;
-    }
-    */
-
     public void ratioShift(int fromRatio, int toRatio, IThing owner)
     {
         // if fromRatio is 0 then time value info was lost, so restore from props and apply toRatio
@@ -272,20 +251,6 @@ abstract public class Expiration
     
     abstract protected long getTimerLength(IThing stack);
     
-    /*
-    protected long getTimerLength(ItemStack owner)
-    {
-        long defaultTime = NO_EXPIRATION;
-        RotProperty rotProps = ConfigHandler.rotting.getRotProperty(owner);
-
-        if ((rotProps != null) && rotProps.doesRot())
-        {
-            defaultTime = rotProps.getRotTime();
-        }
-        return defaultTime;
-    }
-    */
-    
     protected void initTime(int dimensionRatio, IThing stack)
     {
         long timerLength = getTimerLength(stack);
@@ -302,34 +267,10 @@ abstract public class Expiration
         }
     }
     
-    /*
-    protected void initTime(int dimensionRatio, ItemStack stack)
-    {
-        RotProperty rotProps = ConfigHandler.rotting.getRotProperty(stack);
-
-        initTime(rotProps, dimensionRatio, stack);
-    }
-    
-    protected void initTime(RotProperty rotProps, int dimensionRatio, ItemStack stack)
-    {
-        if ((rotProps != null) && rotProps.doesRot())
-        {
-            setTimeSafe(rotProps.getRotTime());
-            setRelative(dimensionRatio, stack);
-        }
-    }
-    */
-    
     public int getChunkingPercent()
     {
         return 0;
     }
-    /*
-    public int getChunkingPercent()
-    {
-        return ConfigContainer.rotting.chunkingPercentage;
-    }
-    */
 
     public boolean checkInitialized(World world, IThing stack)
     {
@@ -375,12 +316,6 @@ abstract public class Expiration
     {
         return DIMENSIONRATIO_DEFAULT;
     }
-    /*
-    public int getDimensionRatio(String dimensionKey)
-    {
-        return ConfigContainer.modifiers.dimensionRatios.getOrDefault(dimensionKey, ConfigHandler.DIMENSIONRATIO_DEFAULT);
-    }
-    */
 
     public int getDimensionRatio(World world)
     {

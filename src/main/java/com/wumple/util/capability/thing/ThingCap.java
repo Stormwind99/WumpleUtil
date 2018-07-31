@@ -62,41 +62,12 @@ abstract public class ThingCap<T extends IThing> implements IThingCap<T>
         checkInit(ownerIn);
     }
 
-    /*
-    // silly unique id to increment and put into NBT to force an update to client
-    protected byte forceId = 0;
-
-    @Override
-    public byte getForceId()
-    {
-        return this.forceId;
-    }
-
-    @Override
-    public void setForceId(byte newid)
-    {
-        this.forceId = newid;
-    }
-    */
-
     @Override
     public void forceUpdate()
     {
         if (owner != null) { owner.forceUpdate(); }
     }
     
-    /*
-    protected void setForceIdNBT(byte sendid)
-    {
-        ItemStack stack = owner.as(ItemStack.class);
-        if (stack != null)
-        {
-            NBTTagCompound tag = stack.getOrCreateSubCompound("Update");
-            tag.setByte("i", sendid);
-        }
-    }
-    */
-
     @Override
     public T getOwner()
     {

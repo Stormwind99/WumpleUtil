@@ -122,16 +122,6 @@ abstract public class EventTimedThingCap<W extends IThing, T extends Expiration>
     // ----------------------------------------------------------------------
     // Functionality
     
-    /*
-    public W expired(World world, W stack)
-    {
-        RotProperty rotProps = ConfigHandler.rotting.getRotProperty(stack);
-        // forget owner to eliminate dependency
-        owner = null;
-        return (rotProps != null) ? rotProps.forceRot(stack) : null;
-    }
-    */
-    
     public void evaluate(World world, Integer index, IItemHandler itemhandler, W stack)
     {
         int count = stack.getCount();
@@ -241,9 +231,6 @@ abstract public class EventTimedThingCap<W extends IThing, T extends Expiration>
      */
     public void handleCraftedTimers(World world, IInventory craftMatrix, ItemStack crafting)
     {
-        //long lowestDate = world.getTotalWorldTime();
-        //info.setDateSafe(lowestDate);
-        
         int slots = craftMatrix.getSizeInventory();
         for (int i = 0; i < slots; i++)
         {

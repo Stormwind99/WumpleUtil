@@ -36,9 +36,6 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
     {
         return getCap(TUtil.to(stack));
     }
-    /*
-     * return RotCapHelper.getRot(stack)
-     */
 
     // transient data
     // ticks since last refresh of contents - special value 0 means need to cache preserving settings
@@ -64,16 +61,6 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
     {
         return refreshingRatio;
     }
-
-    /*
-    @Override
-    protected void cache()
-    {
-        Integer ratio = owner.getPreservingProperty();
-        // at this point ratio should not be null - probably a bug, maybe throw exception
-        preservingRatio = (ratio != null) ? ratio.intValue() : ConfigHandler.NO_PRESERVING;
-    }
-     */
 
     protected void doIt(long timeSinceLast)
     {
