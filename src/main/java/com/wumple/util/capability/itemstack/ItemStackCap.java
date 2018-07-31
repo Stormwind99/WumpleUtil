@@ -39,6 +39,7 @@ abstract public class ItemStackCap implements IItemStackCap
         forceId = other.forceId;
     }
 
+    /*
     @Override
     public byte getForceId()
     {
@@ -50,6 +51,7 @@ abstract public class ItemStackCap implements IItemStackCap
     {
         this.forceId = newid;
     }
+    */
 
     @Override
     public void forceUpdate()
@@ -59,14 +61,19 @@ abstract public class ItemStackCap implements IItemStackCap
         //   stack all new items if client receives new item before this tag set - making it not match other 
         //   items it will match after NBT arrives.
         
-        setForceIdNBT(++this.forceId);
+        NBTTagCompound tag = owner.getOrCreateSubCompound("Update");
+        byte sendid = tag.getByte("i");
+        sendid++;
+        tag.setByte("i", sendid);
     }
     
+    /*
     protected void setForceIdNBT(byte sendid)
     {
         NBTTagCompound tag = owner.getOrCreateSubCompound("Update");
         tag.setByte("i", sendid);        
     }
+    */
 
     /*
      * Set the owner of this capability, and init based on that owner
@@ -82,7 +89,7 @@ abstract public class ItemStackCap implements IItemStackCap
             // on client, tooltip will init with reasonable guess until update is received from server
             
             // set to first value so stacking will work on client before first update received
-            setForceIdNBT(forceId);
+            forceUpdate();
         }
     }
 

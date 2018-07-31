@@ -1,16 +1,10 @@
 package com.wumple.util.adapter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.wumple.util.capability.CapabilityUtils;
-import com.wumple.util.misc.Util;
-
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class TileEntityThingBase implements IThingBase
 {
@@ -37,26 +31,6 @@ public class TileEntityThingBase implements IThingBase
     public boolean isInvalid()
     {
         return (owner == null) || owner.isInvalid();
-    }
-
-    @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
-    {
-        return (owner != null) ? owner.hasCapability(capability, facing) : false;
-    }
-
-    @Override
-    @Nullable
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        return (owner != null) ? owner.getCapability(capability, facing) : null;
-    }
-
-    @Override
-    @Nullable
-    public <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        return CapabilityUtils.fetchCapability(owner, capability, facing);
     }
 
     @Override
@@ -94,19 +68,24 @@ public class TileEntityThingBase implements IThingBase
     
     @Override
     public Object object()
-    {
-        return owner;
-    }
+    { return owner; }
+        
+    @Override
+    public ICapabilityProvider capProvider()
+    { return owner; }
     
     @Override
-    public <T> T as(Class<T> t)
+    public void forceUpdate()
     {
-        return Util.as(owner, t);
-    }
-    
-    @Override
-    public <T> boolean is(Class<T> t)
-    {
-        return t.isInstance(owner);
+        if (owner != null)
+        {
+            BlockPos pos = getPos();
+            World world = getWorld();
+            IBlockState state = world.getBlockState(pos);
+            world.markBlockRangeForRenderUpdate(pos, pos);
+            world.notifyBlockUpdate(getPos(), state, state, 3);
+            world.scheduleBlockUpdate(getPos(),owner.getBlockType(),0,0);
+            owner.markDirty();
+        }
     }
 }

@@ -1,16 +1,10 @@
 package com.wumple.util.adapter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.wumple.util.capability.CapabilityUtils;
-import com.wumple.util.misc.Util;
-
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class ItemStackThingBase implements IThingBase
 {
@@ -37,26 +31,6 @@ public class ItemStackThingBase implements IThingBase
     public boolean isInvalid()
     {
         return false;
-    }
-
-    @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
-    {
-        return (owner != null) ? owner.hasCapability(capability, facing) : false;
-    }
-
-    @Override
-    @Nullable
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        return (owner != null) ? owner.getCapability(capability, facing) : null;
-    }
-
-    @Override
-    @Nullable
-    public <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        return CapabilityUtils.fetchCapability(owner, capability, facing);
     }
 
     @Override
@@ -87,20 +61,24 @@ public class ItemStackThingBase implements IThingBase
     }
     
     @Override
-    public <T> T as(Class<T> t)
-    {
-        return Util.as(owner, t);
-    }
-    
-    @Override
     public int getCount()
     {
         return (owner != null) ? owner.getCount() : 0;
     }
     
     @Override
-    public <T> boolean is(Class<T> t)
-    {
-        return t.isInstance(owner);
+    public ICapabilityProvider capProvider()
+    { return owner; }
+    
+    @Override
+    public void forceUpdate()
+    { 
+        if (owner != null)
+        {
+            NBTTagCompound tag = owner.getOrCreateSubCompound("Update");
+            byte sendid = tag.getByte("i");
+            sendid++;
+            tag.setByte("i", sendid);
+        }
     }
 }

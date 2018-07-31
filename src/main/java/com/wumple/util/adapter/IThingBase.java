@@ -3,6 +3,9 @@ package com.wumple.util.adapter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.wumple.util.capability.CapabilityUtils;
+import com.wumple.util.misc.Util;
+
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -16,14 +19,6 @@ public interface IThingBase extends ICapabilityProvider
 
     boolean isInvalid();
 
-    boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing);
-
-    @Nullable
-    <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing);
-
-    @Nullable
-    <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing);
-
     void markDirty();
 
     void invalidate();
@@ -31,11 +26,39 @@ public interface IThingBase extends ICapabilityProvider
     boolean sameAs(IThing entity);
     
     Object object();
-    <T> T as(Class<T> t);
     
     default int getCount()
     { return 1; }
+        
+    default <T> T as(Class<T> t)
+    { return Util.as(object(), t); }
     
+    default <T> boolean is(Class<T> t)
+    { return t.isInstance(object()); }
     
-    public <T> boolean is(Class<T> t);
+    ICapabilityProvider capProvider();
+    
+    @Override
+    default boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    {
+        ICapabilityProvider provider = capProvider();
+        return (provider != null) ? provider.hasCapability(capability, facing) : false;
+    }
+
+    @Override
+    @Nullable
+    default <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    {
+        ICapabilityProvider provider = capProvider();
+        return (provider != null) ? provider.getCapability(capability, facing) : null;
+    }
+
+    @Nullable
+    default <T> T fetchCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    {
+        ICapabilityProvider provider = capProvider();
+        return CapabilityUtils.fetchCapability(provider, capability, facing);
+    }
+    
+    void forceUpdate();
 }

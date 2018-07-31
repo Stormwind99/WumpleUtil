@@ -4,10 +4,11 @@ import net.minecraft.item.ItemStack;
 
 public interface IItemStackCap
 {
-
+    /*
     byte getForceId();
 
     void setForceId(byte newid);
+    */
 
     void forceUpdate();
 

@@ -18,7 +18,7 @@ public class EventTimedThingStorage<T extends IEventTimedThingCap<?,?> > impleme
         {
             tags.setLong("start", instance.getDate());
             tags.setLong("time", instance.getTime());
-            tags.setByte("i", instance.getForceId());
+            //tags.setByte("i", instance.getForceId());
         }
 
         return tags;
@@ -42,19 +42,19 @@ public class EventTimedThingStorage<T extends IEventTimedThingCap<?,?> > impleme
             {
                 instance.setDate(tags.getLong("rotStartTimestamp"));
                 instance.setTime(tags.getLong("rotLengthTime"));
-                instance.setForceId(tags.getByte("i"));
+                //instance.setForceId(tags.getByte("i"));
             }
             else if (tags.hasKey("rotStart"))
             {
                 instance.setDate(tags.getLong("rotStart"));
                 instance.setTime(tags.getLong("rotTime"));
-                instance.setForceId(tags.getByte("i"));
+                //instance.setForceId(tags.getByte("i"));
             }
             else
             {
                 instance.setDate(tags.getLong("start"));
                 instance.setTime(tags.getLong("time"));
-                instance.setForceId(tags.getByte("i"));
+                //instance.setForceId(tags.getByte("i"));
             }
         }
     }
