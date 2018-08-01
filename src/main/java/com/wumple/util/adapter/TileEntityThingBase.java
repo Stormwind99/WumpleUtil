@@ -81,10 +81,13 @@ public class TileEntityThingBase implements IThingBase
         {
             BlockPos pos = getPos();
             World world = getWorld();
-            IBlockState state = world.getBlockState(pos);
-            world.markBlockRangeForRenderUpdate(pos, pos);
-            world.notifyBlockUpdate(getPos(), state, state, 3);
-            world.scheduleBlockUpdate(getPos(),owner.getBlockType(),0,0);
+            if ((world != null) && (pos != null))
+            {
+                IBlockState state = world.getBlockState(pos);
+                world.markBlockRangeForRenderUpdate(pos, pos);
+                world.notifyBlockUpdate(pos, state, state, 3);
+                world.scheduleBlockUpdate(pos,owner.getBlockType(),0,0);
+            }
             owner.markDirty();
         }
     }

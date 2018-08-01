@@ -281,7 +281,7 @@ abstract public class Expiration
 
             int ratio = getDimensionRatio(world);
             long curTime = getCurTime();
-            long newTime = curTime;
+            long newDate = curTime;
 
             // chunk the start date of new items to increments of x% of local timer length time
             // that way same items created close in time will usually stack because they have the same expiration date and time
@@ -293,10 +293,10 @@ abstract public class Expiration
                 long xPercentOfExpTime  = (shiftedTime * chunkingPercent) / 100;
                 long chunk = (curTime / xPercentOfExpTime) + 1;
                 
-                newTime = Math.max(1, chunk * xPercentOfExpTime);
+                newDate = Math.max(1, chunk * xPercentOfExpTime);
             }
             
-            setDateSafe(newTime);
+            setDateSafe(newDate);
            
             initTime(timerLength, ratio, stack);
 
