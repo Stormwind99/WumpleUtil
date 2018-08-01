@@ -167,8 +167,6 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
         } // else crafted item doesn't rot
     }
     
-    static final Minecraft mc = Minecraft.getMinecraft();
-    
     /*
      * Draw debug screen extras
      */
@@ -176,6 +174,8 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onDrawOverlay(final RenderGameOverlayEvent.Text e)
     {
+        Minecraft mc = Minecraft.getMinecraft();
+        
         if (mc.gameSettings.showDebugInfo == true)
         {
             if (isDebugging())
@@ -191,6 +191,8 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     @SideOnly(Side.CLIENT)
     public void addTileEntityDebug(RenderGameOverlayEvent.Text e)
     {
+        Minecraft mc = Minecraft.getMinecraft();
+        
         // tile entity
         if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos() != null)
         {
