@@ -5,7 +5,7 @@
     "1.12.2-recommended": "2.5.0"
   },
   "1.12.2": {
-    "2.8.26": "EventTimedThingCap",
+    "2.8.27": "EventTimedThingCap",
     "2.7.0": "NameableTileEntity and related classes",
     "2.6.11": "Bug fixes and additions to base capabilities and adapters.",
     "2.6.0": "nameKey OreDict (defauts true) and class names (defaults false) optional.  Added base capabilities.",

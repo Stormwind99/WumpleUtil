@@ -32,7 +32,8 @@ public class TimeUtil
 
     public static long getLastWorldTimestamp()
     {
-        assert (lastWorldTimestamp > 0);
+        // ugh - during MC startup, OreDict registration can create ItemStacks before a world time exists
+        //assert (lastWorldTimestamp > 0);
         return lastWorldTimestamp;
     }
 
