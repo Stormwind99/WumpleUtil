@@ -1,5 +1,7 @@
 package com.wumple.util.misc;
 
+import com.wumple.util.function.Procedure;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -9,6 +11,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,6 +23,25 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class RegistrationHelpers
 {
+    public static void run(Procedure proc)
+    {
+        proc.run();
+    }
+    
+    public static void cheat(Procedure proc)
+    {
+        Loader l = Loader.instance();
+        ModContainer k = l.activeModContainer();
+        l.setActiveModContainer(l.getMinecraftModContainer());
+        proc.run();
+        l.setActiveModContainer(k);
+    }
+    
+    public static void setRegNameIllegally(IForgeRegistryEntry<?> entry, String name)
+    {
+        cheat( () -> { entry.setRegistryName(new ResourceLocation("minecraft", name)); } );
+    }
+    
     public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing)
     {
         assert (thing != null);
@@ -63,12 +86,26 @@ public class RegistrationHelpers
     public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing,
             String name)
     {
+        return regHelper(registry, thing, name, true);
+    }
+    
+    public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing,
+            String name, boolean doTransKey, boolean shouldCheat)
+    {
         assert (thing != null);
         assert (name != null);
-
-        nameHelper(thing, name);
+       
+        Procedure nameIt = () -> { nameHelper(thing, name, doTransKey); };
+        if (shouldCheat) { cheat(nameIt); }
+        else { run(nameIt); }
 
         return regHelper(registry, thing);
+    }
+    
+    public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing,
+            String name, boolean doTransKey)
+    {
+        return regHelper(registry, thing, name, false);
     }
 
     public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing,
@@ -77,38 +114,52 @@ public class RegistrationHelpers
         assert (thing != null);
         assert (loc != null);
 
-        nameHelper(thing, loc);
+        nameHelper(thing, loc, true);
 
         return regHelper(registry, thing);
     }
 
-    public static <T extends IForgeRegistryEntry<T>> void nameHelper(T thing, ResourceLocation loc)
+    public static <T extends IForgeRegistryEntry<T>> void nameHelper(T thing, ResourceLocation loc, boolean doTransKey)
     {
         assert (thing != null);
         assert (loc != null);
 
         thing.setRegistryName(loc);
-        String dotname = loc.getNamespace() + "." + loc.getPath();
 
-        if (thing instanceof Block)
+        if (doTransKey)
         {
-            ((Block) thing).setTranslationKey(dotname);
-        }
-        else if (thing instanceof Item)
-        {
-            ((Item) thing).setTranslationKey(dotname);
+            String dotname = loc.getNamespace() + "." + loc.getPath();
+            
+            if (thing instanceof Block)
+            {
+                ((Block) thing).setTranslationKey(dotname);
+            }
+            else if (thing instanceof Item)
+            {
+                ((Item) thing).setTranslationKey(dotname);
+            }
         }
     }
+    
+    public static <T extends IForgeRegistryEntry<T>> void nameHelper(T thing, ResourceLocation loc)
+    {
+        nameHelper(thing, loc, true);
+    }
 
-    public static <T extends IForgeRegistryEntry<T>> void nameHelper(T thing, String name)
+    public static <T extends IForgeRegistryEntry<T>> void nameHelper(T thing, String name, boolean doTransKey)
     {
         assert (thing != null);
         assert (name != null);
 
         ResourceLocation loc = GameData.checkPrefix(name);
-        nameHelper(thing, loc);
+        nameHelper(thing, loc, doTransKey);
     }
 
+    public static <T extends IForgeRegistryEntry<T>> void nameHelper(T thing, String name)
+    {
+        nameHelper(thing, name, true);
+    }
+    
     public static SoundEvent registerSound(IForgeRegistry<SoundEvent> registry, String name)
     {
         assert (name != null);

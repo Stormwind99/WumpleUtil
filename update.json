@@ -5,6 +5,7 @@
     "1.12.2-recommended": "2.5.0"
   },
   "1.12.2": {
+    "2.8.32": "regHelpers without translation key automation",
     "2.8.28": "EventTimedThingCap",
     "2.7.0": "NameableTileEntity and related classes",
     "2.6.11": "Bug fixes and additions to base capabilities and adapters.",
