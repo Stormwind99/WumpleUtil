@@ -5,7 +5,7 @@
     "1.12.2-recommended": "2.8.32"
   },
   "1.12.2": {
-    "2.9.1": "ItemStack forceUpdate hack optional. BaseChest rendering rotatable.",
+    "2.9.2": "ItemStack forceUpdate hack optional. BaseChest rendering rotatable.",
     "2.8.32": "regHelpers without translation key automation",
     "2.8.28": "EventTimedThingCap",
     "2.7.0": "NameableTileEntity and related classes",

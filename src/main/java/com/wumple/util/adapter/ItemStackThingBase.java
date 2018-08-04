@@ -1,14 +1,12 @@
 package com.wumple.util.adapter;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class ItemStackThingBase implements IThingBase
 {
-    static public boolean forceUpdateEnabled = true;
     public ItemStack owner = null;
 
     public ItemStackThingBase(ItemStack ownerIn)
@@ -74,17 +72,5 @@ public class ItemStackThingBase implements IThingBase
     @Override
     public void forceUpdate()
     { 
-        if (forceUpdateEnabled && (owner != null))
-        {
-            // HACK to force Container.detectAndSendChanges to detect change and notify ContainerListener
-            // In past used to just serialize current cap NBT data, but this seemed to be making client not
-            //   stack all new items if client receives new item before this tag set - making it not match other
-            //   items it will match after NBT arrives.
-
-            NBTTagCompound tag = owner.getOrCreateSubCompound("Update");
-            byte sendid = tag.getByte("i");
-            sendid++;
-            tag.setByte("i", sendid);
-        }
     }
 }

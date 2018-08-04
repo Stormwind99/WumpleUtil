@@ -240,8 +240,8 @@ public class ContainerUtil
                 rotItem = ItemStack.EMPTY;
             }
             // Equivalent to inventory.setInventorySlotContents(i, rotItem);
-            itemhandler.extractItem(index, count, false);
-            itemhandler.insertItem(index, rotItem, false);
+            ItemStack newStack = itemhandler.extractItem(index, count, false);
+            itemhandler.insertItem(index, newStack, false);
         }
     }
 }
