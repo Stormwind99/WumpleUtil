@@ -1,10 +1,11 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "2.5.0",
-    "1.12.2-recommended": "2.5.0"
+    "1.12.2-latest": "2.8.32",
+    "1.12.2-recommended": "2.8.32"
   },
   "1.12.2": {
+    "2.9.1": "ItemStack forceUpdate hack optional. BaseChest rendering rotatable.",
     "2.8.32": "regHelpers without translation key automation",
     "2.8.28": "EventTimedThingCap",
     "2.7.0": "NameableTileEntity and related classes",

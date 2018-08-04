@@ -8,6 +8,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class ItemStackThingBase implements IThingBase
 {
+    static public boolean forceUpdateEnabled = true;
     public ItemStack owner = null;
 
     public ItemStackThingBase(ItemStack ownerIn)
@@ -73,7 +74,7 @@ public class ItemStackThingBase implements IThingBase
     @Override
     public void forceUpdate()
     { 
-        if (owner != null)
+        if (forceUpdateEnabled && (owner != null))
         {
             // HACK to force Container.detectAndSendChanges to detect change and notify ContainerListener
             // In past used to just serialize current cap NBT data, but this seemed to be making client not

@@ -52,6 +52,7 @@ public class TileEntityThingBase implements IThingBase
                 world.removeTileEntity(pos);
             }
             owner.invalidate();
+            owner.updateContainingBlockInfo();
         }
         owner = null;
     }

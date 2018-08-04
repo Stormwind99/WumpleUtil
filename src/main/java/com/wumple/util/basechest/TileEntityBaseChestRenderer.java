@@ -14,9 +14,8 @@ abstract public class TileEntityBaseChestRenderer extends TileEntitySpecialRende
     private final ModelChest modelChest = new ModelChest();
 
     abstract protected ResourceLocation getTexture();
-
-    public void render(TileEntityBaseChest te, double x, double y, double z, float partialTicks, int destroyStage,
-            float alpha)
+    
+    protected void rotate(TileEntityBaseChest te)
     {
         int i = 0;
 
@@ -25,26 +24,6 @@ abstract public class TileEntityBaseChestRenderer extends TileEntitySpecialRende
             i = te.getBlockMetadata();
         }
 
-        if (destroyStage >= 0)
-        {
-            this.bindTexture(DESTROY_STAGES[destroyStage]);
-            GlStateManager.matrixMode(5890);
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(4.0F, 4.0F, 1.0F);
-            GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
-            GlStateManager.matrixMode(5888);
-        }
-        else
-        {
-            this.bindTexture(getTexture());
-        }
-
-        GlStateManager.pushMatrix();
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
-        GlStateManager.translate((float) x, (float) y + 1.0F, (float) z + 1.0F);
-        GlStateManager.scale(1.0F, -1.0F, -1.0F);
-        GlStateManager.translate(0.5F, 0.5F, 0.5F);
         int j = 0;
 
         if (i == 2)
@@ -68,6 +47,33 @@ abstract public class TileEntityBaseChestRenderer extends TileEntitySpecialRende
         }
 
         GlStateManager.rotate((float) j, 0.0F, 1.0F, 0.0F);
+    }
+
+    public void render(TileEntityBaseChest te, double x, double y, double z, float partialTicks, int destroyStage,
+            float alpha)
+    {
+
+        if (destroyStage >= 0)
+        {
+            this.bindTexture(DESTROY_STAGES[destroyStage]);
+            GlStateManager.matrixMode(5890);
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(4.0F, 4.0F, 1.0F);
+            GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
+            GlStateManager.matrixMode(5888);
+        }
+        else
+        {
+            this.bindTexture(getTexture());
+        }
+
+        GlStateManager.pushMatrix();
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
+        GlStateManager.translate((float) x, (float) y + 1.0F, (float) z + 1.0F);
+        GlStateManager.scale(1.0F, -1.0F, -1.0F);
+        GlStateManager.translate(0.5F, 0.5F, 0.5F);
+        rotate(te);
         GlStateManager.translate(-0.5F, -0.5F, -0.5F);
         float f = te.prevLidAngle + (te.lidAngle - te.prevLidAngle) * partialTicks;
         f = 1.0F - f;
