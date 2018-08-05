@@ -8,6 +8,8 @@ import com.wumple.util.mod.ModBase;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION, dependencies = Reference.DEPENDENCIES,
@@ -26,14 +28,28 @@ public class WumpleUtil extends ModBase
     
     @EventHandler
     @Override
+    public void init(FMLInitializationEvent event)
+    {
+        super.init(event);
+    }
+    
+    @EventHandler
+    @Override
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        super.postInit(event);
+    }
+    
+    @EventHandler
+    @Override
     public void onFingerprintViolation(FMLFingerprintViolationEvent event)
     {
-        logFingerprintViolationMessage(event, forceGetLogger());
+        super.onFingerprintViolation(event);
     }
 
     @Override
-    public Logger forceGetLogger()
+    public Logger getLoggerFromManager()
     {
-        return (logger != null) ? logger : LogManager.getLogger(Reference.MOD_ID);
+        return LogManager.getLogger(Reference.MOD_ID);
     }
 }
