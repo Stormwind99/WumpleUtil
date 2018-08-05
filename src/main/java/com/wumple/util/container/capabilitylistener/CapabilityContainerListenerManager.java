@@ -1,4 +1,4 @@
-package com.wumple.util.capability;
+package com.wumple.util.container.capabilitylistener;
 
 import java.util.HashSet;
 import java.util.Set;

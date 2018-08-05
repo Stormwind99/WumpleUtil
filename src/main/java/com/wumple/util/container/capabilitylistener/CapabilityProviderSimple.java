@@ -1,4 +1,4 @@
-package com.wumple.util.capability;
+package com.wumple.util.container.capabilitylistener;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;

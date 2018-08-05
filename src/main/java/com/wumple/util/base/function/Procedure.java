@@ -1,4 +1,4 @@
-package com.wumple.util.function;
+package com.wumple.util.base.function;
 
 // from https://stackoverflow.com/questions/23868733/java-8-functional-interface-with-no-arguments-and-no-return-value
 @FunctionalInterface

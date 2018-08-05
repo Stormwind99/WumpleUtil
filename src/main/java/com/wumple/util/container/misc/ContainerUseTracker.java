@@ -1,9 +1,9 @@
-package com.wumple.util.container;
+package com.wumple.util.container.misc;
 
 import javax.annotation.Nullable;
 
 import com.wumple.util.adapter.IThing;
-import com.wumple.util.capability.CapabilityUtils;
+import com.wumple.util.container.capabilitylistener.CapabilityUtils;
 import com.wumple.util.misc.GuiUtil;
 
 import net.minecraft.client.Minecraft;

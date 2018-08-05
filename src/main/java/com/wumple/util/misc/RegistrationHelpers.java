@@ -1,6 +1,6 @@
 package com.wumple.util.misc;
 
-import com.wumple.util.function.Procedure;
+import com.wumple.util.base.function.Procedure;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

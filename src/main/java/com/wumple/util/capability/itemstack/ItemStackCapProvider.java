@@ -2,7 +2,7 @@ package com.wumple.util.capability.itemstack;
 
 import javax.annotation.Nullable;
 
-import com.wumple.util.capability.SimpleCapabilityProvider;
+import com.wumple.util.container.capabilitylistener.SimpleCapabilityProvider;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;

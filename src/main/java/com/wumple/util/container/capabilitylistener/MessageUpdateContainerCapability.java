@@ -1,6 +1,4 @@
-package com.wumple.util.capability;
-
-import java.util.HashMap;
+package com.wumple.util.container.capabilitylistener;
 
 import javax.annotation.Nullable;
 
@@ -10,17 +8,13 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IThreadListener;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
- * Base class for messages that update the capability data for each slot of a {@link Container}.
- * <p>
- * The {@link HANDLER} type must override {@link Object#equals(Object)} to perform a value comparison and {@link Object#hashCode()} to generate a hash code based on the values used
- * in {@link Object#equals(Object)}.
+ * Base class for messages that update capability data for a single slot of a {@link Container}.
  *
  * @param <HANDLER>
  *            The capability handler type
@@ -28,12 +22,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  *            The data type written to and read from the buffer
  * @author Choonster
  */
-public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implements IMessage
+public abstract class MessageUpdateContainerCapability<HANDLER, DATA> implements IMessage
 {
     /**
      * The {@link Capability} instance to update.
      */
-    final Capability<HANDLER> capability;
+    protected final Capability<HANDLER> capability;
 
     /**
      * The {@link EnumFacing} to get the capability handler from.
@@ -47,39 +41,28 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
     int windowID;
 
     /**
-     * The capability data instances for each slot, indexed by their index in the original {@link List<ItemStack>}.
+     * The slot's index in the {@link Container}.
      */
-    final HashMap<Integer, DATA> capabilityData = new HashMap<Integer, DATA>();
+    int slotNumber;
 
-    protected MessageBulkUpdateContainerCapability(final Capability<HANDLER> capability)
+    /**
+     * The capability data instance.
+     */
+    DATA capabilityData;
+
+    protected MessageUpdateContainerCapability(final Capability<HANDLER> capability)
     {
         this.capability = capability;
     }
 
-    public MessageBulkUpdateContainerCapability(final Capability<HANDLER> capability, @Nullable final EnumFacing facing,
-            final int windowID, final NonNullList<ItemStack> items)
+    protected MessageUpdateContainerCapability(final Capability<HANDLER> capability, @Nullable final EnumFacing facing,
+            final int windowID, final int slotNumber, final HANDLER handler)
     {
         this.capability = capability;
         this.facing = facing;
         this.windowID = windowID;
-
-        for (int index = 0; index < items.size(); index++)
-        {
-            final ItemStack stack = items.get(index);
-
-            final HANDLER handler = CapabilityUtils.fetchCapability(stack, capability, facing);
-            DATA data = null;
-
-            if (handler != null)
-            {
-                data = convertCapabilityToData(handler);
-
-                if (data != null)
-                {
-                    capabilityData.put(index, data);
-                }
-            }
-        }
+        this.slotNumber = slotNumber;
+        this.capabilityData = convertCapabilityToData(handler);
     }
 
     /**
@@ -92,6 +75,7 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
     public final void fromBytes(final ByteBuf buf)
     {
         windowID = buf.readInt();
+        slotNumber = buf.readInt();
 
         final int facingIndex = buf.readByte();
         if (facingIndex >= 0)
@@ -103,12 +87,10 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
             facing = null;
         }
 
-        final int numEntries = buf.readInt();
-        for (int i = 0; i < numEntries; i++)
+        final boolean hasData = buf.readBoolean();
+        if (hasData)
         {
-            final int index = buf.readInt();
-            final DATA data = readCapabilityData(buf);
-            capabilityData.put(index, data);
+            capabilityData = readCapabilityData(buf);
         }
     }
 
@@ -122,6 +104,7 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
     public final void toBytes(final ByteBuf buf)
     {
         buf.writeInt(windowID);
+        buf.writeInt(slotNumber);
 
         if (facing != null)
         {
@@ -132,11 +115,8 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
             buf.writeByte(-1);
         }
 
-        buf.writeInt(capabilityData.size());
-        capabilityData.forEach((index, data) -> {
-            buf.writeInt(index);
-            writeCapabilityData(buf, data);
-        });
+        buf.writeBoolean(hasData());
+        writeCapabilityData(buf, capabilityData);
     }
 
     /**
@@ -146,21 +126,21 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
      */
     public final boolean hasData()
     {
-        return !capabilityData.isEmpty();
+        return capabilityData != null;
     }
 
     /**
-     * Convert a capability handler instance to a data instance.
+     * Convert the capability handler instance to a data instance.
      *
      * @param handler
      *            The handler
      * @return The data instance
      */
     @Nullable
-    protected abstract DATA convertCapabilityToData(final HANDLER handler);
+    protected abstract DATA convertCapabilityToData(HANDLER handler);
 
     /**
-     * Read a data instance from the buffer.
+     * Read the capability data from the buffer.
      *
      * @param buf
      *            The buffer
@@ -169,7 +149,7 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
     protected abstract DATA readCapabilityData(final ByteBuf buf);
 
     /**
-     * Write a data instance to the buffer.
+     * Write the capability data to the buffer.
      *
      * @param buf
      *            The buffer
@@ -178,14 +158,14 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
      */
     protected abstract void writeCapabilityData(final ByteBuf buf, DATA data);
 
-    public abstract static class Handler<HANDLER, DATA, MESSAGE extends MessageBulkUpdateContainerCapability<HANDLER, DATA>>
+    public abstract static class Handler<HANDLER, DATA, MESSAGE extends MessageUpdateContainerCapability<HANDLER, DATA>>
             implements IMessageHandler<MESSAGE, IMessage>
     {
-
+    	
     	abstract protected IThreadListener getThreadListener(final MessageContext ctx);
     	
     	abstract protected EntityPlayer getPlayer(final MessageContext ctx);
-    	
+
         /**
          * Called when a message is received of the appropriate type. You can optionally return a reply message, or null if no reply is needed.
          *
@@ -219,26 +199,24 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
                     return;
                 }
 
-                message.capabilityData.forEach((index, data) -> {
-                    final ItemStack originalStack = container.getSlot(index).getStack();
-                    final HANDLER originalHandler = CapabilityUtils.fetchCapability(originalStack, message.capability,
+                final ItemStack originalStack = container.getSlot(message.slotNumber).getStack();
+                final HANDLER originalHandler = CapabilityUtils.fetchCapability(originalStack, message.capability,
+                        message.facing);
+                if (originalHandler != null)
+                {
+                    final ItemStack newStack = originalStack.copy();
+
+                    final HANDLER newHandler = CapabilityUtils.fetchCapability(newStack, message.capability,
                             message.facing);
-                    if (originalHandler != null)
+                    assert newHandler != null;
+
+                    applyCapabilityData(newHandler, message.capabilityData);
+
+                    if (!originalHandler.equals(newHandler))
                     {
-                        final ItemStack newStack = originalStack.copy();
-
-                        final HANDLER newHandler = CapabilityUtils.fetchCapability(newStack, message.capability,
-                                message.facing);
-                        assert newHandler != null;
-
-                        applyCapabilityData(newHandler, data);
-
-                        if (!originalHandler.equals(newHandler))
-                        {
-                            container.putStackInSlot(index, newStack);
-                        }
+                        container.putStackInSlot(message.slotNumber, newStack);
                     }
-                });
+                }
             });
 
             return null;
@@ -250,7 +228,7 @@ public abstract class MessageBulkUpdateContainerCapability<HANDLER, DATA> implem
          * @param handler
          *            The capability handler instance
          * @param data
-         *            The data instance
+         *            The data
          */
         protected abstract void applyCapabilityData(final HANDLER handler, final DATA data);
     }

@@ -4,7 +4,7 @@ package com.wumple.util.capability.thing;
 import javax.annotation.Nullable;
 
 import com.wumple.util.adapter.IThing;
-import com.wumple.util.capability.SimpleCapabilityProvider;
+import com.wumple.util.container.capabilitylistener.SimpleCapabilityProvider;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;

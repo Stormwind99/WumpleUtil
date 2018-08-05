@@ -1,4 +1,4 @@
-package com.wumple.util.misc;
+package com.wumple.util.base.misc;
 
 public class Util
 {

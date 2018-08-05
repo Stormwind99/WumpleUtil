@@ -5,7 +5,7 @@ import com.wumple.util.adapter.TUtil;
 import com.wumple.util.capability.eventtimed.Expiration;
 import com.wumple.util.capability.eventtimed.IEventTimedThingCap;
 import com.wumple.util.capability.tickingthing.TickingThingCap;
-import com.wumple.util.container.Walker;
+import com.wumple.util.container.misc.Walker;
 import com.wumple.util.misc.SUtil;
 
 import net.minecraft.item.ItemStack;

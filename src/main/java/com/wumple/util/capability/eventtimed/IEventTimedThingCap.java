@@ -7,7 +7,7 @@ import com.wumple.util.WumpleUtil;
 import com.wumple.util.adapter.IThing;
 import com.wumple.util.adapter.TUtil;
 import com.wumple.util.capability.thing.IThingCap;
-import com.wumple.util.container.ContainerUtil;
+import com.wumple.util.container.misc.ContainerUtil;
 import com.wumple.util.misc.CraftingUtil;
 import com.wumple.util.tileentity.placeholder.ICopyableCap;
 

@@ -2,7 +2,7 @@ package com.wumple.util.capability.eventtimed;
 
 import com.wumple.util.adapter.IThing;
 import com.wumple.util.adapter.TUtil;
-import com.wumple.util.container.Walker;
+import com.wumple.util.container.misc.Walker;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

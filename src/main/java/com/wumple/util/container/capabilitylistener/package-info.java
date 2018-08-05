@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package com.wumple.util.capability;
+package com.wumple.util.container.capabilitylistener;
 
 import mcp.MethodsReturnNonnullByDefault;
 

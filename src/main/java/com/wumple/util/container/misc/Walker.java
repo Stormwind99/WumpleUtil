@@ -1,7 +1,7 @@
-package com.wumple.util.container;
+package com.wumple.util.container.misc;
 
-import com.wumple.util.capability.CapabilityUtils;
-import com.wumple.util.function.TriConsumer;
+import com.wumple.util.base.function.TriConsumer;
+import com.wumple.util.container.capabilitylistener.CapabilityUtils;
 
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;

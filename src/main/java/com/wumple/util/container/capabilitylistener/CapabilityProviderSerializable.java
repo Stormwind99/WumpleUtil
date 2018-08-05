@@ -1,4 +1,4 @@
-package com.wumple.util.capability;
+package com.wumple.util.container.capabilitylistener;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;

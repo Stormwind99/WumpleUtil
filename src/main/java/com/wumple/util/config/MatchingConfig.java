@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.wumple.util.adapter.IThing;
-import com.wumple.util.misc.Util;
+import com.wumple.util.base.misc.Util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;

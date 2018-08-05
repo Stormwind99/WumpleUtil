@@ -2,7 +2,7 @@ package com.wumple.util.basechest;
 
 import javax.annotation.Nullable;
 
-import com.wumple.util.container.ContainerUtil;
+import com.wumple.util.container.misc.ContainerUtil;
 import com.wumple.util.nameable.NameableTileEntity;
 
 import net.minecraft.block.Block;

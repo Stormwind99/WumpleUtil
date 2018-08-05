@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -52,19 +54,57 @@ public class TestDebug
             Minecraft mc = Minecraft.getMinecraft();
             if (mc.gameSettings.showDebugInfo == true)
             {
-                if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY && mc.objectMouseOver.entityHit != null)
+                addEntityDebug(e);
+                addTileEntityDebug(e);
+            }
+        }
+    }
+    
+    /*
+     * Add Entity debug text to debug screen if looking at Entity
+     */
+    
+    @SideOnly(Side.CLIENT)
+    public static void addEntityDebug(RenderGameOverlayEvent.Text e)
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+        
+        if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY && mc.objectMouseOver.entityHit != null)
+        {
+            Entity entity = mc.objectMouseOver.entityHit;
+
+            ArrayList<String> nameKeys = MatchingConfigBase.getNameKeys(entity);
+
+            if (nameKeys != null)
+            {
+                for (String nameKey : nameKeys)
                 {
-                    Entity entity = mc.objectMouseOver.entityHit;
+                    e.getRight().add(I18n.format("misc.wumpleutil.debug.namekey", nameKey));
+                }
+            }
+        }
+    }
+    
+    /*
+     * Add TileEntity debug text to debug screen if looking at Block with a TileEntity
+     */
+    @SideOnly(Side.CLIENT)
+    public static void addTileEntityDebug(RenderGameOverlayEvent.Text e)
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+        
+        if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK && mc.objectMouseOver.getBlockPos() != null)
+        {
+            BlockPos blockpos = (mc.objectMouseOver == null) ? null : mc.objectMouseOver.getBlockPos();
+            TileEntity te = (blockpos == null) ? null : mc.world.getTileEntity(blockpos);
+            
+            ArrayList<String> nameKeys = MatchingConfigBase.getNameKeys(te);
 
-                    ArrayList<String> nameKeys = MatchingConfigBase.getNameKeys(entity);
-
-                    if (nameKeys != null)
-                    {
-                        for (String nameKey : nameKeys)
-                        {
-                            e.getRight().add(I18n.format("misc.wumpleutil.debug.namekey", nameKey));
-                        }
-                    }
+            if (nameKeys != null)
+            {
+                for (String nameKey : nameKeys)
+                {
+                    e.getRight().add(I18n.format("misc.wumpleutil.debug.namekey", nameKey));
                 }
             }
         }

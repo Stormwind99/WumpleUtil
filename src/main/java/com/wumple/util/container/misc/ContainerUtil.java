@@ -1,4 +1,4 @@
-package com.wumple.util.container;
+package com.wumple.util.container.misc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import com.wumple.util.adapter.EntityThing;
 import com.wumple.util.adapter.IThing;
 import com.wumple.util.adapter.TUtil;
-import com.wumple.util.capability.CapabilityUtils;
+import com.wumple.util.container.capabilitylistener.CapabilityUtils;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

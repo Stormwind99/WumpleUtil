@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.wumple.util.adapter.IThing;
-import com.wumple.util.misc.Util;
+import com.wumple.util.base.misc.Util;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

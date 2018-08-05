@@ -1,6 +1,6 @@
 package com.wumple.util.nameable;
 
-import com.wumple.util.misc.Util;
+import com.wumple.util.base.misc.Util;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;

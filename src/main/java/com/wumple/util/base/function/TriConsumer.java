@@ -1,4 +1,4 @@
-package com.wumple.util.function;
+package com.wumple.util.base.function;
 
 import java.util.Objects;
 
