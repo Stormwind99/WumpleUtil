@@ -231,16 +231,17 @@ public class ContainerUtil
         return null;
     }
     
-    public static void checkUpdateSlot(Integer index, IItemHandler itemhandler, ItemStack stack, int count, ItemStack rotItem)
+    public static void checkUpdateSlot(Integer index, IItemHandler itemhandler, ItemStack stack, int count, ItemStack newStack)
     {
-        if (rotItem == null || rotItem.isEmpty() || (rotItem != stack))
+        if (newStack == null || newStack.isEmpty() || (newStack != stack))
         {
-            if (rotItem == null)
+            if (newStack == null)
             {
-                rotItem = ItemStack.EMPTY;
+                newStack = ItemStack.EMPTY;
             }
             // Equivalent to inventory.setInventorySlotContents(i, rotItem);
-            ItemStack newStack = itemhandler.extractItem(index, count, false);
+            @SuppressWarnings("unused")
+            ItemStack oldStack = itemhandler.extractItem(index, count, false);
             itemhandler.insertItem(index, newStack, false);
         }
     }
