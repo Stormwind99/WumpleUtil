@@ -82,7 +82,9 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
 
     default boolean checkInitialized(World world)
     {
-        return getInfo().checkInitialized(world, getOwner());
+        boolean initedAlready = getInfo().checkInitialized(world, getOwner());
+        if (!initedAlready) { forceUpdate(); }
+        return initedAlready;
     }
 
     // ----------------------------------------------------------------------
@@ -132,12 +134,21 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         
         if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: other " + other + " this " + this); }
         
-        // handle uninitialized src or dest
-        // should never happen - but for now just skip this operation
-        if (!other.isExpirationTimestampSet() || !this.isExpirationTimestampSet() )
+        if (!this.isExpirationTimestampSet())
         {
-            if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: skipping uninit other " + other.isExpirationTimestampSet() + " this " + this.isExpirationTimestampSet()); }
-            return;
+            if (other.isExpirationTimestampSet())
+            {
+                if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: uninit this, copying " + other.getDate() + " " + other.getTime()); }
+                setExpiration(other.getDate(), other.getTime());
+                forceUpdate();               
+            }
+            else
+            {
+                // handle uninitialized src or dest
+                // should never happen - but for now just skip this operation
+                if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: skipping uninit other " + other.isExpirationTimestampSet() + " this " + this.isExpirationTimestampSet()); }
+                return;  
+            }
         }
         
         // handle dimension-related state:
@@ -173,6 +184,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
                     ); }
             
             setExpiration(new_d_i, t_i);
+            forceUpdate();
         }
         else
         {

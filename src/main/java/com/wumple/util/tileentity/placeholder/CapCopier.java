@@ -39,34 +39,12 @@ public interface CapCopier<T extends ICopyableCap<T> >
     default void onHarvest(BlockEvent.HarvestDropsEvent event)
     {
         World world = event.getWorld();
-        if (world.isRemote)
-        {
-            return;
-        }
+        if (world.isRemote) { return; }
+        
         List<ItemStack> drops = event.getDrops();
         TileEntity tileentity = setLastTileEntity(null);
-        T srcCap = getCap(tileentity);
-        if (srcCap != null)
-        {
-            for (int i = 0; i < drops.size(); ++i)
-            {
-                ItemStack before = drops.get(i);
-                
-                ItemStack after = check(world, before);
-                // in case check changes the stack
-                if (before != after)
-                {
-                    drops.set(i, after);
-                }
-                
-                T destCap = getCap(after);
-                
-                if ((destCap != null) && (srcCap != null))
-                {
-                    destCap.copyFrom(srcCap);
-                }
-            }
-        }
+        
+        copyToFrom(drops, tileentity, world);
     }
     
     default void onBreak(BlockEvent.BreakEvent event)
@@ -92,17 +70,59 @@ public interface CapCopier<T extends ICopyableCap<T> >
     {
         World world = event.getWorld();
         
-        if (world.isRemote)
-        {
-            return;
-        }
+        if (world.isRemote) { return; }
         
         ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
+        BlockPos pos = event.getPos();
+        
+        copyToFrom(pos, stack, world);
+    }
+    
+    default <Z extends ICapabilityProvider> void copyToFrom(ICapabilityProvider dest, List<Z> others)
+    {
+        T destCap = getCap(dest);
+
+        if (destCap != null)
+        {
+            destCap.copyToFrom(others);
+        }
+    }
+  
+    default <Z extends ICapabilityProvider> void copyToFrom(List<ItemStack> drops, ICapabilityProvider src, World world)
+    {
+        T srcCap = getCap(src);
+        
+        if (srcCap != null)
+        {
+            for (int i = 0; i < drops.size(); ++i)
+            {
+                ItemStack before = drops.get(i);
+                
+                // only check before if world is available, since init depends on world
+                ItemStack after = (world != null) ? check(world, before) : before;
+                
+                // in case check changes the stack, replace old in drops with new
+                if (before != after)
+                {
+                    drops.set(i, after);
+                }
+                
+                T destCap = getCap(after);
+                
+                if (destCap != null)
+                {
+                    destCap.copyFrom(srcCap);
+                }
+            }
+        }
+    }
+    
+    default void copyToFrom(BlockPos pos, ICapabilityProvider stack, World world)
+    {
         T srcCap = getCap(stack);
         
         if (srcCap != null)
         {
-            BlockPos pos = event.getPos();
             TileEntity tileentity = world.getTileEntity(pos);
             
             if (tileentity == null)
@@ -125,10 +145,12 @@ public interface CapCopier<T extends ICopyableCap<T> >
             
             T destCap = getCap(tileentity);
             
-            if ((destCap != null) && (srcCap != null))
+            if (destCap != null)
             {
                 destCap.copyFrom(srcCap);
             }
         }
+
     }
+    
 }
