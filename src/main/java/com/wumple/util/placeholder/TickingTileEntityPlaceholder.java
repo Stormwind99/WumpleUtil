@@ -1,4 +1,4 @@
-package com.wumple.util.tileentity.placeholder;
+package com.wumple.util.placeholder;
 
 import com.wumple.util.ModConfig;
 
