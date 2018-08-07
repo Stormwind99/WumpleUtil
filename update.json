@@ -5,7 +5,7 @@
     "1.12.2-recommended": "2.8.32"
   },
   "1.12.2": {
-    "2.11.0": "BlockRepair classes derived from CoroUtil",
+    "2.11.6": "BlockRepair classes derived from CoroUtil",
     "2.10.7": "Map functions and base mod class moved from Pantography. More ICopyableCap functionality. Reusable CapMergeRecipe from FoodFunk. Moved various classes.",
     "2.9.2": "ItemStack forceUpdate hack optional. BaseChest rendering rotatable.",
     "2.8.32": "regHelpers without translation key automation",
