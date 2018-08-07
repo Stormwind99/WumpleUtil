@@ -212,8 +212,6 @@ bintray {
     }
 }
 
-/// Uploads
-
 // upload built mod and/or artifacts to all release/artifact locations
 task uploadAll {
     group 'upload'
@@ -259,7 +257,7 @@ processResources {
 }
 
 jar {
-    //classifier = ""
+    classifier = ""
     //rename the default output, for some better sanity with scripts
     archiveName = "${baseName}-${minecraft.version}-${version}.${extension}"
 
@@ -275,31 +273,6 @@ jar {
 	"Built-On": project.minecraft.version
 	)
 }
-
-//task deobfJar(type: Jar) {
-//    classifier = "dev"
-//
-//    //rename the default output, for some better sanity with scripts
-//    archiveName = "${baseName}-${minecraft.version}-${version}-${classifier}.${extension}"
-//
-//    exclude "**/*.bat"
-//    exclude "**/*.psd"
-//    exclude "**/*.exe"
-//
-//    from sourceSets.main.output
-//    from "LICENSE"
-//     
-//    manifest.mainAttributes(
-//        "Implementation-Title": config.mod.name,
-//        "Implementation-Version": project.version,
-//        "Built-On": project.minecraft.version
-//        )
-//}
-
-//artifacts {
-//    archives deobfJar
-//    archives jar
-//}
 
 // --------------------------------------------------------------------------
 // Local functions
@@ -425,6 +398,7 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
     outputFile = jar.archivePath
 }
 
+// Use jarsigner to manually examine that jar is signed
 task reviewSignJar(type: Exec) {
     onlyIf {
         project.hasProperty('keyStore')
@@ -455,6 +429,14 @@ build {
     dependsOn 'saveBuildNumber'
 }
 
+// make build tasks run before publish, otherwise could upload MCP mapped jar instead of SRG mapped jar!
 tasks.publish.dependsOn build
+tasks.publishMavenPublicationToMavenLocal.dependsOn build
+tasks.githubRelease.dependsOn build
+tasks.bintrayUpload.dependsOn build
+tasks.curseforge.dependsOn build
+
+/// Uploads
+
 
 defaultTasks 'build'
