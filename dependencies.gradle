@@ -1,8 +1,9 @@
 
 repositories {
-    //maven {
-    //    url  "https://dl.bintray.com/stormwind/MinecraftModding" 
-    //}
+    mavenLocal()
+    maven {
+        url  "https://dl.bintray.com/stormwind/MinecraftModding" 
+    }
 }
 
 dependencies {
