@@ -6,12 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class TileEntityPlaceholder extends TileEntity
-{
-    public static void register()
-    {
-        RegistrationHelpers.registerTileEntity(TileEntityPlaceholder.class, "wumpleutil:placeholder");
-    }
-    
+{   
     public void ensureInitialized(World world)
     {
     }

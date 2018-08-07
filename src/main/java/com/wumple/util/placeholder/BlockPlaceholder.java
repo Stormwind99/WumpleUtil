@@ -9,21 +9,19 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class BlockPlaceholder extends Block implements IBlockPlaceholder
 {
-    public static void register(final IForgeRegistry<Block> registry)
-    {
-        RegistrationHelpers.regHelper(registry, new BlockPlaceholder());
-    }
-    
     public BlockPlaceholder()
-    { super(Material.AIR); }
+    {
+        this(Material.AIR);
+    }
     
     public BlockPlaceholder(Material blockMaterialIn, MapColor blockMapColorIn)
     {
         super(blockMaterialIn, blockMapColorIn);
+        RegistrationHelpers.nameHelper(this, "wumpleutil:placeholder");
     }
 
     public BlockPlaceholder(Material materialIn)
     {
-        super(materialIn);
+        this(materialIn, materialIn.getMaterialMapColor());
     }
 }
