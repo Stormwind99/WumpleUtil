@@ -1,10 +1,11 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "2.11.7",
-    "1.12.2-recommended": "2.11.7"
+    "1.12.2-latest": "2.11.8",
+    "1.12.2-recommended": "2.11.8"
   },
   "1.12.2": {
+    "2.11.8": "Fix jar signing",
     "2.11.7": "Rebuild to fix crash",
     "2.11.6": "BlockRepair classes derived from CoroUtil",
     "2.10.7": "Map functions and base mod class moved from Pantography. More ICopyableCap functionality. Reusable CapMergeRecipe from FoodFunk. Moved various classes.",
