@@ -90,10 +90,15 @@ apply from: 'dependencies.gradle'
 // Default repositories and publishing
 
 repositories {
+    // see https://authors.curseforge.com/docs/api
     maven {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
     }
+   //maven {
+   //    name = "mc"
+   //    url = "https://libraries.minecraft.net/"
+   //}
 }
 
 allprojects {
@@ -112,7 +117,7 @@ publishing {
             artifactId = config.mod_id
             version = config.version
 
-            from components.java
+            //from components.java
         }
     }
 }
@@ -121,7 +126,7 @@ publishing {
 // see https://github.com/matthewprenger/CurseGradle/issues/14
 publishToMavenLocal {
     dependsOn build
-    publish
+    dependsOn publish
 }
 
 /// CurseGradle
@@ -254,7 +259,7 @@ processResources {
 }
 
 jar {
-    classifier = ""
+    //classifier = ""
     //rename the default output, for some better sanity with scripts
     archiveName = "${baseName}-${minecraft.version}-${version}.${extension}"
 
@@ -271,30 +276,30 @@ jar {
 	)
 }
 
-task deobfJar(type: Jar) {
-    classifier = "dev"
+//task deobfJar(type: Jar) {
+//    classifier = "dev"
+//
+//    //rename the default output, for some better sanity with scripts
+//    archiveName = "${baseName}-${minecraft.version}-${version}-${classifier}.${extension}"
+//
+//    exclude "**/*.bat"
+//    exclude "**/*.psd"
+//    exclude "**/*.exe"
+//
+//    from sourceSets.main.output
+//    from "LICENSE"
+//     
+//    manifest.mainAttributes(
+//        "Implementation-Title": config.mod.name,
+//        "Implementation-Version": project.version,
+//        "Built-On": project.minecraft.version
+//        )
+//}
 
-    //rename the default output, for some better sanity with scripts
-    archiveName = "${baseName}-${minecraft.version}-${version}-${classifier}.${extension}"
-
-    exclude "**/*.bat"
-    exclude "**/*.psd"
-    exclude "**/*.exe"
-
-    from sourceSets.main.output
-    from "LICENSE"
-     
-    manifest.mainAttributes(
-        "Implementation-Title": config.mod.name,
-        "Implementation-Version": project.version,
-        "Built-On": project.minecraft.version
-        )
-}
-
-artifacts {
-    archives deobfJar
-    archives jar
-}
+//artifacts {
+//    archives deobfJar
+//    archives jar
+//}
 
 // --------------------------------------------------------------------------
 // Local functions
@@ -420,7 +425,7 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
     outputFile = jar.archivePath
 }
 
-task reviewSignJar(type:Exec) {
+task reviewSignJar(type: Exec) {
     onlyIf {
         project.hasProperty('keyStore')
     }
@@ -431,6 +436,16 @@ task reviewSignJar(type:Exec) {
 // --------------------------------------------------------------------------
 // Misc
 
+// delete lots of directories where bugs cause old dependencies and files to be used
+task superClean(type: Delete) {
+    outputs.upToDateWhen { false }
+    delete ".classpath", ".project", ".settings", "bin", "build"
+    // Prevented by .gradle\4.9\fileContent\fileContent.lock
+    // delete ".gradle"
+}
+
+tasks.superClean.dependsOn clean
+
 // force runClient to always run when requested - never UP-TO-DATE
 runClient.outputs.upToDateWhen { false }
 
@@ -439,5 +454,7 @@ build {
     dependsOn 'signJar'
     dependsOn 'saveBuildNumber'
 }
+
+tasks.publish.dependsOn build
 
 defaultTasks 'build'
