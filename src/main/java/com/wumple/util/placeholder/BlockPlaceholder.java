@@ -5,7 +5,6 @@ import com.wumple.util.misc.RegistrationHelpers;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraftforge.registries.IForgeRegistry;
 
 public class BlockPlaceholder extends Block implements IBlockPlaceholder
 {

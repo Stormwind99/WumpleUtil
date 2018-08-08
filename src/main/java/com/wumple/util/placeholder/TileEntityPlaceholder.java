@@ -1,7 +1,5 @@
 package com.wumple.util.placeholder;
 
-import com.wumple.util.misc.RegistrationHelpers;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
