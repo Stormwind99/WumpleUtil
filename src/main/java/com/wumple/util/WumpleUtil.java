@@ -25,21 +25,21 @@ public class WumpleUtil extends ModBase
     {
         super.preInit(event);
     }
-    
+
     @EventHandler
     @Override
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
     }
-    
+
     @EventHandler
     @Override
     public void postInit(FMLPostInitializationEvent event)
     {
         super.postInit(event);
     }
-    
+
     @EventHandler
     @Override
     public void onFingerprintViolation(FMLFingerprintViolationEvent event)

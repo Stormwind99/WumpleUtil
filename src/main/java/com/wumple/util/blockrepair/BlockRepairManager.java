@@ -1,6 +1,8 @@
 package com.wumple.util.blockrepair;
 
+import com.wumple.util.ModConfig;
 import com.wumple.util.Reference;
+import com.wumple.util.WumpleUtil;
 import com.wumple.util.misc.RegistrationHelpers;
 
 import net.minecraft.block.Block;
@@ -33,12 +35,15 @@ public class BlockRepairManager
     
     public static void log(String msg)
     {
-        
+        if (isDebugEnabled())
+        {
+            WumpleUtil.logger.info(msg);
+        }
     }
     
     public static boolean isDebugEnabled()
     {
-        return false;
+        return ModConfig.zdebugging.debug;
     }
 
     public BlockRepairManager()
