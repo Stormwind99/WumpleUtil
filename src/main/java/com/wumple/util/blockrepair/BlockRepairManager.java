@@ -59,7 +59,7 @@ public class BlockRepairManager
     }
 
     // override if usig a different TileEntityRepairingBlock class
-    protected Class<TileEntityRepairingBlock> TileEntityRepairingBlockClass()
+    protected Class<? extends TileEntity> TileEntityRepairingBlockClass()
     {
         return TileEntityRepairingBlock.class;
     }

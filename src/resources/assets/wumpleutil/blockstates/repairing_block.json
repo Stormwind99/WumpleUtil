@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "normal": {
+      "model": "blockrepair:repairing_block"
+    }
+  }
+}
