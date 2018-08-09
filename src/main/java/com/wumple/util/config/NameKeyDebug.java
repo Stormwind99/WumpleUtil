@@ -1,8 +1,9 @@
-package com.wumple.util;
+package com.wumple.util.config;
 
 import java.util.ArrayList;
 
-import com.wumple.util.config.MatchingConfigBase;
+import com.wumple.util.ModConfig;
+import com.wumple.util.Reference;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-public class TestDebug
+public class NameKeyDebug
 {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)

@@ -4,9 +4,12 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.wumple.util.ModConfig;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -67,6 +70,14 @@ public class BlockRepairingBlock extends BlockContainer
     @Override
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos)
     {
+        // debug behavior
+        Minecraft mc = Minecraft.getMinecraft();
+        
+        if ( (mc.player != null) && (mc.gameSettings.showDebugInfo == true) && (ModConfig.zdebugging.debug == true))
+        {
+            return AABB;
+        }
+
         /*
         // For CoroUtil's ItemRepairingGel:
         // special behavior to let block only be selectable to repair if correct context
@@ -80,6 +91,7 @@ public class BlockRepairingBlock extends BlockContainer
             return NO_COLLIDE_AABB;
         }
         */
+                
         return NO_COLLIDE_AABB;
     }
 

@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import com.wumple.util.misc.LeafUtil;
+
 /*
  * Based on CoroUtil's TileEntityRepairingBlock
  * from https://github.com/Corosauce/CoroUtil
@@ -26,7 +28,7 @@ import net.minecraft.world.World;
  * Based on CoroUtil's BlockRepairingBlock
  * from https://github.com/Corosauce/CoroUtil
  */
-public class TileEntityRepairingBlock extends TileEntity implements ITickable
+public class TileEntityRepairingBlock extends TileEntity implements ITickable, IRepairing
 {
     // block state to restore later
     protected IBlockState orig_blockState;
@@ -37,12 +39,77 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
 
     // when to restore state
     protected long timeToRepairAt = 0;
+    protected long creationTime = 0;
 
     public void setTicksToRepair(World world, int ticksToRepair)
     {
-        this.timeToRepairAt = world.getTotalWorldTime() + ticksToRepair;
+        long currentTime = world.getTotalWorldTime();
+        if (creationTime == 0)
+        {
+            creationTime = currentTime;
+        }
+        timeToRepairAt = currentTime + ticksToRepair;
+        markDirty();
     }
 
+    // override to change behavior when determining if repairing block has expired
+    /* (non-Javadoc)
+     * @see com.wumple.util.blockrepair.IRepairingTimes#getExpirationTimeLength()
+     */
+    @Override
+    public long getExpirationTimeLength()
+    {
+        // override to change behavior
+        return 0;
+    }
+    
+    /* (non-Javadoc)
+     * @see com.wumple.util.blockrepair.IRepairingTimes#getTimeToRepairAt()
+     */
+    @Override
+    public long getTimeToRepairAt()
+    {
+        return timeToRepairAt;
+    }
+    
+    /* (non-Javadoc)
+     * @see com.wumple.util.blockrepair.IRepairingTimes#getTimeToGiveUpAt()
+     */
+    @Override
+    public long getTimeToGiveUpAt()
+    {
+        long timeExpiration = 0;
+        long exp = getExpirationTimeLength();
+        if ((creationTime != 0) && (exp > 0))
+        {
+            timeExpiration = creationTime + exp;
+        }        
+        return timeExpiration;
+    }
+    
+    protected boolean isTimeToRepair()
+    {
+        long currentTime = getWorld().getTotalWorldTime();
+        return (currentTime >= timeToRepairAt);
+    }
+    
+    public boolean isTimeToGiveUp()
+    {
+        long timeExpiration = getTimeToGiveUpAt();
+        if (timeExpiration > 0)
+        {
+            long currentTime = getWorld().getTotalWorldTime();
+            return (currentTime >= timeExpiration);
+        }
+        
+        return false;
+    }
+    
+    protected boolean isDataInvalid()
+    {
+        return orig_blockState == null || orig_blockState == this.getBlockType().getDefaultState();
+    }
+    
     // override to change behavior when determining if block is repairable now
     protected boolean canRepairBlock()
     {
@@ -56,8 +123,11 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
     // override to change behavior when a block can't be repaired now (aka canRepairBlock() returned false)
     protected void onCantRepairBlock()
     {
-        // do nothing by default
         // override to change behavior
+        if (isTimeToGiveUp())
+        {
+            giveUp();
+        }
     }
 
     // override to change behavior before a block is restored
@@ -71,6 +141,7 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
     protected void coreRestoreBlock()
     {
         getWorld().setBlockState(this.getPos(), orig_blockState);
+        markDirty();
     }
 
     // override to change behavior after a block is restored
@@ -87,12 +158,12 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
                 for (int z = -1; z <= 1; z++)
                 {
                     BlockPos posFix = pos.add(x, y, z);
-                    IBlockState state = world.getBlockState(posFix);
-                    if (state.getBlock() instanceof BlockLeaves)
+                    if (LeafUtil.isLeaves(world, posFix))
                     {
                         try
                         {
                             RepairManager.log("restoring leaf to non decay state at pos: " + posFix);
+                            IBlockState state = world.getBlockState(posFix);
                             // modify just the CHECK_DECAY property, leaving the rest as-is
                             world.setBlockState(posFix, state.withProperty(BlockLeaves.CHECK_DECAY, false), 4);
                         }
@@ -124,23 +195,28 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
         coreRestoreBlock();
         postRestoreBlock();
     }
-
+    
+    protected void giveUp()
+    {
+        RepairManager.log("giving up on state: " + orig_blockState + " at " + this.getPos());
+        getWorld().setBlockState(this.getPos(), Blocks.AIR.getDefaultState());
+        markDirty();
+        this.invalidate();
+    }
+    
     // implements ITickable
     @Override
     public void update()
     {
         if (!getWorld().isRemote)
         {
-
-            if (getWorld().getTotalWorldTime() >= timeToRepairAt)
+            if (isTimeToRepair())
             {
-
                 // if for some reason data is invalid, remove block
-                if (orig_blockState == null || orig_blockState == this.getBlockType().getDefaultState())
+                if (isDataInvalid())
                 {
-                    RepairManager.log("invalid state for repairing block, removing, orig_blockState: " + orig_blockState + " vs "
-                            + this.getBlockType().getDefaultState());
-                    getWorld().setBlockState(this.getPos(), Blocks.AIR.getDefaultState());
+                    RepairManager.log("invalid state for repairing block, removing, orig_blockState: " + orig_blockState + " vs " + this.getBlockType().getDefaultState());
+                    giveUp();
                 }
                 else
                 {
@@ -174,6 +250,7 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
             var1.setTag("orig_blockState2", stateNBT);
         }
         var1.setLong("timeToRepairAt", timeToRepairAt);
+        var1.setLong("creationTime", creationTime);
 
         var1.setFloat("orig_hardness", orig_hardness);
         var1.setFloat("orig_explosionResistance", orig_explosionResistance);
@@ -186,6 +263,7 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
     {
         super.readFromNBT(var1);
         timeToRepairAt = var1.getLong("timeToRepairAt");
+        creationTime = var1.getLong("creationTime");
         try
         {
             Block block = Block.getBlockFromName(var1.getString("orig_blockName"));

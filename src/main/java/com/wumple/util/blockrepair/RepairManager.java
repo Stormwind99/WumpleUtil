@@ -2,8 +2,9 @@ package com.wumple.util.blockrepair;
 
 import com.wumple.util.ModConfig;
 import com.wumple.util.WumpleUtil;
+import com.wumple.util.base.misc.Util;
 
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -34,22 +35,9 @@ public class RepairManager
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    // override if using a different BlankBlock class
-    protected BlockBlank BlockBlankFactory()
+    protected Block getRepairingBlock()
     {
-        return new BlockBlank(Material.AIR);
-    }
-
-    // override if using a different BlockRepairingBlock class
-    protected BlockRepairingBlock BlockRepairingBlockFactory()
-    {
-        return new BlockRepairingBlock();
-    }
-
-    // override if using a different TileEntityRepairingBlock class
-    protected Class<? extends TileEntity> TileEntityRepairingBlockClass()
-    {
-        return TileEntityRepairingBlock.class;
+        return MyObjectHolder.blockRepairingBlock;
     }
 
     /*
@@ -63,7 +51,7 @@ public class RepairManager
      * @param world
      * @param pos
      */
-    protected TileEntityRepairingBlock replaceBlockAndBackup(World world, BlockPos pos, int ticksToRepair)
+    protected IRepairingTimes replaceBlockAndBackup(World world, BlockPos pos, int ticksToRepair)
     {
         IBlockState oldState = world.getBlockState(pos);
         float oldHardness = oldState.getBlockHardness(world, pos);
@@ -77,13 +65,13 @@ public class RepairManager
 
         }
 
-        world.setBlockState(pos, MyObjectHolder.blockRepairingBlock.getDefaultState());
+        world.setBlockState(pos, getRepairingBlock().getDefaultState());
         TileEntity tEnt = world.getTileEntity(pos);
-        if (tEnt instanceof TileEntityRepairingBlock)
+        IRepairing repairing = Util.as(tEnt, IRepairing.class);
+        if (repairing != null)
         {
             // IBlockState state = world.getBlockState(pos);
             RepairManager.log("set repairing block for pos: " + pos + ", " + oldState.getBlock());
-            TileEntityRepairingBlock repairing = ((TileEntityRepairingBlock) tEnt);
             repairing.init(world, ticksToRepair, oldState, oldHardness, oldExplosionResistance);
             return repairing;
         }

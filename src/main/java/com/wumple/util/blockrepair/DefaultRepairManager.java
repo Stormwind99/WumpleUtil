@@ -18,7 +18,10 @@ package com.wumple.util.blockrepair;
  *    3. Call YourBlockRepairManager#replaceBlock(world, state, pos, ticks) for block (at pos) to remove and be repaired in ticks
  */
 
-public class RepairFactory
+/*
+ * Need to use and/or replace the global RepairManager (to use when a custom one isn't needed)?  Use below.
+ */
+public class DefaultRepairManager
 {
     public static RepairManager proxy = null;
     
@@ -30,5 +33,10 @@ public class RepairFactory
         }
         
         return proxy;
+    }
+    
+    void setManager(RepairManager newManager)
+    {
+        proxy = newManager;
     }
 }

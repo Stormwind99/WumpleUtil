@@ -1,7 +1,10 @@
 {
+  "forge_marker": 1,
+  "defaults": {
+    "model": "wumpleutil:blank"
+  },
   "variants": {
-    "normal": {
-      "model": "wumpleutil:blank"
-    }
+    "normal": [{}]
   }
 }
+

@@ -14,6 +14,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class TimeUtil
 {
+    public static final int TICKS_PER_SECOND = 20;
+    
     // the last world time/tick count/timestamp received during world tick
     // needed since no access to world later
     protected static long lastWorldTimestamp = 0;

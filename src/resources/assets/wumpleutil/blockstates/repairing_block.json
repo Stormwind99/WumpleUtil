@@ -1,7 +1,10 @@
 {
+  "forge_marker": 1,
+  "defaults": {
+    "model": "wumpleutil:repairing_block"
+  },
   "variants": {
-    "normal": {
-      "model": "wumpleutil:repairing_block"
-    }
+    "normal": [{}]
   }
 }
+

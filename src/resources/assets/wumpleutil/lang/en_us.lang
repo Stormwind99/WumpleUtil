@@ -1,2 +1,3 @@
 misc.wumpleutil.debug.namekey=nameKey: %s
 tile.wumpleutil.repairing_block.name=Repairing Block
+misc.wumpleutil.debug.repairtimes=Repair: %s / §a%s§r : §c%s§r
