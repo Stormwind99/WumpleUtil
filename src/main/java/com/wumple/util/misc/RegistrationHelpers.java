@@ -105,7 +105,7 @@ public class RegistrationHelpers
     public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing,
             String name, boolean doTransKey)
     {
-        return regHelper(registry, thing, name, false);
+        return regHelper(registry, thing, name, doTransKey, false);
     }
 
     public static <T extends IForgeRegistryEntry<T>> T regHelper(IForgeRegistry<T> registry, T thing,

@@ -1,7 +1,7 @@
 {
   "variants": {
     "normal": {
-      "model": "blockrepair:blank"
+      "model": "wumpleutil:blank"
     }
   }
 }

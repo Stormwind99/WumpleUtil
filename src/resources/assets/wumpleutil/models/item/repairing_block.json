@@ -1,5 +1,5 @@
 {
-  "parent": "blockrepair:block/repairing_block",
+  "parent": "wumpleutil:block/repairing_block",
   "display": {
     "thirdperson": {
       "rotation": [

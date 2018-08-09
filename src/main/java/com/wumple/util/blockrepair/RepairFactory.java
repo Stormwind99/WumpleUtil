@@ -18,15 +18,15 @@ package com.wumple.util.blockrepair;
  *    3. Call YourBlockRepairManager#replaceBlock(world, state, pos, ticks) for block (at pos) to remove and be repaired in ticks
  */
 
-public class BlockRepair
+public class RepairFactory
 {
-    public static BlockRepairManager proxy = null;
+    public static RepairManager proxy = null;
     
-    BlockRepairManager getManager()
+    RepairManager getManager()
     {
         if (proxy == null)
         {
-            proxy = new BlockRepairManager();
+            proxy = new RepairManager();
         }
         
         return proxy;

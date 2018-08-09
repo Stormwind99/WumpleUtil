@@ -1,8 +1,7 @@
-package com.wumple.util;
+package com.wumple.util.placeholder;
 
+import com.wumple.util.Reference;
 import com.wumple.util.misc.RegistrationHelpers;
-import com.wumple.util.placeholder.BlockPlaceholder;
-import com.wumple.util.placeholder.TileEntityPlaceholder;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -13,13 +12,13 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @ObjectHolder("wumpleutil")
-public class ModObjectHolder
+public class MyObjectHolder
 {
     // ----------------------------------------------------------------------
     // Blocks
 
-    @ObjectHolder("wumpleutil:placeholder")
-    public static final Block placeholder = null;
+    //@ObjectHolder("wumpleutil:placeholder")
+    public static /*final*/ Block placeholder = null;
 
     // ----------------------------------------------------------------------
     // Events
@@ -32,7 +31,7 @@ public class ModObjectHolder
         {
             final IForgeRegistry<Block> registry = event.getRegistry();
 
-            RegistrationHelpers.regHelper(registry, new BlockPlaceholder());
+            placeholder = RegistrationHelpers.regHelper(registry, new BlockPlaceholder());
         }
         
         @SubscribeEvent

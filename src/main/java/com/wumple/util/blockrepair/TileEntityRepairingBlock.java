@@ -92,14 +92,14 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
                     {
                         try
                         {
-                            BlockRepairManager.log("restoring leaf to non decay state at pos: " + posFix);
+                            RepairManager.log("restoring leaf to non decay state at pos: " + posFix);
                             // modify just the CHECK_DECAY property, leaving the rest as-is
                             world.setBlockState(posFix, state.withProperty(BlockLeaves.CHECK_DECAY, false), 4);
                         }
                         catch (Exception ex)
                         {
                             // must be a modded block that doesn't use decay
-                            if (BlockRepairManager.isDebugEnabled())
+                            if (RepairManager.isDebugEnabled())
                             {
                                 // debug log stack trace
                                 StringWriter sw = new StringWriter();
@@ -107,7 +107,7 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
                                 ex.printStackTrace(pw);
                                 String sStackTrace = sw.toString(); // stack trace as a string
 
-                                BlockRepairManager.log("Assume modded block not using decay: " + sStackTrace);
+                                RepairManager.log("Assume modded block not using decay: " + sStackTrace);
                             }
                         }
                     }
@@ -119,7 +119,7 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
     // override to change behavior to restore a block (after canRestoreBlock() returns true)
     protected void restoreBlock()
     {
-        BlockRepairManager.log("restoring block to state: " + orig_blockState + " at " + this.getPos());
+        RepairManager.log("restoring block to state: " + orig_blockState + " at " + this.getPos());
         preRestoreBlock();
         coreRestoreBlock();
         postRestoreBlock();
@@ -138,7 +138,7 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable
                 // if for some reason data is invalid, remove block
                 if (orig_blockState == null || orig_blockState == this.getBlockType().getDefaultState())
                 {
-                    BlockRepairManager.log("invalid state for repairing block, removing, orig_blockState: " + orig_blockState + " vs "
+                    RepairManager.log("invalid state for repairing block, removing, orig_blockState: " + orig_blockState + " vs "
                             + this.getBlockType().getDefaultState());
                     getWorld().setBlockState(this.getPos(), Blocks.AIR.getDefaultState());
                 }

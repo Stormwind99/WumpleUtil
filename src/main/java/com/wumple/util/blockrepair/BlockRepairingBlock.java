@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
@@ -38,6 +39,7 @@ public class BlockRepairingBlock extends BlockContainer
         super(Material.PLANTS);
         // stone, fallback default
         setHardness(1.5F);
+        setCreativeTab(CreativeTabs.MISC);
     }
 
     @Nullable
