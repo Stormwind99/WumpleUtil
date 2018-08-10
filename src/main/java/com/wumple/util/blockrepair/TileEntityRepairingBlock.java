@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.wumple.util.misc.LeafUtil;
 
 /*
@@ -18,6 +20,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -53,9 +57,6 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable, I
     }
 
     // override to change behavior when determining if repairing block has expired
-    /* (non-Javadoc)
-     * @see com.wumple.util.blockrepair.IRepairingTimes#getExpirationTimeLength()
-     */
     @Override
     public long getExpirationTimeLength()
     {
@@ -63,18 +64,12 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable, I
         return 0;
     }
     
-    /* (non-Javadoc)
-     * @see com.wumple.util.blockrepair.IRepairingTimes#getTimeToRepairAt()
-     */
     @Override
     public long getTimeToRepairAt()
     {
         return timeToRepairAt;
     }
     
-    /* (non-Javadoc)
-     * @see com.wumple.util.blockrepair.IRepairingTimes#getTimeToGiveUpAt()
-     */
     @Override
     public long getTimeToGiveUpAt()
     {
@@ -143,12 +138,9 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable, I
         getWorld().setBlockState(this.getPos(), orig_blockState);
         markDirty();
     }
-
-    // override to change behavior after a block is restored
-    protected void postRestoreBlock()
+    
+    protected void cancelAdjacentLeafDecay()
     {
-        markDirty();
-
         // try to untrigger leaf decay for those large trees too far from wood source
         // also undo it for neighbors around it
         for (int x = -1; x <= 1; x++)
@@ -185,6 +177,15 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable, I
                 }
             }
         }
+
+    }
+
+    // override to change behavior after a block is restored
+    protected void postRestoreBlock()
+    {
+        markDirty();
+
+        cancelAdjacentLeafDecay();
     }
 
     // override to change behavior to restore a block (after canRestoreBlock() returns true)
@@ -274,7 +275,10 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable, I
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            if (RepairManager.isDebugEnabled())
+            {
+                ex.printStackTrace();
+            }
 
             this.orig_blockState = Blocks.AIR.getDefaultState();
         }
@@ -309,5 +313,40 @@ public class TileEntityRepairingBlock extends TileEntity implements ITickable, I
     public float getOrig_explosionResistance()
     {
         return orig_explosionResistance;
+    }
+    
+    // ----------------------------------------------------------------------
+    // Update custom data to client
+    // from https://github.com/Chisel-Team/Chisel/blob/1.10/dev/src/main/java/team/chisel/common/block/TileAutoChisel.java
+
+    @Override
+    @Nullable
+    public SPacketUpdateTileEntity getUpdatePacket()
+    {
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag()
+    {
+        NBTTagCompound ret = super.getUpdateTag();
+        ret.setLong("timeToRepairAt", timeToRepairAt);
+        ret.setLong("creationTime", creationTime);
+        return ret;
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+    {
+        handleUpdateTag(pkt.getNbtCompound());
+        super.onDataPacket(net, pkt);
+    }
+
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag)
+    {
+        timeToRepairAt = tag.getLong("timeToRepairAt");
+        creationTime = tag.getLong("creationTime");
+        super.handleUpdateTag(tag);
     }
 }
