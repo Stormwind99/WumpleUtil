@@ -6,10 +6,13 @@ import com.wumple.util.base.misc.Util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 
 /*
  * Based on CoroUtil's BlockRepairingBlock
@@ -103,4 +106,55 @@ public class RepairManager
         replaceBlockAndBackup(world, pos, ticks);
         return true;
     }
+    
+    public boolean shouldRepair(EntityPlayer player, Block block, IBlockState blockstate, World world, BlockPos pos)
+    {
+        // override to change behavior
+        return false;
+    }
+    
+    public int getTicksToRepair()
+    {
+        // override to change behavior
+        return 200;
+    }
+
+    // idea from LilRichy's RegrowableLeaves EventHandler.breakEvent()
+    public void onBreak(BlockEvent.BreakEvent event)
+    {
+        BlockPos pos = event.getPos();
+        IBlockState blockstate = event.getState();
+        World world = event.getWorld();
+        Block block = blockstate.getBlock();
+        EntityPlayer player = event.getPlayer();
+        
+        // don't allow breaking repairing blocks normally
+        TileEntity tEnt = world.getTileEntity(pos);
+        IRepairing repairing = Util.as(tEnt, IRepairing.class);
+        if (repairing != null)
+        {
+            event.setCanceled(true);
+            return;
+        }
+        
+        // only handle replacement on server
+        if (world.isRemote)
+        {
+            return;
+        }
+        
+        // check if should replace with repairing block
+        if (shouldRepair(player, block, blockstate, world, pos))
+        {
+            // replace with repairing block
+            replaceBlock(world, blockstate, pos, getTicksToRepair());
+            
+            // harvest original block
+            block.harvestBlock(world, player, pos, blockstate, null, ItemStack.EMPTY);
+            
+            // don't handle event later since we did handled it
+            event.setCanceled(true);
+        }
+    }
+
 }
