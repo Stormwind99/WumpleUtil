@@ -17,8 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-abstract public class TimerRefreshingEventHandler<T extends TimerRefreshingCap<?,?,?> >
-//<T extends TimerRefreshingCap<X extends IThing, Y extends Expiration, Z extends IThing> >
+abstract public class TimerRefreshingEventHandler<T extends ITimerRefreshingCap<?,?> >
 {
     /*
     @SubscribeEvent
