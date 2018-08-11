@@ -5,7 +5,7 @@
     "1.12.2-recommended": "2.11.8"
   },
   "1.12.2": {
-    "2.11.10": "Basic Tooltip utils",
+    "2.11.11": "Basic Tooltip utils",
     "2.11.9": "BlockRepair fixes",
     "2.11.8": "Fix jar signing",
     "2.11.7": "Rebuild to fix crash",
