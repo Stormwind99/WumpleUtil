@@ -10,6 +10,7 @@ import com.wumple.util.capability.copier.ICopyableCap;
 import com.wumple.util.capability.thing.IThingCap;
 import com.wumple.util.container.misc.ContainerUtil;
 import com.wumple.util.misc.CraftingUtil;
+import com.wumple.util.tooltip.ITooltipProvider;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -19,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.IItemHandler;
 
-public interface IEventTimedThingCap<W extends IThing, T extends Expiration> extends IThingCap<W>, ICopyableCap< IEventTimedThingCap<W,T> >
+public interface IEventTimedThingCap<W extends IThing, T extends Expiration> extends IThingCap<W>, ICopyableCap< IEventTimedThingCap<W,T> >, ITooltipProvider
 {
     public T newT();
     public IEventTimedThingCap<W,T> getCap(ICapabilityProvider stack);
@@ -232,37 +233,38 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
      */
     default void doTooltip(ItemStack stack, EntityPlayer entity, boolean advanced, List<String> tips)
     {
-        if (isEnabled() && (stack != null) && !stack.isEmpty() && (entity != null))
+        if (isEnabled() && (entity != null))
         {
-            T info = getInfo();
-            if (info != null)
+            T myinfo = getInfo();
+            
+            if (myinfo != null)
             {
                 World world = entity.getEntityWorld();
                         
                 // if not initialized, set with reasonable guess to be overwritten by server update
                 checkInitialized(world);
                 
-                // timer state
-                boolean beingCrafted = CraftingUtil.isItemBeingCraftedBy(stack, entity);
-                String key = getStateTooltipKey(info, beingCrafted);
-                
+                // Rot state
+                boolean beingCrafted = (stack != null) ? CraftingUtil.isItemBeingCraftedBy(stack, entity) : false;
+                String key = getStateTooltipKey(myinfo, beingCrafted);
+
                 if (key != null)
                 {
-                    tips.add(new TextComponentTranslation(key, info.getPercent() + "%", info.getDaysLeft(),
-                            info.getDaysTotal()).getUnformattedText());
+                    tips.add(new TextComponentTranslation(key, myinfo.getPercent() + "%", myinfo.getDaysLeft(),
+                            myinfo.getDaysTotal()).getUnformattedText());
                 }
 
                 // advanced tooltip debug info
                 if (advanced && isDebugging())
                 {
-                    tips.add(new TextComponentTranslation("misc.foodfunk.tooltip.advanced.datetime", info.getDate(),
-                            info.getTime()).getUnformattedText());
-                    tips.add(new TextComponentTranslation("misc.foodfunk.tooltip.advanced.expire", info.getCurTime(),
-                            info.getExpirationTimestamp()).getUnformattedText());
+                    tips.add(new TextComponentTranslation("misc.wumpleutil.tooltip.advanced.datetime", myinfo.getDate(),
+                            myinfo.getTime()).getUnformattedText());
+                    tips.add(new TextComponentTranslation("misc.wumpleutil.tooltip.advanced.expire", myinfo.getCurTime(),
+                            myinfo.getExpirationTimestamp()).getUnformattedText());
 
                     int dimension = world.provider.getDimension();
-                    int dimensionRatio = info.getDimensionRatio(world);
-                    tips.add(new TextComponentTranslation("misc.foodfunk.tooltip.advanced.dimratio", dimensionRatio, dimension).getUnformattedText());
+                    int dimensionRatio = myinfo.getDimensionRatio(world);
+                    tips.add(new TextComponentTranslation("misc.wumpleutil.tooltip.advanced.dimratio", dimensionRatio, dimension).getUnformattedText());
                 }
             }
         }
@@ -274,22 +276,22 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
 
         if (local.isNonExpiring())
         {
-            key = "misc.wumple.util.tooltip.timer.nonexpiring";
+            key = "misc.wumpleutil.tooltip.timer.nonexpiring";
         }
         else if (local.isSet() && !beingCrafted)
         {
             if (local.getPercent() >= 100)
             {
-                key = "misc.wumple.util.tooltip.timer.expired";
+                key = "misc.wumpleutil.tooltip.timer.expired";
             }
             else
             {
-                key = "misc.wumple.util.tooltip.timer.timer";
+                key = "misc.wumpleutil.tooltip.timer.timer";
             }
         }        
         else if (local.time > 0)
         {
-            key = "misc.wumple.util.tooltip.timer.crafting";
+            key = "misc.wumpleutil.tooltip.timer.crafting";
         }
 
         return key;

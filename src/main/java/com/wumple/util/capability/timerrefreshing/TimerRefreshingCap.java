@@ -31,10 +31,10 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
     }
     */
     
-    abstract protected IEventTimedThingCap<X,W> getCap(ICapabilityProvider stack);
-    protected IEventTimedThingCap<X,W> getCap(ItemStack stack)
+    abstract protected IEventTimedThingCap<X,W> getTimedCap(ICapabilityProvider stack);
+    protected IEventTimedThingCap<X,W> getTimedCap(ItemStack stack)
     {
-        return getCap(TUtil.to(stack));
+        return getTimedCap(TUtil.to(stack));
     }
 
     // transient data
@@ -55,6 +55,9 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
         super(ownerIn);
         MinecraftForge.EVENT_BUS.register(this);
     }
+    
+    // ----------------------------------------------------------------------
+    // Main
 
     @Override
     public int getRatio()
@@ -62,6 +65,7 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
         return refreshingRatio;
     }
 
+    @Override
     protected void doIt(long timeSinceLast)
     {
         // adjust for preserving ratio
@@ -70,7 +74,7 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
         IItemHandler capability = owner.fetchCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         freshenTheseContents(capability, expTime);
     }
-
+    
     // ----------------------------------------------------------------------
     // Internal
 
@@ -85,7 +89,7 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
 
     protected boolean freshenStack(int index, IItemHandler itemhandler, ItemStack stack, long time)
     {
-        IEventTimedThingCap<X,W> cap = (!SUtil.isEmpty(stack)) ? getCap(stack) : null;
+        IEventTimedThingCap<X,W> cap = (!SUtil.isEmpty(stack)) ? getTimedCap(stack) : null;
 
         return (cap != null) ? rescheduleAndCheck(cap, index, itemhandler, stack, time) : false;
     }
