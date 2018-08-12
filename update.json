@@ -1,10 +1,11 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "2.11.8",
-    "1.12.2-recommended": "2.11.8"
+    "1.12.2-latest": "2.11.12",
+    "1.12.2-recommended": "2.11.12"
   },
   "1.12.2": {
+    "2.11.12": "Fix for ConcurrentModificationException due to ICopyableCap.copyTo()",
     "2.11.11": "Basic Tooltip utils",
     "2.11.9": "BlockRepair fixes",
     "2.11.8": "Fix jar signing",
