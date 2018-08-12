@@ -69,6 +69,7 @@ public interface CapCopier<T extends ICopyableCap<T> >
         ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
         BlockPos pos = event.getPos();
         
+        // this can fail if pos (aka Block at pos) has no TileEntity!
         copyToFrom(pos, stack, world);
     }
     

@@ -39,8 +39,12 @@ public class ModConfig
     public static class Debugging
     {
         @Name("Debug mode")
-        @Config.Comment("Enable debug features on this menu, display extra debug info.")
+        @Config.Comment("Enable general debug features, display extra debug info.")
         public boolean debug = false;
+        
+        @Name("Placeholder TileEntity")
+        @Config.Comment("Use placeholder TileEntity to hold caps if block has none.  May crash.  May not persist.")
+        public boolean usePlaceholderTileEntity = false;
     }
 
     @Mod.EventBusSubscriber(modid = Reference.MOD_ID)

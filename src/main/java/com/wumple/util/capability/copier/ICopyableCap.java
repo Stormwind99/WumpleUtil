@@ -2,6 +2,7 @@ package com.wumple.util.capability.copier;
 
 import java.util.List;
 
+import com.wumple.util.ModConfig;
 import com.wumple.util.placeholder.TileEntityPlaceholder;
 
 import net.minecraft.item.ItemStack;
@@ -93,25 +94,34 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
     {
         TileEntity tileentity = world.getTileEntity(pos);
 
-        if (tileentity == null)
+        if (ModConfig.zdebugging.usePlaceholderTileEntity)
         {
-            tileentity = getNewTE();
-            if (tileentity != null)
+            if (tileentity == null)
             {
-                Chunk chunk = world.getChunk(pos);
-                // Obvious method doesn't work: world.setTileEntity(pos, tileentity);
-                // Block.hasTileEntity() false would cause Chunk.addTileEntity() to reject
-                tileentity.setWorld(world);
-                tileentity.setPos(pos);
-                tileentity.validate();
-                chunk.getTileEntityMap().put(pos, tileentity);
-                chunk.markDirty();
-                world.addTileEntity(tileentity);
-                // TODO: tileentity will not persist - loading/saving will strip it out since Block.hasTileEntity() false
+                tileentity = getNewTE();
+                if (tileentity != null)
+                {
+                    Chunk chunk = world.getChunk(pos);
+                    // Obvious method doesn't work: world.setTileEntity(pos, tileentity);
+                    // Block.hasTileEntity() false would cause Chunk.addTileEntity() to reject
+                    tileentity.setWorld(world);
+                    tileentity.setPos(pos);
+                    tileentity.validate();
+                    // THIS CAUSES ConcurrentModificationException !!!
+                    // However World.processingLoadedTiles that World.setTileEntity uses is private
+                    chunk.getTileEntityMap().put(pos, tileentity);
+                    chunk.markDirty();
+                    world.addTileEntity(tileentity);
+                    // TODO: tileentity will not persist - loading/saving will strip it out since Block.hasTileEntity() false
+                }
             }
         }
         
-        copyTo(tileentity);
+        if (tileentity != null)
+        {
+            copyTo(tileentity);
+        }
+        // else failure: no TileEntity to copy cap to
     }
     
     default void copyTo(TileEntity tileentity)
