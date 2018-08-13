@@ -5,6 +5,7 @@
     "1.12.2-recommended": "2.11.12"
   },
   "1.12.2": {
+    "2.11.13": "Improved early server life timer functioning",
     "2.11.12": "Fix for ConcurrentModificationException due to ICopyableCap.copyTo()",
     "2.11.11": "Basic Tooltip utils",
     "2.11.9": "BlockRepair fixes",
