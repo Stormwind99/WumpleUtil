@@ -90,7 +90,47 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
 
     // ----------------------------------------------------------------------
     // Functionality
+    
+    /*
+    @Override
+    default ItemStack check(World world, ItemStack stack)
+    {
+        T info = getInfo();
+        info.checkInitialized(world, TUtil.to(stack));
+        return stack;
+    }
 
+    @Override
+    default <I extends IThing> I check(World world, I before)
+    {
+        return before;
+    }
+    
+    @Override
+    default IThing check(World world, ICapabilityProvider stack)
+    {
+        IEventTimedThingCap<W,T> cap = getCap(stack);
+        cap.checkInitialized(world);
+        return cap.getOwner();
+    }
+    
+    @Override
+    default IThing check(World world, IThing stack)
+    {
+        IEventTimedThingCap<W,T> cap = getCap(stack);
+        cap.checkInitialized(world);
+        return cap.getOwner();
+    }
+    */
+
+    @Override
+    default ItemStack check(World world, ItemStack stack)
+    {
+        IEventTimedThingCap<W,T> cap = getCap(stack);
+        cap.checkInitialized(world);
+        return cap.getOwner().as(ItemStack.class);
+    }
+    
     /*
      * Evaluate this timer, which belongs to stack
      */

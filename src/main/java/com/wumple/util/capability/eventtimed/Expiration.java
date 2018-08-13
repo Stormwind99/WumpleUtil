@@ -10,115 +10,36 @@ import net.minecraft.world.World;
 /**
  * Wrapper class used to encapsulate information about an expiring timer.
  */
-abstract public class Expiration
+abstract public class Expiration extends ExpirationBase
 {
-    public static final long TICKS_PER_DAY = 24000L;
-    public static final int NO_EXPIRATION = -1;
     public static final int DIMENSIONRATIO_DEFAULT = 100;
     
-    /*
-     * The timestamp at which the timer is at 0% - creation time at first, but can be advanced (example: rot by preserving containers aka the fresh date)
-     */
-    public long date;
+    abstract protected long getTimerLength(IThing stack);
     
-    /*
-     * The amount of time the timer takes to expire. The timestamp at which expires is date + time
-     */
-    public long time;
-
     public Expiration()
     {
+        super();
     }
 
     public Expiration(long date, long time)
     {
-        set(date, time);
+        super(date, time);
     }
 
     public Expiration(Expiration other)
     {
-        set(other.date, other.time);
+        super(other);
     }
 
     public Expiration(NBTTagCompound tags)
     {
-        this.readFromNBT(tags);
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound tags)
-    {
-        if (tags != null)
-        {
-            tags.setLong("start", this.date);
-            tags.setLong("time", this.time);
-        }
-
-        return tags;
-    }
-
-    public NBTTagCompound readFromNBT(NBTTagCompound tags)
-    {
-        if (tags != null)
-        {
-            setDate(tags.getLong("start"));
-            setTime(tags.getLong("time"));
-        }
-
-        return tags;
-    }
-
-    public long getDate()
-    {
-        return date;
-    }
-
-    public void setDate(long dateIn)
-    {
-        date = dateIn;
-    }
-
-    public long getTime()
-    {
-        return time;
-    }
-
-    public void setTime(long timeIn)
-    {
-        time = timeIn;
-    }
-
-    public void set(long dateIn, long timeIn)
-    {
-        date = dateIn;
-        time = timeIn;
-    }
-
-    public void setDateSafe(long dateIn)
-    {
-        setDate(dateIn);
-    }
-
-    public void setTimeSafe(long timeIn)
-    {
-        assert (timeIn >= 0);
-        setTime(timeIn);
-    }
-
-    public void setSafe(long dateIn, long timeIn)
-    {
-        setDateSafe(dateIn);
-        setTimeSafe(timeIn);
+        super(tags);
     }
 
     public long getCurTime()
     {
         return TimeUtil.getLastWorldTimestamp();
     }    
-
-    public long getExpirationTimestamp()
-    {
-        return date + time;
-    }
 
     public int getPercent()
     {
@@ -129,26 +50,6 @@ abstract public class Expiration
     public int getDaysLeft()
     {
         return Math.max(0, MathHelper.floor((double) (getCurTime() - date) / TICKS_PER_DAY));
-    }
-
-    public int getDaysTotal()
-    {
-        return MathHelper.floor((double) time / TICKS_PER_DAY);
-    }
-
-    public int getUseBy()
-    {
-        return MathHelper.floor((double) (date + time) / TICKS_PER_DAY);
-    }
-
-    public boolean isSet()
-    {
-        return (date > 0);
-    }
-
-    public boolean isNonExpiring()
-    {
-        return (time == NO_EXPIRATION);
     }
 
     public void setRelative(int dimensionRatio, IThing owner)
@@ -184,16 +85,17 @@ abstract public class Expiration
     {
         if (toRatio == 0)
         {
-            if ((fromRatio != 0) && (time != 0))
+            if ((fromRatio != 0) && (time != UNINITIALIZED))
             {
                 // this would loose any relative to fresh date expiration info
                 // but we encode any current non-zero expiration time into start date before zeroing
                 // that newdate+defaultTime = oldDate+oldTime
                 long defaultTime = getDefaultTime(owner);
-                long newDate = Math.max(1, date + time - defaultTime);
-
-                // set without range checking
-                set(newDate, NO_EXPIRATION);
+                long addTime = (time == NO_EXPIRATION) ? 0 : time;
+                // TODO date == UNINITIALIZED
+                long newDate = date + addTime - defaultTime;
+                
+                setSafeValid(newDate, NO_EXPIRATION);
             }
             return;
         }
@@ -220,9 +122,11 @@ abstract public class Expiration
 
         // debug ratio was already applied to time in checkInitialized() at initialization
 
-        long clampedLocalTime = (localTime < 0) ? 0 : localTime;
-
-        setTimeSafe(clampedLocalTime);
+        // USED TO: 
+        // long clampedLocalTime = (localTime < 0) ? 0 : localTime;
+        // setTimeSafe(clampedLocalTime);
+        
+        setTimeSafe(localTime);
     }
     
     public static long alterTime(int dimensionRatioShift, long now, long date, long time)
@@ -249,8 +153,6 @@ abstract public class Expiration
         return (long) y;
     }
     
-    abstract protected long getTimerLength(IThing stack);
-    
     protected void initTime(int dimensionRatio, IThing stack)
     {
         long timerLength = getTimerLength(stack);
@@ -275,7 +177,7 @@ abstract public class Expiration
     public boolean checkInitialized(World world, IThing stack)
     {
         // if initialization not yet done (stack just created or was missed somehow), then do/fix it
-        if (date == 0)
+        if (date == UNINITIALIZED)
         {
             long timerLength = getTimerLength(stack);
 
@@ -293,7 +195,8 @@ abstract public class Expiration
                 long xPercentOfExpTime  = (shiftedTime * chunkingPercent) / 100;
                 long chunk = (curTime / xPercentOfExpTime) + 1;
                 
-                newDate = Math.max(1, chunk * xPercentOfExpTime);
+                // MAYBE newDate = Math.max(1, chunk * xPercentOfExpTime);
+                newDate = chunk * xPercentOfExpTime;
             }
             
             setDateSafe(newDate);
@@ -330,15 +233,8 @@ abstract public class Expiration
 
     public boolean hasExpired()
     {
-        if (isNonExpiring())
-        {
-            return false;
-        }
-        
         long worldTimeStamp = getCurTime();
-        long relativeExpirationTimeStamp = getExpirationTimestamp();
-
-        return (worldTimeStamp >= relativeExpirationTimeStamp);
+        return super.hasExpired(worldTimeStamp);
     }
     
     public void reschedule(long timeIn)
@@ -347,6 +243,7 @@ abstract public class Expiration
         if (!isNonExpiring())
         {
             long worldTimeStamp = getCurTime();
+            // TODO date == UNINITIALIZED
             long newDate = date + timeIn;
                                 
             // don't allow items to go into negative expiration (example: with rot, aka super-fresh aka fresh date in future)
@@ -368,7 +265,9 @@ abstract public class Expiration
             */
             newDate = Math.min(newDate, maxDate);
             
-            // don't go negative date (or even special value 0) when negative-preserving
+            /*
+            // setDateSafe avoiding UNINITIALIZED should take care of this
+            // PAST: don't go negative date (or even special value 0) when negative-preserving
             if (newDate < 1)
             {
                 // experiment: try reducing time if date would be <= 0
@@ -377,8 +276,9 @@ abstract public class Expiration
                 time = newTime;
                 newDate = 1;
             }
+            */
             
-            date = newDate;
+            setDateSafe(newDate);
         }
     }
 }

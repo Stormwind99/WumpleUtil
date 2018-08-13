@@ -32,7 +32,8 @@ public interface CapCopier<T extends ICopyableCap<T> >
     
     default ItemStack check(World world, ItemStack stack)
     {
-        return stack;
+        T cap = getCap(stack);
+        return cap.check(world, stack);
     }
     
     default void onHarvest(BlockEvent.HarvestDropsEvent event)

@@ -23,12 +23,7 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
     {
         copyFrom((T) other);
     }
-
-    default ItemStack check(World world, ItemStack before)
-    {
-        return before;
-    }
-
+    
     default void copyFrom(List<T> stacks)
     {
         for (int i = 0; i < stacks.size(); i++)
@@ -60,7 +55,15 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
             copyFrom(ccap);
         }        
     }
+    
+    // ----------------------------------------------------------------------
+    // For item drop and crafting processing
 
+    default ItemStack check(World world, ItemStack before)
+    {
+        return before;
+    }
+    
     default void copyTo(List<ItemStack> drops, World world)
     {
         for (int i = 0; i < drops.size(); ++i)
@@ -84,12 +87,42 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
             }
         }
     }
-
-    default TileEntity getNewTE()
+    
+    /*     
+    default IThing check(World world, IThing before)
     {
-        return new TileEntityPlaceholder();
+        return before;
     }
 
+    default void copyTo3(List<IThing> drops, World world)
+    {
+        for (int i = 0; i < drops.size(); ++i)
+        {
+            IThing before = drops.get(i);
+            
+            // only check before if world is available, since init depends on world
+            IThing after = (world != null) ? check(world, before) : before;
+
+            // in case check changes the stack, replace old in drops with new
+            if (!after.sameAs(before))
+            {
+                drops.set(i, after);
+            }
+
+            T destCap = getCap(after);
+
+            if (destCap != null)
+            {
+                destCap.copyFrom2(this);
+            }
+        }
+    }
+    */
+    
+    // ----------------------------------------------------------------------
+    // For block placement processing
+    // Example: (Item+ItemStack to TileEntity+Block)
+    
     default void copyTo(BlockPos pos, World world)
     {
         TileEntity tileentity = world.getTileEntity(pos);
@@ -122,6 +155,11 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
             copyTo(tileentity);
         }
         // else failure: no TileEntity to copy cap to
+    }
+    
+    default TileEntity getNewTE()
+    {
+        return new TileEntityPlaceholder();
     }
     
     default void copyTo(TileEntity tileentity)
