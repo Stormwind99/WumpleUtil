@@ -28,6 +28,9 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
     T setInfo(T infoIn);
 
     T getInfo();
+    
+    default W expired(World world)
+    { return expired(world, getOwner()); }
 
     W expired(World world, W stack);
 
@@ -48,16 +51,19 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
     default void setDate(long dateIn)
     {
         getInfo().setDate(dateIn);
+        forceUpdate();
     }
 
     default void setTime(long timeIn)
     {
         getInfo().setTime(timeIn);
+        forceUpdate();
     }
     
     default void setExpiration(long dateIn, long timeIn)
     {
         getInfo().set(dateIn, timeIn);
+        forceUpdate();
     }
     
     default long getExpirationTimestamp()
@@ -122,13 +128,21 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         return cap.getOwner();
     }
     */
-
+    
     @Override
     default ItemStack check(World world, ItemStack stack)
     {
         IEventTimedThingCap<W,T> cap = getCap(stack);
         cap.checkInitialized(world);
         return cap.getOwner().as(ItemStack.class);
+    }
+    
+    /*
+     * Evaluate this timer, which belongs to stack
+     */
+    default W evaluate(World world)
+    {
+        return evaluate(world, getOwner());
     }
     
     /*
@@ -141,8 +155,8 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         if (!info.checkInitialized(world, stack))
         {
             forceUpdate();
-        }
-
+        }     
+        
         if (!info.isNonExpiring())
         {
             if (info.hasExpired())
@@ -181,7 +195,6 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
             {
                 if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: uninit this, copying " + other.getDate() + " " + other.getTime()); }
                 setExpiration(other.getDate(), other.getTime());
-                forceUpdate();               
             }
             else
             {
@@ -225,7 +238,6 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
                     ); }
             
             setExpiration(new_d_i, t_i);
-            forceUpdate();
         }
         else
         {

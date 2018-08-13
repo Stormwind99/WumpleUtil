@@ -37,12 +37,14 @@ abstract public class EventTimedThingCap<W extends IThing, T extends Expiration>
     {
         super();
         info = other.info;
+        forceUpdate();
     }
     
     @Override
     public T setInfo(T infoIn)
     {
         info = infoIn;
+        forceUpdate();
         return info;
     }
 
