@@ -1,10 +1,11 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "2.11.12",
-    "1.12.2-recommended": "2.11.12"
+    "1.12.2-latest": "2.11.14",
+    "1.12.2-recommended": "2.11.14"
   },
   "1.12.2": {
+    "2.11.14": "Support for blockproperties and crop age in NameKeys.  Rare insta-tor fix, other fixes.",
     "2.11.13": "Improved early server life timer functioning",
     "2.11.12": "Fix for ConcurrentModificationException due to ICopyableCap.copyTo()",
     "2.11.11": "Basic Tooltip utils",
