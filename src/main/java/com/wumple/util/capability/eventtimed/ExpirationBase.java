@@ -8,14 +8,29 @@ public class ExpirationBase
     public static final long TICKS_PER_DAY = 24000L;
     public static final int UNINITIALIZED = 0;
     public static final int NO_EXPIRATION = -1;
+    
+    /*
+     * Values:
+     * < 0 : rare but valid, caused by recrafting at beginning of world time
+     * == 0 : UNINITIALIZED
+     * > 0 : valid
+     */
     public long date;
+    
+    /*
+     * Values:
+     * < -1: invalid!
+     * -1 : NO_EXPIRATION
+     * == 0: UNINITIALIZED
+     * > 0: valid
+     */
     public long time;
 
     public ExpirationBase()
     {
         super();
     }
-    
+
     public ExpirationBase(long date, long time)
     {
         super();
@@ -35,7 +50,7 @@ public class ExpirationBase
     }
 
     // MAYBE implement INBTSerializable
-    
+
     public NBTTagCompound writeToNBT(NBTTagCompound tags)
     {
         if (tags != null)
@@ -43,7 +58,7 @@ public class ExpirationBase
             tags.setLong("start", this.date);
             tags.setLong("time", this.time);
         }
-    
+
         return tags;
     }
 
@@ -54,12 +69,12 @@ public class ExpirationBase
             setDate(tags.getLong("start"));
             setTime(tags.getLong("time"));
         }
-    
+
         return tags;
     }
 
     /// direct setters and getters - no validation
-     
+
     public long getDate()
     {
         return date;
@@ -85,7 +100,7 @@ public class ExpirationBase
         date = dateIn;
         time = timeIn;
     }
-    
+
     // valid setters - allow setting only valid values
 
     public void setDateValid(long dateIn)
@@ -108,7 +123,7 @@ public class ExpirationBase
         setDateValid(dateIn);
         setTimeValid(timeIn);
     }
-    
+
     // safe setters - allow setting only valid, initialized, expiring values
 
     public void setDateSafe(long dateIn)
@@ -118,7 +133,7 @@ public class ExpirationBase
         {
             dateIn++;
         }
-    
+
         setDate(dateIn);
     }
 
@@ -139,13 +154,13 @@ public class ExpirationBase
     }
 
     /// mixed setters
-    
+
     public void setSafeValid(long dateIn, long timeIn)
     {
         setDateSafe(dateIn);
         setTimeValid(timeIn);
     }
-    
+
     // misc getters
 
     public boolean isSet()
@@ -162,7 +177,7 @@ public class ExpirationBase
     {
         return date + time;
     }
-    
+
     public int getDaysTotal()
     {
         return MathHelper.floor((double) time / TICKS_PER_DAY);
@@ -172,14 +187,14 @@ public class ExpirationBase
     {
         return MathHelper.floor((double) (date + time) / TICKS_PER_DAY);
     }
-    
+
     public boolean hasExpired(long worldTimeStamp)
     {
         if (isNonExpiring() || !isSet())
         {
             return false;
         }
-        
+
         long relativeExpirationTimeStamp = getExpirationTimestamp();
 
         return (worldTimeStamp >= relativeExpirationTimeStamp);
