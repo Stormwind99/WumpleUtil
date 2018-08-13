@@ -175,7 +175,7 @@ public class ExpirationBase
     
     public boolean hasExpired(long worldTimeStamp)
     {
-        if (isNonExpiring())
+        if (isNonExpiring() || !isSet())
         {
             return false;
         }

@@ -177,7 +177,7 @@ abstract public class Expiration extends ExpirationBase
     public boolean checkInitialized(World world, IThing stack)
     {
         // if initialization not yet done (stack just created or was missed somehow), then do/fix it
-        if (date == UNINITIALIZED)
+        if (!isSet())
         {
             long timerLength = getTimerLength(stack);
 
