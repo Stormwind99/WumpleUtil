@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 /*
  * Wrapper around Forge HashMap<String, T> configs for (itemstack, item, entity, string)->value configs
  */
-public class MatchingConfig<T> extends MatchingConfigBase
+public class MatchingConfig<T> extends NameKeys
 {
     protected final Map<String, T> config;
     public final T FALSE_VALUE;

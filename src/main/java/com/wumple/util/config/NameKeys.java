@@ -1,25 +1,33 @@
 package com.wumple.util.config;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.wumple.util.ModConfig;
 import com.wumple.util.misc.TypeIdentifier;
 
+import net.minecraft.block.BlockCrops;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemSeedFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class MatchingConfigBase
+public class NameKeys
 {
     // special tags for backwards compatibility
     public static final String FOOD_TAG = "minecraft:food";
+    public static final String SEED_FOOD_TAG = "minecraft:seedfood";
     public static final String PLAYER_TAG = "entity:player";
     public static final String SPIDER_TAG = "entity:spider";
     
@@ -73,6 +81,7 @@ public class MatchingConfigBase
             return nameKeys;
         }
 
+        addNameKeysProperty(nameKeys, entity, BlockCrops.AGE);
         addNameKeys(nameKeys, entity);
         addNameKeys(nameKeys, (Object)entity);
         
@@ -107,6 +116,27 @@ public class MatchingConfigBase
     {
         addNameKeysResLoc(nameKeys, it);
 
+        return nameKeys;
+    }
+ 
+    static public <T extends Comparable<T>> ArrayList<String> addNameKeysProperty(ArrayList<String> nameKeys, TileEntity te, IProperty<T> property)
+    {
+        ResourceLocation loc = (te == null) ? null : TileEntity.getKey(te.getClass());
+        if (loc == null)
+        {
+            return nameKeys;
+        }
+        
+        BlockPos pos = te.getPos();
+        World world = te.getWorld();
+        IBlockState state = (world != null) ? world.getBlockState(pos) : null;
+        Collection<IProperty<?>> props = (state != null) ? state.getPropertyKeys() : null;
+        if ((props != null) && (props.contains(property)))
+        {
+            T value = state.getValue(property);
+            nameKeys.add(loc.toString() + "[" + property.getName() + "=" + value.toString() + "]" );
+        }
+            
         return nameKeys;
     }
     
@@ -183,6 +213,11 @@ public class MatchingConfigBase
     static public ArrayList<String> addNameKeysSpecial(ArrayList<String> nameKeys, Object object)
     {   
         // special tags for backwards compatibility 
+        if (object instanceof ItemSeedFood)
+        {
+            nameKeys.add(SEED_FOOD_TAG);
+        }
+        
         if (object instanceof ItemFood)
         {
             nameKeys.add(FOOD_TAG);

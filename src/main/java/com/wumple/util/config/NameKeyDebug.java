@@ -31,7 +31,7 @@ public class NameKeyDebug
         if (ModConfig.zdebugging.debug == true)
         {
             ItemStack itemStack = event.getItemStack();
-            ArrayList<String> nameKeys = MatchingConfigBase.getNameKeys(itemStack);
+            ArrayList<String> nameKeys = NameKeys.getNameKeys(itemStack);
 
             if (nameKeys != null)
             {
@@ -74,7 +74,7 @@ public class NameKeyDebug
         {
             Entity entity = mc.objectMouseOver.entityHit;
 
-            ArrayList<String> nameKeys = MatchingConfigBase.getNameKeys(entity);
+            ArrayList<String> nameKeys = NameKeys.getNameKeys(entity);
 
             if (nameKeys != null)
             {
@@ -99,7 +99,7 @@ public class NameKeyDebug
             BlockPos blockpos = (mc.objectMouseOver == null) ? null : mc.objectMouseOver.getBlockPos();
             TileEntity te = (blockpos == null) ? null : mc.world.getTileEntity(blockpos);
             
-            ArrayList<String> nameKeys = MatchingConfigBase.getNameKeys(te);
+            ArrayList<String> nameKeys = NameKeys.getNameKeys(te);
 
             if (nameKeys != null)
             {
