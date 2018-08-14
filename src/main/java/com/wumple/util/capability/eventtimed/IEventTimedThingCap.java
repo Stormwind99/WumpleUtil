@@ -291,12 +291,34 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         }         
         
         // handle dimension-related state:
-        // if other.nonExpiring && info.nonExpiring, do nothing
-        // if other.nonExpiring && !info.nonExpiring, do nothing
-        // if !other.nonExp && info.nonExpiring, do nothing
-        // if !other.nonExp && !info.nonExpiring, do below
+        // if other.nonExpiring && info.nonExpiring, keep oldest non-expiring (was do nothing)
+        // if other.nonExpiring && !info.nonExpiring, keep info (was do nothing)
+        // if !other.nonExp && info.nonExpiring, keep other (was do nothing)
+        // if !other.nonExp && !info.nonExpiring, do merge (see below)
         
-        if ((!this.isNonExpiring()) && (!other.isNonExpiring()))
+        if (this.isNonExpiring() && other.isNonExpiring())
+        {
+            long d_o = other.getDate();
+            long d_i = this.getDate();
+            long new_d_i = Math.min(d_o, d_i);
+            long t_i = ExpirationBase.NO_EXPIRATION;
+            
+            if (ModConfig.zdebugging.debug)
+            { 
+                long t_o = other.getTime();
+                
+                WumpleUtil.logger.info("copyFrom: non-exp setting"
+                    + " new_d_i " + new_d_i
+                    + " d_o " + d_o
+                    + " t_o " + t_o
+                    + " d_i " + d_i
+                    + " t_i " + t_i
+                    );
+            }
+            
+            setExpiration(new_d_i, t_i);
+        }
+        else if ((!this.isNonExpiring()) && (!other.isNonExpiring()))
         {
             long d_o = other.getDate();
             long t_o = other.getTime();
