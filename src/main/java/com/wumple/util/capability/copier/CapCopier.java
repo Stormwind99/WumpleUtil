@@ -74,13 +74,13 @@ public interface CapCopier<T extends ICopyableCap<T> >
         copyToFrom(pos, stack, world);
     }
     
-    default <Z extends ICapabilityProvider> void copyToFrom(ICapabilityProvider dest, List<Z> others)
+    default <Z extends ICapabilityProvider> void copyToFrom(ICapabilityProvider dest, List<Z> others, World world)
     {
         T destCap = getCap(dest);
 
         if (destCap != null)
         {
-            destCap.copyFromProviders(others);
+            destCap.copyFromProviders(others, world);
         }
     }
   
@@ -94,7 +94,6 @@ public interface CapCopier<T extends ICopyableCap<T> >
         }
     }
    
-    
     default void copyToFrom(BlockPos pos, ICapabilityProvider stack, World world)
     {
         T srcCap = getCap(stack);

@@ -16,15 +16,15 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
 {
     T getCap(ICapabilityProvider provider);
     
-    void copyFrom(T other);
+    void copyFrom(T other, World world);
 
     @SuppressWarnings("unchecked")
-    default void copyFrom2(ICopyableCap<T> other)
+    default void copyFrom2(ICopyableCap<T> other, World world)
     {
-        copyFrom((T) other);
+        copyFrom((T) other, world);
     }
     
-    default void copyFrom(List<T> stacks)
+    default void copyFrom(List<T> stacks, World world)
     {
         for (int i = 0; i < stacks.size(); i++)
         {
@@ -32,27 +32,27 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
 
             if (ccap != null)
             {
-                copyFrom(ccap);
+                copyFrom(ccap, world);
             }
         }
     }
     
-    default <X extends ICapabilityProvider> void copyFromProviders(List<X> stacks)
+    default <X extends ICapabilityProvider> void copyFromProviders(List<X> stacks, World world)
     {
         for (int i = 0; i < stacks.size(); i++)
         {
             X provider = stacks.get(i);
-            copyFromProvider(provider);
+            copyFromProvider(provider, world);
         }
     }
     
-    default <X extends ICapabilityProvider> void copyFromProvider(X provider)
+    default <X extends ICapabilityProvider> void copyFromProvider(X provider, World world)
     {
         T ccap = (provider != null) ? getCap(provider) : null;
         
         if (ccap != null)
         {
-            copyFrom(ccap);
+            copyFrom(ccap, world);
         }        
     }
     
@@ -83,7 +83,7 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
 
             if (destCap != null)
             {
-                destCap.copyFrom2(this);
+                destCap.copyFrom2(this, world);
             }
         }
     }
@@ -113,7 +113,7 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
 
             if (destCap != null)
             {
-                destCap.copyFrom2(this);
+                destCap.copyFrom2(this, world);
             }
         }
     }
@@ -152,7 +152,7 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
         
         if (tileentity != null)
         {
-            copyTo(tileentity);
+            copyTo(tileentity, world);
         }
         // else failure: no TileEntity to copy cap to
     }
@@ -162,6 +162,7 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
         return new TileEntityPlaceholder();
     }
     
+    /*
     default void copyTo(TileEntity tileentity)
     {
         T destCap = getCap(tileentity);
@@ -169,6 +170,17 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
         if (destCap != null)
         {
             destCap.copyFrom2(this);
+        }
+    }
+    */
+    
+    default void copyTo(TileEntity tileentity, World world)
+    {
+        T destCap = getCap(tileentity);
+
+        if (destCap != null)
+        {
+            destCap.copyFrom2(this, world);
         }
     }
 }

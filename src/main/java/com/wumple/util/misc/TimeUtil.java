@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,6 +26,15 @@ public class TimeUtil
     protected static long lastServerWorldTimestamp = 0;
     protected static int lastServerWorld = 0;
 
+    public static void clear()
+    {
+        lastWorldTimestamp = 0;
+        lastClientWorldTimestamp = 0;
+        lastClientWorld = 0;
+        lastServerWorldTimestamp = 0;
+        lastServerWorld = 0;
+    }
+    
     public static void setLastWorldTimestamp(long timestamp)
     {
         if (timestamp > lastWorldTimestamp)
@@ -88,5 +99,15 @@ public class TimeUtil
     {
         World world = event.getWorld();
         setTimestamp(world);
+    }
+    
+    public static void onAboutToStart(FMLServerAboutToStartEvent event)
+    {
+        clear();
+    }
+    
+    public static void onStopped(FMLServerStoppedEvent event)
+    {
+        clear();
     }
 }

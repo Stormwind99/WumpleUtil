@@ -89,7 +89,16 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
 
     default boolean checkInitialized(World world)
     {
-        boolean initedAlready = getInfo().checkInitialized(world, getOwner());
+        IThing owner = getOwner();
+        boolean initedAlready = getInfo().checkInitialized(owner.getWorldBackup(world), owner);
+        if (!initedAlready) { forceUpdate(); }
+        return initedAlready;
+    }
+    
+    default boolean checkInitialized(World world, W stack)
+    {
+        IThing owner = getOwner();
+        boolean initedAlready = getInfo().checkInitialized(owner.getWorldBackup(world), stack);
         if (!initedAlready) { forceUpdate(); }
         return initedAlready;
     }
@@ -150,12 +159,9 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
      */
     default W evaluate(World world, W stack)
     {
-        T info = getInfo();
+        checkInitialized(world, stack);
         
-        if (!info.checkInitialized(world, stack))
-        {
-            forceUpdate();
-        }     
+        T info = getInfo();
         
         if (!info.isNonExpiring())
         {
@@ -173,9 +179,10 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         getInfo().ratioShift(fromRatio, toRatio, getOwner());
         forceUpdate();
     }
-        
+      
+    /*
     @Override
-    default void copyFrom(IEventTimedThingCap<W, T> other)
+    default void copyFrom(IEventTimedThingCap<W, T> other, World world)
     {
         // Avoid cheating from crafting or break rotting items
         
@@ -244,6 +251,85 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
             if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: skipping this isNotExpiring"); }
         }
     }
+    */
+    
+    @Override
+    default void copyFrom(IEventTimedThingCap<W, T> other, World world)
+    {
+        // Avoid cheating from crafting or break rotting items
+        
+        // For example: 
+        // Melon 0/14 days -> Slices 0/7 days -> Melon 0/7 days or 7/14 days
+        // Melon 8/14 days -> Slices 6/7 days -> Melon 6/7 days or 13/14 days
+        // Crafting: Ingredients 1/7, 2/7, 3/7 days -> Results 3/7 days
+        // Crafting: Ingredients 1/7, 2/7, 3/7 days -> Results 10/14 days
+        // Crafting: Ingredients 5/14, 6/14 -> Results 0/7 days
+        // Crafting: Ingredients 6/14, 9/14 -> Results 2/7 days
+        
+        if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: other " + other + " this " + this); }
+
+        // world might be null
+        this.checkInitialized(world);
+        other.checkInitialized(world);
+        
+        if (!this.isExpirationTimestampSet())
+        {
+            if (other.isExpirationTimestampSet())
+            {
+                if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: uninit this, copying " + other.getDate() + " " + other.getTime()); }
+                setExpiration(other.getDate(), other.getTime());
+            }
+        }
+        
+        if (!other.isExpirationTimestampSet())
+        {
+            // handle uninitialized src
+            // should never happen - but for now just skip this operation
+            if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: skipping uninit other " + other.isExpirationTimestampSet() + " this " + this.isExpirationTimestampSet()); }
+            assert(other.isExpirationTimestampSet());
+            return;              
+        }         
+        
+        // handle dimension-related state:
+        // if other.nonExpiring && info.nonExpiring, do nothing
+        // if other.nonExpiring && !info.nonExpiring, do nothing
+        // if !other.nonExp && info.nonExpiring, do nothing
+        // if !other.nonExp && !info.nonExpiring, do below
+        
+        if (!this.isNonExpiring())
+        {
+            long d_o = other.getDate();
+            long t_o = other.getTime();
+            long e_o = d_o + t_o; // aka other.getExpirationTimestamp();
+            long d_i = this.getDate();
+            long t_i = this.getTime();
+            long e_i = d_i + t_i; // aka info.getExpirationTimestamp();
+
+            long new_d_i = d_i;
+            if (e_i > e_o)
+            {
+                // clamp dest expiration timestamp at src expiration timestamp by moving destination date backwards
+                new_d_i = e_o - t_i;
+            }
+            
+            if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: setting"
+                    + " new_d_i " + new_d_i
+                    + " d_o " + d_o
+                    + " t_o " + t_o
+                    + " e_o " + e_o
+                    + " d_i " + d_i
+                    + " t_i " + t_i
+                    + " e_i " + e_i
+                    ); }
+            
+            setExpiration(new_d_i, t_i);
+        }
+        else
+        {
+            if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: skipping this isNotExpiring"); }
+        }
+    }
+
     
     default void evaluate(World world, Integer index, IItemHandler itemhandler, W stack)
     {
@@ -275,7 +361,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
 
             if (cap != null)
             {
-                copyFrom(cap);
+                copyFrom(cap, world);
             }
         }
     }

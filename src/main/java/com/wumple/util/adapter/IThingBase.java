@@ -15,6 +15,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 public interface IThingBase extends ICapabilityProvider
 {
     World getWorld();
+    
     BlockPos getPos();
 
     boolean isInvalid();
@@ -26,6 +27,12 @@ public interface IThingBase extends ICapabilityProvider
     boolean sameAs(IThing entity);
     
     Object object();
+    
+    default World getWorldBackup(World otherWorld)
+    {
+        World myWorld = getWorld();
+        return (myWorld != null) ? myWorld : otherWorld;
+    }
     
     default int getCount()
     { return 1; }

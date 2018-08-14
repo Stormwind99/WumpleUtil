@@ -78,7 +78,7 @@ public abstract class CapMergeRecipeFactory<T extends ICopyableCap<?> > implemen
                 T cap = getCap(newStack);
                 if (cap != null)
                 {
-                    cap.copyFromProviders(stacks);
+                    cap.copyFromProviders(stacks, null);
                 }
                                 
                 return newStack;
