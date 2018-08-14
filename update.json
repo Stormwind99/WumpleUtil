@@ -1,8 +1,8 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "2.11.12",
-    "1.12.2-recommended": "2.11.12"
+    "1.12.2-latest": "2.11.20",
+    "1.12.2-recommended": "2.11.20"
   },
   "1.12.2": {
     "2.11.20": "Support for blockproperties and crop age in NameKeys.  Rare insta-tor fix, other fixes. Time init fix. CraftingUtil findPlayer and findWorld",
