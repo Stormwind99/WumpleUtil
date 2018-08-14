@@ -296,7 +296,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         // if !other.nonExp && info.nonExpiring, do nothing
         // if !other.nonExp && !info.nonExpiring, do below
         
-        if (!this.isNonExpiring())
+        if ((!this.isNonExpiring()) && (!other.isNonExpiring()))
         {
             long d_o = other.getDate();
             long t_o = other.getTime();
@@ -326,7 +326,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         }
         else
         {
-            if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: skipping this isNotExpiring"); }
+            if (ModConfig.zdebugging.debug) { WumpleUtil.logger.info("copyFrom: skipping isNotExpiring this " + this.isNonExpiring() + " other " + other.isNonExpiring()); }
         }
     }
 

@@ -5,6 +5,14 @@ import net.minecraft.world.World;
 
 public class TileEntityPlaceholder extends TileEntity
 {   
+    public TileEntityPlaceholder() { super(); }
+    
+    public TileEntityPlaceholder(World worldIn)
+    {
+        super();
+        setWorld(worldIn);
+    }
+    
     public void ensureInitialized(World world)
     {
     }
@@ -14,11 +22,11 @@ public class TileEntityPlaceholder extends TileEntity
     {
         super.onLoad();
         
-        World world = getWorld();
+        World myWorld = getWorld();
         
-        if (world != null)
+        if (myWorld != null)
         {
-            ensureInitialized(world);
+            ensureInitialized(myWorld);
         }
     }   
 }

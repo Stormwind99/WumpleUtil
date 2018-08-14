@@ -131,7 +131,7 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
         {
             if (tileentity == null)
             {
-                tileentity = getNewTE();
+                tileentity = getNewTE(world);
                 if (tileentity != null)
                 {
                     Chunk chunk = world.getChunk(pos);
@@ -157,9 +157,9 @@ public interface ICopyableCap<T extends ICopyableCap<T>>
         // else failure: no TileEntity to copy cap to
     }
     
-    default TileEntity getNewTE()
+    default TileEntity getNewTE(World world)
     {
-        return new TileEntityPlaceholder();
+        return new TileEntityPlaceholder(world);
     }
     
     /*

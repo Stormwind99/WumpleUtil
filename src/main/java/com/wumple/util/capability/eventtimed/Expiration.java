@@ -162,11 +162,10 @@ abstract public class Expiration extends ExpirationBase
 
     protected void initTime(long timerLength, int dimensionRatio, IThing stack)
     {
-        if (timerLength != NO_EXPIRATION)
-        {
-            setTimeSafe(timerLength);
-            setRelative(dimensionRatio, stack);
-        }
+        // used to be setTimeSafe() but Block.createNewTileEntity() causes init on incomplete TileEntity (no pos, no world)
+        // which can lead to a non-rotting TileEntity to get a Rot cap - so need to allow it and deal with it as well as possible
+        setTimeValid(timerLength);
+        setRelative(dimensionRatio, stack);
     }
     
     public int getChunkingPercent()

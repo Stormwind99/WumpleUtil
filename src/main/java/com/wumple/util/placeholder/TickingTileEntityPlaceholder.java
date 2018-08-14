@@ -8,7 +8,12 @@ import net.minecraft.world.World;
 abstract public class TickingTileEntityPlaceholder extends TileEntityPlaceholder implements ITickable
 {
     protected long ticks = 0;
-  
+    
+    public TickingTileEntityPlaceholder() { super(); }
+    
+    public TickingTileEntityPlaceholder(World worldIn)
+    { super(worldIn); }
+    
     protected void handleOnTick(World world)
     {
         ticks++;

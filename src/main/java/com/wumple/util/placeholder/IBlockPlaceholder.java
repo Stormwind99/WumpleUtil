@@ -8,6 +8,6 @@ public interface IBlockPlaceholder extends ITileEntityProvider
 {
     default public TileEntity createNewTileEntity(World worldIn, int meta)
     {
-        return new TileEntityPlaceholder();
+        return new TileEntityPlaceholder(worldIn);
     }
 }
