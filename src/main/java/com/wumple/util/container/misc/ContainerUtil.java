@@ -3,6 +3,8 @@ package com.wumple.util.container.misc;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.wumple.util.adapter.EntityThing;
 import com.wumple.util.adapter.IThing;
 import com.wumple.util.adapter.TUtil;
@@ -172,20 +174,10 @@ public class ContainerUtil
 
         return doesContain(capability, itemToSearchFor);
     }
-
-    // horrible hack - find the thing containing stack
-    static public IThing getContainedBy(ItemStack stack, Entity entityHint, TileEntity tileEntityHint)
+    
+    // horrible hack - guess the world and pos of thing containing stack
+    static public Pair<World, BlockPos> getContainedWorldPos(ItemStack stack, Entity entityHint, TileEntity tileEntityHint)
     {
-        if (doesContain(entityHint, stack))
-        {
-            return TUtil.to(entityHint);
-        }
-
-        if (doesContain(tileEntityHint, stack))
-        {
-            return TUtil.to(tileEntityHint);
-        }
-
         BlockPos posGuess = null;
         World worldGuess = null;
         if (entityHint != null)
@@ -201,6 +193,27 @@ public class ContainerUtil
         /*
          * else { posGuess = FoodFunk.proxy.getClientPlayer().getPos(); }
          */
+
+        return Pair.of(worldGuess, posGuess);
+    }
+
+    // horrible hack - find the thing containing stack
+    static public IThing getContainedBy(ItemStack stack, Entity entityHint, TileEntity tileEntityHint)
+    {
+        if (doesContain(entityHint, stack))
+        {
+            return TUtil.to(entityHint);
+        }
+
+        if (doesContain(tileEntityHint, stack))
+        {
+            return TUtil.to(tileEntityHint);
+        }
+
+        Pair<World, BlockPos> guess = getContainedWorldPos(stack, entityHint, tileEntityHint);
+        
+        BlockPos posGuess = guess.getRight();
+        World worldGuess = guess.getLeft();
 
         // TODO open TileEntity container
         // TODO open Entity container

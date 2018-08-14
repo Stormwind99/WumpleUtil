@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import com.google.gson.JsonObject;
 import com.wumple.util.Reference;
+import com.wumple.util.misc.CraftingUtil;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -69,7 +70,7 @@ public abstract class CapMergeRecipeFactory<T extends ICopyableCap<?> > implemen
                 exampleItem = exampleStack.getItem();
             }
             
-            public ItemStack create()
+            public ItemStack create(World world)
             {   
                 int newCount = Math.min(stacks.size(), exampleItem.getItemStackLimit(exampleStack));
                 
@@ -78,10 +79,20 @@ public abstract class CapMergeRecipeFactory<T extends ICopyableCap<?> > implemen
                 T cap = getCap(newStack);
                 if (cap != null)
                 {
-                    cap.copyFromProviders(stacks, null);
+                    cap.copyFromProviders(stacks, world);
                 }
                                 
                 return newStack;
+            }
+            
+            public ItemStack create()
+            {  
+                return create(getWorld());
+            }
+            
+            public World getWorld()
+            {
+                return null;
             }
         }
         
@@ -166,7 +177,7 @@ public abstract class CapMergeRecipeFactory<T extends ICopyableCap<?> > implemen
 
             if (results != null)
             {
-                ItemStack itemstack2 = results.create();
+                ItemStack itemstack2 = results.create(CraftingUtil.findWorld(inv));
                 
                 log("CapMergeRecipe getCraftingResults result " + itemstack2);
 
