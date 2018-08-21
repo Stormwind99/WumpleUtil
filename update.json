@@ -1,11 +1,13 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "2.11.20",
-    "1.12.2-recommended": "2.11.20"
+    "1.12.2-latest": "2.11.22",
+    "1.12.2-recommended": "2.11.22"
   },
   "1.12.2": {
-    "2.11.20": "Support for blockproperties and crop age in NameKeys.  Rare insta-tor fix, other fixes. Time init fix. CraftingUtil findPlayer and findWorld",
+    "2.12.5": "Added TargetCrafting package and more Map package",
+    "2.11.22": "Made Rect public, more useful Rect methods",
+    "2.11.20": "Support for blockproperties and crop age in NameKeys.  Rare insta-expire fix, other fixes. Time init fix. CraftingUtil findPlayer and findWorld",
     "2.11.13": "Improved early server life timer functioning",
     "2.11.12": "Fix for ConcurrentModificationException due to ICopyableCap.copyTo()",
     "2.11.11": "Basic Tooltip utils",
@@ -16,7 +18,7 @@
     "2.10.7": "Map functions and base mod class moved from Pantography. More ICopyableCap functionality. Reusable CapMergeRecipe from FoodFunk. Moved various classes.",
     "2.9.2": "ItemStack forceUpdate hack optional. BaseChest rendering rotatable.",
     "2.8.32": "regHelpers without translation key automation",
-    "2.8.28": "EventTimedThingCap",
+    "2.8.28": "EventTimedThingCap - timer on a thing that uses events rather than tick for checks",
     "2.7.0": "NameableTileEntity and related classes",
     "2.6.11": "Bug fixes and additions to base capabilities and adapters.",
     "2.6.0": "nameKey OreDict (defauts true) and class names (defaults false) optional.  Added base capabilities.",
@@ -27,7 +29,7 @@
     "2.2.2": "Signing jar",
     "2.2.1": "Server fix for TimeUtil",
     "2.2.0": "Added IThing.fetchCapability",
-    "2.1.0": "Added TimeUtil, container Walkers, TriComsumer, TriFunction.",
+    "2.1.0": "Added TimeUtil, container Walkers, TriConsumer, TriFunction.",
     "2.0.0": "Separated library for reuse",
     "1.0.0": "Initial version"
   }
