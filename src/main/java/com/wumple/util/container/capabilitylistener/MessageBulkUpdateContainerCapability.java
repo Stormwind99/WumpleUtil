@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
+import com.wumple.util.capability.CapabilityUtils;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

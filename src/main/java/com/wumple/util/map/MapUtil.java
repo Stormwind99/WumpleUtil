@@ -51,6 +51,16 @@ public class MapUtil
         }
     }
     
+    public static boolean isItemMap(ItemStack itemStack)
+    {
+        return itemStack.getItem() == Items.FILLED_MAP;
+    }
+
+    public static boolean isItemEmptyMap(ItemStack itemStack)
+    {
+        return itemStack.getItem() == Items.MAP;
+    }
+    
     /**
      * given a pixel coordinate i,j and scale, find the most common pixel within range
      * 

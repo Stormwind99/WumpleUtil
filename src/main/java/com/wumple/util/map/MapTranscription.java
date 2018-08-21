@@ -1,5 +1,7 @@
 package com.wumple.util.map;
 
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
@@ -9,12 +11,9 @@ public class MapTranscription extends MapUtil
     /**
      * can we transcribe any map data from src to dest?
      * 
-     * @param dest
-     *            destination map
-     * @param src
-     *            source map
-     * @param worldIn
-     *            current world
+     * @param dest destination map
+     * @param src source map
+     * @param worldIn current world
      * @return true if any data would be copied, false if not
      */
     public static Boolean canTranscribeMap(final ItemStack dest, final ItemStack src, final World worldIn)
@@ -29,14 +28,11 @@ public class MapTranscription extends MapUtil
     }
 
     /**
-     * copy the map data from src to dest if possible
+     * copy the map data from src to dest if possible (even with different scales or locations - as long as there is overlap)
      * 
-     * @param dest
-     *            destination map
-     * @param src
-     *            source map
-     * @param worldIn
-     *            current world
+     * @param dest destination map
+     * @param src source map
+     * @param worldIn current world
      */
     public static void transcribeMap(final ItemStack dest, final ItemStack src, final World worldIn)
     {
@@ -124,4 +120,62 @@ public class MapTranscription extends MapUtil
         log("transcribeMap end - done");
     }
 
+    /**
+     * Given a set of input maps and a target map, can the input maps be transcribed onto the target map?
+     * 
+     * @param worldIn
+     * @param targetStack the target map
+     * @param inputs the input maps
+     * @return true if possible, false if not
+     */
+    public static boolean checkTranscribe(World worldIn, ItemStack targetStack, List<ItemStack> inputs)
+    {
+        // first, must have a map in target slot
+        if ( ! MapUtil.isItemMap(targetStack) )
+        {
+            return false;
+        }
+        
+        int count = 0;
+        for (ItemStack inputStack : inputs)
+        {
+            if (MapUtil.isItemMap(inputStack))
+            {
+                if ( MapTranscription.canTranscribeMap(targetStack, inputStack, worldIn)  )
+                {
+                    count++;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        } 
+        
+        return (count > 0);
+    }
+
+    /**
+     * Given a set of input maps and a target map, transcribed each input map onto the target map
+     * 
+     * @param worldIn
+     * @param targetStack the target map
+     * @param inputs the input maps
+     * @return number of maps transcribed
+     */
+    public static int doTranscribe(World worldIn, ItemStack targetStack, List<ItemStack> inputs)
+    {
+        int count = 0;
+        
+        for (ItemStack inputStack : inputs)
+        {
+            if (MapUtil.isItemMap(inputStack))
+            {
+                MapTranscription.transcribeMap(targetStack, inputStack, worldIn);
+                count++;
+            }
+        }
+        
+        return count;
+    }
 }

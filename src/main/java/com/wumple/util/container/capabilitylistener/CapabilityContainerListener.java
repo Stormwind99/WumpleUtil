@@ -2,6 +2,8 @@ package com.wumple.util.container.capabilitylistener;
 
 import javax.annotation.Nullable;
 
+import com.wumple.util.capability.CapabilityUtils;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;

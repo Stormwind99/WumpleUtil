@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.wumple.util.adapter.EntityThing;
 import com.wumple.util.adapter.IThing;
 import com.wumple.util.adapter.TUtil;
-import com.wumple.util.container.capabilitylistener.CapabilityUtils;
+import com.wumple.util.capability.CapabilityUtils;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.wumple.util.base.misc.Util;
-import com.wumple.util.container.capabilitylistener.CapabilityUtils;
+import com.wumple.util.capability.CapabilityUtils;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
