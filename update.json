@@ -1,8 +1,8 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "2.11.22",
-    "1.12.2-recommended": "2.11.22"
+    "1.12.2-latest": "2.12.5",
+    "1.12.2-recommended": "2.12.5"
   },
   "1.12.2": {
     "2.12.5": "Added TargetCrafting package and more Map package",
