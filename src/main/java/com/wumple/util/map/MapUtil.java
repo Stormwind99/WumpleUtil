@@ -7,6 +7,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Multisets;
 
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemEmptyMap;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -53,12 +54,12 @@ public class MapUtil
     
     public static boolean isItemMap(ItemStack itemStack)
     {
-        return itemStack.getItem() == Items.FILLED_MAP;
+        return (itemStack.getItem() == Items.FILLED_MAP) || (itemStack.getItem() instanceof ItemMap);
     }
 
     public static boolean isItemEmptyMap(ItemStack itemStack)
     {
-        return itemStack.getItem() == Items.MAP;
+        return (itemStack.getItem() == Items.MAP) || (itemStack.getItem() instanceof ItemEmptyMap);
     }
     
     /**
@@ -214,7 +215,7 @@ public class MapUtil
      */
     static public MapData getMapData(final ItemStack dest, final World worldIn)
     {
-        if (dest != null && dest != ItemStack.EMPTY && dest.getItem() instanceof ItemMap)
+        if (dest != null && dest != ItemStack.EMPTY && isItemMap(dest))
         {
             return Items.FILLED_MAP.getMapData(dest, worldIn);
         }

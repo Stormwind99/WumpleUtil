@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 
 import com.wumple.util.base.misc.MathUtil;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -50,6 +49,16 @@ public class MapCreation
 
         return overallRect;
     }
+    
+    public static class MapProps
+    {
+        public MapProps(int worldXIn, int worldZIn, int scaleIn)
+            { worldX = worldXIn; worldZ = worldZIn; scale = scaleIn; }
+        
+        public int worldX;
+        public int worldZ;
+        public int scale;
+    }
 
     /**
      * Create a new map that attempts to include all the input maps (if they can fit given map scale ranges possible)
@@ -60,6 +69,36 @@ public class MapCreation
      */
     @Nullable
     public static ItemStack doCreate(World worldIn, List<ItemStack> inputs)
+    {
+        MapProps mapProps = getCreateMap(worldIn, inputs);
+
+        if (mapProps == null)
+        {
+            return null;
+        }
+
+        int worldX = mapProps.worldX;
+        int worldZ = mapProps.worldZ;
+        // MAYBE MegaMap
+        int scale = MathHelper.clamp(mapProps.scale, 0, 4);
+
+        // copy input maps onto new map
+        // TODO MegaMap
+        ItemStack newStack = ItemMap.setupNewMap(worldIn, (double) worldX, (double) worldZ, (byte) scale, false, false);
+        MapTranscription.doTranscribe(worldIn, newStack, inputs);
+
+        return newStack;
+    }
+    
+    /**
+     * Create a new map that attempts to include all the input maps (if they can fit given map scale ranges possible)
+     * 
+     * @param worldIn
+     * @param inputs
+     * @return new map ItemStack that trys to include data from all input maps
+     */
+    @Nullable
+    public static MapProps getCreateMap(World worldIn, List<ItemStack> inputs)
     {
         Rect overallRect = checkCreateRect(worldIn, inputs);
 
@@ -77,18 +116,14 @@ public class MapCreation
         int max128 = max / 128;
         double logMax128 = MathUtil.log2(max128);
         int rawScale = (int) Math.ceil(logMax128);
-        int scale = MathHelper.clamp(rawScale, 0, 4);
 
         // find center
         int worldX = overallRect.x1 + width / 2;
         int worldZ = overallRect.z1 + height / 2;
 
-        // copy input maps onto new map
-        ItemStack newStack = ItemMap.setupNewMap(worldIn, (double) worldX, (double) worldZ, (byte) scale, false, false);
-        MapTranscription.doTranscribe(worldIn, newStack, inputs);
-
-        return newStack;
+        return new MapProps(worldX, worldZ, rawScale);
     }
+
 
     /**
      * Create a copy of a source map
@@ -104,7 +139,7 @@ public class MapCreation
             return null;
         }
 
-        ItemStack destStack = new ItemStack(Items.FILLED_MAP, 1, srcStack.getMetadata());
+        ItemStack destStack = new ItemStack(srcStack.getItem(), 1, srcStack.getMetadata());
 
         if (srcStack.hasDisplayName())
         {

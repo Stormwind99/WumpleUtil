@@ -5,6 +5,7 @@
     "1.12.2-recommended": "2.12.5"
   },
   "1.12.2": {
+    "2.12.6": "Split some map functions for use by MegaMap and Pantography integration",
     "2.12.5": "Added TargetCrafting package and more Map package",
     "2.11.22": "Made Rect public, more useful Rect methods",
     "2.11.20": "Support for blockproperties and crop age in NameKeys.  Rare insta-expire fix, other fixes. Time init fix. CraftingUtil findPlayer and findWorld",
