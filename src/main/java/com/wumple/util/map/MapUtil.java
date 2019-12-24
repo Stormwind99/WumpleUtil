@@ -96,7 +96,7 @@ public class MapUtil
                             // don't add transparent pixels
                             if (!isUnexploredColor(color))
                             {
-                                hashmultiset.add(new Integer(color));
+                                hashmultiset.add(Integer.valueOf(color));
                             }
                         }
                 }
