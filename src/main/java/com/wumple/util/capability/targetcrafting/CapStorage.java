@@ -11,18 +11,7 @@ public class CapStorage<U extends IContainerCraftingOwner> implements IStorage<U
     @Override
     public NBTBase writeNBT(Capability<U> capability, U instance, EnumFacing side)
     {
-        if (instance != null)
-        {
-            return instance.serializeNBT();
-        }
-
-        // Attempted workaround for https://github.com/Stormwind99/FoodFunk/issues/56
-        // Some mods are trying to serialize capabilities during Forge mod init!
-        // Then they crash with foodfunk:rot NBT data
-        // Used to:
-        // return null;
-        NBTTagCompound tags = new NBTTagCompound();
-        return tags;
+    	return (instance == null) ? new NBTTagCompound() : instance.serializeNBT();  
     }
 
     @Override
