@@ -5,6 +5,7 @@
     "1.12.2-recommended": "2.12.8"
   },
   "1.12.2": {
+    "2.12.9": "Another attempted workarond for FoodFunk #56 null NBT crash from odd mods",
     "2.12.8": "Attempted workarond for FoodFunk #56 null NBT crash from odd mods",
     "2.12.7": "Update Forge version, etc",
     "2.12.6": "Split some map functions for use by MegaMap and Pantography integration",
