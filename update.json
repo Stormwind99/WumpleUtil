@@ -1,10 +1,12 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.12.2-latest": "2.12.5",
-    "1.12.2-recommended": "2.12.5"
+    "1.12.2-latest": "2.12.8",
+    "1.12.2-recommended": "2.12.8"
   },
   "1.12.2": {
+    "2.12.8": "Attempted workarond for FoodFunk #56 null NBT crash from odd mods",
+    "2.12.7": "Update Forge version, etc",
     "2.12.6": "Split some map functions for use by MegaMap and Pantography integration",
     "2.12.5": "Added TargetCrafting package and more Map package",
     "2.11.22": "Made Rect public, more useful Rect methods",
