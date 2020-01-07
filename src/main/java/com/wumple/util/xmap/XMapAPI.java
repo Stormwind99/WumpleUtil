@@ -13,7 +13,7 @@ import net.minecraft.world.storage.MapData;
 public class XMapAPI implements IXMapAPI
 {
 	public static IXMapAPI instance;
-	
+		
 	public static IXMapAPI getInstance()
 	{
 		if (instance == null)
@@ -38,17 +38,23 @@ public class XMapAPI implements IXMapAPI
 	{
 		return XFilledMapItem.setupNewMap(worldIn, worldX, worldZ, scale, trackingPosition, unlimitedTracking);
 	}
-
+	
+	private static ResourceLocation emptyMapTag = new ResourceLocation("forge", "empty_maps");
+	private static ResourceLocation filledMapTag = new ResourceLocation("forge", "filled_maps");
+	
+	public ResourceLocation getEmptyMapTag() { return emptyMapTag; }
+	public ResourceLocation getFilledMapTag() { return filledMapTag; }
+	
 	@Override
 	public boolean isEmptyMap(ItemStack itemstack1)
 	{
-		return ItemTags.getCollection().getOrCreate(new ResourceLocation("forge", "empty_maps")).contains(itemstack1.getItem());
+		return ItemTags.getCollection().getOrCreate(getEmptyMapTag()).contains(itemstack1.getItem());
 	}
 
 	@Override
 	public boolean isFilledMap(ItemStack itemstack1)
 	{
-		return ItemTags.getCollection().getOrCreate(new ResourceLocation("forge", "filled_maps")).contains(itemstack1.getItem());
+		return ItemTags.getCollection().getOrCreate(getFilledMapTag()).contains(itemstack1.getItem());
 	}
 	
 	@Override
