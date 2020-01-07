@@ -1,68 +1,133 @@
 package com.wumple.util;
 
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.Config.Name;
-import net.minecraftforge.common.config.Config.RangeInt;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+//Name conflict: import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.loading.FMLPaths;
 
-@Config(modid = Reference.MOD_ID)
-@Mod.EventBusSubscriber(modid = Reference.MOD_ID)
+import java.nio.file.Path;
+
+// See
+// https://github.com/McJty/YouTubeModding14/blob/master/src/main/java/com/mcjty/mytutorial/Config.java
+// https://wiki.mcjty.eu/modding/index.php?title=Tut14_Ep6
+
+
+@Mod.EventBusSubscriber
 public class ModConfig
 {
-    @Name("TileEntityPlaceholder default evaluation interval")
-    @Config.Comment("Default number of ticks between TileEntityPlaceholder evaluations")
-    @RangeInt(min=0)
-    public static int tileEntityPlaceholderEvaluationInterval = 20;
-          
-    @Name("Matching config")
-    @Config.Comment("Options for the MatchingConfig classes that match strings to item types, etc.")
-    public static MatchingConfig matchingConfig = new MatchingConfig();
-
+	private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
+	private static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
+	
+	public static ForgeConfigSpec COMMON_CONFIG;
+	public static ForgeConfigSpec CLIENT_CONFIG;
+	
+	public static final String CATEGORY_GENERAL = "General";
+    public static final String CATEGORY_MATCHINGCONFIG = "MatchingConfig";
+    public static final String CATEGORY_DEBUGGING = "Debugging";
+    
+    public static class General
+    {
+    	public static ForgeConfigSpec.IntValue tileEntityPlaceholderEvaluationInterval;
+    	
+        private static void setupConfig()
+        {
+        	COMMON_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
+        	
+            //@Name("TileEntityPlaceholder default evaluation interval")       
+            tileEntityPlaceholderEvaluationInterval = COMMON_BUILDER.comment("Default number of ticks between TileEntityPlaceholder evaluations")
+                    .defineInRange("tileEntityPlaceholderEvaluationInterval", 20, 0, Integer.MAX_VALUE);
+            
+            COMMON_BUILDER.pop();
+    	}
+    }
+    	
     public static class MatchingConfig
     {
-        @Name("Add OreDict names to nameKeys")
-        @Config.Comment("Add the OreDict names for object to nameKeys for matching.")
-        public boolean addOreDictNames = true;
-        
-        @Name("Add class names to nameKeys")
-        @Config.Comment("Add the class names for entire class hierarchy of object to nameKeys for matching.")
-        public boolean addClassNames = false;
-    }    
-
-    @Name("Debugging")
-    @Config.Comment("Debugging options")
-    public static Debugging zdebugging = new Debugging();
-
-    public static class Debugging
-    {
-        @Name("Debug mode")
-        @Config.Comment("Enable general debug features, display extra debug info.")
-        public boolean debug = false;
-        
-        @Name("Placeholder TileEntity")
-        @Config.Comment("Use placeholder TileEntity to hold caps if block has none.  May crash.  May not persist.")
-        public boolean usePlaceholderTileEntity = false;
-    }
-
-    @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-    private static class EventHandler
-    {
-        /**
-         * Inject the new values and save to the config file when the config has been changed from the GUI.
-         *
-         * @param event
-         *            The event
-         */
-        @SubscribeEvent
-        public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event)
+    	public static ForgeConfigSpec.BooleanValue addOreDictNames;
+    	public static ForgeConfigSpec.BooleanValue addClassNames;
+    	
+        private static void setupConfig()
         {
-            if (event.getModID().equals(Reference.MOD_ID))
-            {
-                ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
-            }
+        	// @Config.Comment("Options for the MatchingConfig classes that match strings to item types, etc.")
+        	COMMON_BUILDER.comment("MatchingConfig settings").push(CATEGORY_MATCHINGCONFIG);
+
+            //@Name("Add OreDict names to nameKeys")
+        	addOreDictNames = COMMON_BUILDER.comment("Add the OreDict names for object to nameKeys for matching")
+                    .define("addOreDictNames", true);
+        	
+            //@Name("Add class names to nameKeys")
+        	addClassNames = COMMON_BUILDER.comment("Add the class names for entire class hierarchy of object to nameKeys for matching")
+                    .define("addClassNames", false);
+        	
+            COMMON_BUILDER.pop();
         }
     }
+        
+    public static class Debugging
+    {
+    	public static ForgeConfigSpec.BooleanValue debug;
+    	public static ForgeConfigSpec.BooleanValue usePlaceholderTileEntity;
+    
+	    private static void setupConfig()
+	    {   
+	    	// @Config.Comment("Debugging options")
+	    	COMMON_BUILDER.comment("Debugging settings").push(CATEGORY_DEBUGGING);
+	    	
+	        //@Name("Debug mode")
+	     	debug = COMMON_BUILDER.comment("Enable general debug features, display extra debug info")
+                    .define("debug", false);
+	        
+	        //@Name("Placeholder TileEntity")
+	     	usePlaceholderTileEntity  = COMMON_BUILDER.comment("Use placeholder TileEntity to hold caps if block has none.  May crash.  May not persist.")
+                    .define("usePlaceholderTileEntity", false);
+	        	     	
+	    	COMMON_BUILDER.pop();
+	    }
+    }
+    
+    static
+    {
+    	General.setupConfig();
+    	MatchingConfig.setupConfig();
+        Debugging.setupConfig();
+
+        COMMON_CONFIG = COMMON_BUILDER.build();
+        CLIENT_CONFIG = CLIENT_BUILDER.build();
+    }
+
+          
+    public static void loadConfig(ForgeConfigSpec spec, Path path) {
+
+        final CommentedFileConfig configData = CommentedFileConfig.builder(path)
+                .sync()
+                .autosave()
+                .writingMode(WritingMode.REPLACE)
+                .build();
+
+        configData.load();
+        spec.setConfig(configData);
+    }
+
+    @SubscribeEvent
+    public static void onLoad(final net.minecraftforge.fml.config.ModConfig.Loading configEvent) {
+
+    }
+
+    @SubscribeEvent
+    public static void onReload(final net.minecraftforge.fml.config.ModConfig.ConfigReloading configEvent) {
+    }
+    
+    public static void setupConfig()
+    {
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.CLIENT, CLIENT_CONFIG);
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, COMMON_CONFIG);
+
+        loadConfig(ModConfig.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(Reference.MOD_ID + "-client.toml"));
+        loadConfig(ModConfig.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(Reference.MOD_ID + "-common.toml"));
+    }
+
 }

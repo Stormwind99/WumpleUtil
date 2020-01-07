@@ -17,9 +17,9 @@ public class Reference
     /*
     // debugger settings since no Gradle string replacement
     public static final String MOD_ID = "wumpleutil";
-    public static final String MOD_NAME = "WumpleUtil";
-    public static final String BUILD = "99";
-    public static final String MOD_VERSION = "9.9.9";
+    public static final String MOD_NAME = "Wumple Util Library";
+    public static final String BUILD = "999";
+    public static final String MOD_VERSION = "3.0.0";
     public static final String DEPENDENCIES = "";
     public static final String UPDATEJSON = "update.json";
     public static final String FINGERPRINT = "";

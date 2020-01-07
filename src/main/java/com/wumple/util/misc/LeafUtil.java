@@ -1,26 +1,22 @@
 package com.wumple.util.misc;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLeaves;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class LeafUtil
 {
-    public static boolean isLeaves(Block block, IBlockState blockstate, World world, BlockPos pos)
-    {
-        return (block.isLeaves(blockstate, world, pos) || (block instanceof BlockLeaves));
-    }
-
-    public static boolean isLeaves(World world, BlockPos pos)
-    {
-        IBlockState blockstate = world.getBlockState(pos);
-        Block block = blockstate.getBlock();
-            
-        return isLeaves(block, blockstate, world, pos);
-    }
-    
+	public static boolean isLeaves(BlockState state)
+	{
+		return state.isIn(BlockTags.LEAVES);
+	}
+	
+	public static boolean canSustainLeaves(BlockState state)
+	{
+		return state.isIn(BlockTags.LOGS);
+	}
+	
     public static boolean canLeavesGrowAtLocation(World worldIn, BlockPos pos)
     {       
         boolean leavesCanGrow = false; 
@@ -29,10 +25,9 @@ public class LeafUtil
 
         for (BlockPos blockpos : positions)
         {
-            final IBlockState blockState = worldIn.getBlockState(blockpos);
-            final Block block = blockState.getBlock();
+            final BlockState blockState = worldIn.getBlockState(blockpos);
 
-            if (block.canSustainLeaves(blockState, worldIn, blockpos) || block.isLeaves(blockState, worldIn, blockpos))
+            if (canSustainLeaves(blockState) || isLeaves(blockState))
             {
                 leavesCanGrow = true;
                 break;

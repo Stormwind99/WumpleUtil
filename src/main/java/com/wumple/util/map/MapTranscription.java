@@ -2,11 +2,13 @@ package com.wumple.util.map;
 
 import java.util.List;
 
+import com.wumple.util.xmap.XMapAPI;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 
-public class MapTranscription extends MapUtil
+public class MapTranscription extends MapDataUtil
 {
     /**
      * can we transcribe any map data from src to dest?
@@ -18,8 +20,8 @@ public class MapTranscription extends MapUtil
      */
     public static Boolean canTranscribeMap(final ItemStack dest, final ItemStack src, final World worldIn)
     {
-        final MapData destMapData = getMapData(dest, worldIn);
-        final MapData srcMapData = getMapData(src, worldIn);
+        final MapData destMapData = XMapAPI.getInstance().getMapData(dest, worldIn);
+        final MapData srcMapData = XMapAPI.getInstance().getMapData(src, worldIn);
 
         // find intersection
         final Rect ri = getMapDataIntersection(destMapData, srcMapData);
@@ -38,8 +40,8 @@ public class MapTranscription extends MapUtil
     {
         log("transcribeMap begin");
 
-        final MapData destMapData = getMapData(dest, worldIn);
-        final MapData srcMapData = getMapData(src, worldIn);
+        final MapData destMapData = XMapAPI.getInstance().getMapData(dest, worldIn);
+        final MapData srcMapData = XMapAPI.getInstance().getMapData(src, worldIn);
 
         // find intersection
         final Rect ri = getMapDataIntersection(destMapData, srcMapData);
@@ -131,7 +133,7 @@ public class MapTranscription extends MapUtil
     public static boolean checkTranscribe(World worldIn, ItemStack targetStack, List<ItemStack> inputs)
     {
         // first, must have a map in target slot
-        if ( ! MapUtil.isItemMap(targetStack) )
+        if ( ! XMapAPI.getInstance().isFilledMap(targetStack) )
         {
             return false;
         }
@@ -139,7 +141,7 @@ public class MapTranscription extends MapUtil
         int count = 0;
         for (ItemStack inputStack : inputs)
         {
-            if (MapUtil.isItemMap(inputStack))
+            if (XMapAPI.getInstance().isFilledMap(inputStack))
             {
                 if ( MapTranscription.canTranscribeMap(targetStack, inputStack, worldIn)  )
                 {
@@ -169,7 +171,7 @@ public class MapTranscription extends MapUtil
         
         for (ItemStack inputStack : inputs)
         {
-            if (MapUtil.isItemMap(inputStack))
+            if (XMapAPI.getInstance().isFilledMap(inputStack))
             {
                 MapTranscription.transcribeMap(targetStack, inputStack, worldIn);
                 count++;

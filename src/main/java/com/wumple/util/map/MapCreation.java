@@ -5,8 +5,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.wumple.util.base.misc.MathUtil;
+import com.wumple.util.xmap.XMapAPI;
 
-import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -28,10 +28,10 @@ public class MapCreation
 
         for (ItemStack inputStack : inputs)
         {
-            if (MapUtil.isItemMap(inputStack))
+            if (XMapAPI.getInstance().isFilledMap(inputStack))
             {
-                MapData inputMapData = MapUtil.getMapData(inputStack, worldIn);
-                Rect inputMapRect = MapUtil.getMapRect(inputMapData);
+                MapData inputMapData = XMapAPI.getInstance().getMapData(inputStack, worldIn);
+                Rect inputMapRect = MapDataUtil.getMapRect(inputMapData);
                 if (overallRect == null)
                 {
                     overallRect = inputMapRect.clone();
@@ -79,12 +79,10 @@ public class MapCreation
 
         int worldX = mapProps.worldX;
         int worldZ = mapProps.worldZ;
-        // MAYBE MegaMap
-        int scale = MathHelper.clamp(mapProps.scale, 0, 4);
+        int scale = MathHelper.clamp(mapProps.scale, 0, XMapAPI.getInstance().getMaxScale());
 
         // copy input maps onto new map
-        // TODO MegaMap
-        ItemStack newStack = ItemMap.setupNewMap(worldIn, (double) worldX, (double) worldZ, (byte) scale, false, false);
+        ItemStack newStack = XMapAPI.getInstance().setupNewMap(worldIn, worldX, worldZ, (byte) scale, false, false);
         MapTranscription.doTranscribe(worldIn, newStack, inputs);
 
         return newStack;
@@ -122,35 +120,5 @@ public class MapCreation
         int worldZ = overallRect.z1 + height / 2;
 
         return new MapProps(worldX, worldZ, rawScale);
-    }
-
-
-    /**
-     * Create a copy of a source map
-     * 
-     * @param srcStack the source map
-     * @return the new map or null if not possible
-     */
-    @Nullable
-    public static ItemStack copyMap(ItemStack srcStack)
-    {
-        if (!MapUtil.isItemMap(srcStack))
-        {
-            return null;
-        }
-
-        ItemStack destStack = new ItemStack(srcStack.getItem(), 1, srcStack.getMetadata());
-
-        if (srcStack.hasDisplayName())
-        {
-            destStack.setStackDisplayName(srcStack.getDisplayName());
-        }
-
-        if (srcStack.hasTagCompound())
-        {
-            destStack.setTagCompound(srcStack.getTagCompound());
-        }
-
-        return destStack;
     }
 }
