@@ -40,6 +40,7 @@ public class MapTranscription extends MapDataUtil
     {
         log("transcribeMap begin");
 
+        // TODO dest needs new unique map data
         final MapData destMapData = XMapAPI.getInstance().getMapData(dest, worldIn);
         final MapData srcMapData = XMapAPI.getInstance().getMapData(src, worldIn);
 
@@ -180,4 +181,25 @@ public class MapTranscription extends MapDataUtil
         
         return count;
     }
+    
+    // transcribe src map onto a deep copy of dest's map and make that copy newDest's mapdata
+	public static void transcribeMapWithCopy(ItemStack newDest, ItemStack dest, ItemStack src, World worldIn)
+	{
+		MapUtil.forceDeepCloneMap(newDest, dest, worldIn);
+
+		// transcribe map data from src onto newDest
+		MapTranscription.transcribeMap(newDest, src, worldIn);
+	}
+	
+	// copy dest to new ItemStack newDest, deep transcribe src onto newDest, and return newDest
+	public static ItemStack transcribeMapWithCopy(ItemStack dest, ItemStack src, World worldIn)
+	{
+		ItemStack newDest = dest.copy();
+				
+		transcribeMapWithCopy(newDest, dest, src, worldIn);
+		
+		return newDest;
+	}
 }
+
+

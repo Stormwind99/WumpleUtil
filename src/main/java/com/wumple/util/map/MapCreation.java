@@ -93,7 +93,7 @@ public class MapCreation
      * 
      * @param worldIn
      * @param inputs
-     * @return new map ItemStack that trys to include data from all input maps
+     * @return new MapProps that trys to include data from all input maps
      */
     @Nullable
     public static MapProps getCreateMap(World worldIn, List<ItemStack> inputs)

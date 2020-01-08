@@ -77,6 +77,7 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 		return isMapScaleValid(scale);
 	}
 
+	/// Creates new ItemStack of XFilledMapItem at (worldX, worldZ) with given params (along with new registered XMapData)
 	@Override
 	public ItemStack setupANewMap(World worldIn, int worldX, int worldZ, byte scale, boolean trackingPosition,
 			boolean unlimitedTracking)
@@ -84,18 +85,49 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 		return setupNewMap(worldIn, worldZ, worldZ, scale, unlimitedTracking, unlimitedTracking);
 	}
 
+	/// Creates and registers a new XMapData at (x,z) with given params
 	protected MapData createMyMapData(ItemStack stack, World worldIn, int x, int z, int scale, boolean trackingPosition,
 			boolean unlimitedTracking, DimensionType dimensionTypeIn)
 	{
 		return createMapData(stack, worldIn, x, z, scale, trackingPosition, unlimitedTracking, dimensionTypeIn);
 	}
 
+	// adapted from public static ItemStack func_219992_b(World worldIn, ItemStack stack)
 	@Override
+	public ItemStack copyMapShallow(ItemStack stack)
+	{
+		// this will copy stack's NBT which contains the map id
+		return stack.copy();
+	}
+	
+	// adapted from public static ItemStack func_219992_b(World worldIn, ItemStack stack)
+	@Override
+	public ItemStack copyMapDeep(ItemStack stack, World worldIn)
+	{
+		MapData mapdata = getMyMapData(stack, worldIn);
+		if (mapdata != null)
+		{
+			ItemStack itemstack = stack.copy();
+			MapData mapdata1 = createMyMapData(itemstack, worldIn, 0, 0, mapdata.scale, mapdata.trackingPosition,
+					mapdata.unlimitedTracking, mapdata.dimension);
+			mapdata1.copyFrom(mapdata);
+			mapdata1.locked = mapdata.locked;
+			return itemstack;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	/// Fill in map pixels for viewer
 	public void fillMapData(World worldIn, Entity viewer, MapData data)
 	{
 		updateMapDataArea(worldIn, viewer, data, minX, minZ, limitX, limitZ, null);
 	}
 
+	/// Fill in map pixels for viewer
 	public boolean fillMapData(World worldIn, Entity viewer, ItemStack itemstack)
 	{
 		// get the map data
@@ -108,22 +140,29 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 
 	// Other public methods (for example, for re-direction to MC's static methods)
 
+	/// gets existing MapData from the World, null if doesn't exist
+	@Override
 	@Nullable
 	public MapData getMyData(ItemStack stack, World worldIn)
 	{
 		return getData(stack, worldIn);
 	}
 
+	/// gets existing MapData or (on server) creates new MapData if it doesn't exist
+	@Override
 	@Nullable
 	public MapData getMyMapData(ItemStack stack, World worldIn)
 	{
 		return getMapData(stack, worldIn);
 	}
-	
+
 	protected static boolean isMapScaleValid(byte scale)
 	{
 		return (scale >= 0) && (scale <= 4);
 	}
+	
+	// MAYBE
+	// Duplicate Items.FILLED_MAP advanced tooltip behavior (map id) from special code in ItemStack.doTooltip()
 
 	// ---------------------------------------------------------------------------------------
 	// Copied from FilledMapItem
@@ -140,8 +179,11 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 	public static int getMapId(ItemStack stack)
 	public static MapData getMapData(ItemStack stack, World worldIn) -> calls non-static getCustomMapData()
 	*/
-	
+
 	// PORTED
+	/*
+	 * Creates new ItemStack of XFilledMapItem at (worldX, worldZ) with given params (along with new registered XMapData)
+	 */
 	public static ItemStack setupNewMap(World worldIn, int worldX, int worldZ, byte scale, boolean trackingPosition,
 			boolean unlimitedTracking)
 	{
@@ -149,7 +191,7 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 		createMapData(itemstack, worldIn, worldX, worldZ, scale, trackingPosition, unlimitedTracking,
 				worldIn.dimension.getType());
 		return itemstack;
-	}	
+	}
 
 	// BADPARENT
 	@Nullable
@@ -160,8 +202,7 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 		{
 			String mapName = getMapName(getMapId(stack));
 
-			return worldIn.getServer().getWorld(DimensionType.OVERWORLD).getSavedData().get(() ->
-			{
+			return worldIn.getServer().getWorld(DimensionType.OVERWORLD).getSavedData().get(() -> {
 				return XMapAPI.getInstance().createMapData(mapName);
 			}, mapName);
 		}
@@ -189,6 +230,9 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 	}
 
 	// PORTED
+	/*
+	 * Creates and registers a new XMapData at (x,z) with given params
+	 */
 	private static MapData createMapData(ItemStack stack, World worldIn, int x, int z, int scale,
 			boolean trackingPosition, boolean unlimitedTracking, DimensionType dimensionTypeIn)
 	{
@@ -225,8 +269,7 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 		int startPixelZ = viewerPixelZ - pixelViewRange - 1;
 		int endPixelZ = viewerPixelZ + pixelViewRange;
 
-		BiFunction<Integer, Integer, Boolean> usePixel = (pixelX, pixelZ) ->
-		{
+		BiFunction<Integer, Integer, Boolean> usePixel = (pixelX, pixelZ) -> {
 			int i2 = pixelX - viewerPixelX;
 			int j2 = pixelZ - viewerPixelZ;
 			boolean flag1 = i2 * i2 + j2 * j2 > (pixelViewRange - 2) * (pixelViewRange - 2);
@@ -241,6 +284,9 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 	}
 
 	// PORTED AND SPLIT
+	/*
+	 * Fill in map pixels for viewer
+	 */
 	public void updateMapDataArea(World worldIn, Entity viewer, MapData data, int startPixelX, int startPixelZ,
 			int endPixelX, int endPixelZ, @Nullable BiFunction<Integer, Integer, Boolean> usePixel)
 	{
@@ -621,7 +667,7 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 	public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn)
 	{
 		int scaling = MapUtil.extractMapScaleDirection(stack);
-		
+
 		if (scaling != 0)
 		{
 			scaleMap(stack, worldIn, scaling);
@@ -635,8 +681,8 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 		if (mapdata != null)
 		{
 			createMapData(stack, world, mapdata.xCenter, mapdata.zCenter,
-					MathHelper.clamp(mapdata.scale + scaleChange, 0, XMapAPI.getInstance().getMaxScale()), mapdata.trackingPosition,
-					mapdata.unlimitedTracking, mapdata.dimension);
+					MathHelper.clamp(mapdata.scale + scaleChange, 0, XMapAPI.getInstance().getMaxScale()),
+					mapdata.trackingPosition, mapdata.unlimitedTracking, mapdata.dimension);
 		}
 
 	}
@@ -683,8 +729,8 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 						.applyTextStyle(TextFormatting.GRAY));
 				tooltip.add((new TranslationTextComponent("filled_map.scale", 1 << mapdata.scale))
 						.applyTextStyle(TextFormatting.GRAY));
-				tooltip.add((new TranslationTextComponent("filled_map.level", mapdata.scale,XMapAPI.getInstance().getMaxScale()))
-						.applyTextStyle(TextFormatting.GRAY));
+				tooltip.add((new TranslationTextComponent("filled_map.level", mapdata.scale,
+						XMapAPI.getInstance().getMaxScale())).applyTextStyle(TextFormatting.GRAY));
 			}
 			else
 			{

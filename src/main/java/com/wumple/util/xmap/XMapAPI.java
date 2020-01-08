@@ -73,14 +73,41 @@ public class XMapAPI implements IXMapAPI
 	}
 	
 	@Override
-	public ItemStack copyMap(ItemStack itemstack, int i)
+	public ItemStack copyMapShallow(ItemStack itemstack)
 	{
-		// MAYBE check if itemstack is a valid map and return EMPTY if not?
+		if (itemstack.getItem() instanceof XFilledMapItem)
+		{
+			ItemStack newstack = ((XFilledMapItem)(itemstack.getItem())).copyMapShallow(itemstack);
+			return newstack;
+		}
+		else
+		{
+			return itemstack.copy();
+		}
+	}
 		
-		ItemStack itemstack2 = itemstack.copy();
-		itemstack2.setCount(i);
+	@Override
+	public ItemStack copyMapDeep(ItemStack itemstack, World worldIn)
+	{
+		ItemStack newstack = null;
+		
+		if (itemstack.getItem() instanceof IXFilledMapItem)
+		{
+			newstack = ((IXFilledMapItem)(itemstack.getItem())).copyMapDeep(itemstack, worldIn);
+		}
+		else
+		{
+			newstack = itemstack.copy();
+			cloneMapData(itemstack, newstack, worldIn);
+		}
+		
+		return newstack;
+	}
 	
-		return itemstack2;
+	@Override
+	public ItemStack copyMapDeepLocked(ItemStack itemstack, World worldIn)
+	{
+		return FilledMapItem.func_219992_b(worldIn, itemstack);
 	}
 
 	@Override
@@ -117,7 +144,27 @@ public class XMapAPI implements IXMapAPI
 		
 		return mapdata;
 	}
-
+	
+	@Override
+	public MapData getMapDataIfExists(ItemStack itemstack, World worldIn)
+	{
+		MapData mapdata;
+		
+		// use XFilledMapItem if possible to get XFilledMapData instead of just MapData
+		if (itemstack.getItem() instanceof IXFilledMapItem)
+		{
+			IXFilledMapItem item = Util.as(itemstack.getItem(), IXFilledMapItem.class);
+			mapdata = item.getMyData(itemstack, worldIn);
+		}
+		// otherwise if normal map, fallback
+		else
+		{
+			mapdata = FilledMapItem.getData(itemstack, worldIn);
+		}
+		
+		return mapdata;
+	}
+	
 	@Override
 	public MapData createMapData(String mapName)
 	{

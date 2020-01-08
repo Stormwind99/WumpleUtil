@@ -13,15 +13,20 @@ public interface IXFilledMapItem
 {
 	boolean isAMapScaleValid(byte scale);
 
+	// create a new map ItemStack with fresh MapData
 	ItemStack setupANewMap(World worldIn, int worldX, int worldZ, byte scale, boolean trackingPosition,
 			boolean unlimitedTracking);
-	
+
+	// create a new map ItemStack with fresh MapData
 	default ItemStack setupANewMap(World worldIn, int worldX, int worldZ, byte scale)
 		{ return setupANewMap(worldIn, worldX, worldZ, scale, true, false); }
 
 	String getID();
 
 	boolean fillMapData(World worldIn, Entity viewer, ItemStack itemstack);
+	
+	ItemStack copyMapShallow(ItemStack stack);	
+	ItemStack copyMapDeep(ItemStack stack, World worldIn);
 
 	// -------------------------------------------------------------------------------------
 	// MapData-using API's for backwards compatibility, etc - try not to use these
@@ -35,4 +40,6 @@ public interface IXFilledMapItem
 
 	@Nullable
 	public MapData getMyMapData(ItemStack stack, World worldIn);
+	@Nullable
+	public MapData getMyData(ItemStack stack, World worldIn);
 }
