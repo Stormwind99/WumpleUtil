@@ -1,12 +1,15 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.14.4-latest": "3.0.0",
-    "1.14.4-recommended": "3.0.0",
+    "1.14.4-latest": "3.0.3",
+    "1.14.4-recommended": "3.0.3",
     "1.12.2-latest": "2.12.8",
     "1.12.2-recommended": "2.12.8"
   },
   "1.14.4": {
+    "3.0.3": "Fix to Forge MDK build.gradle thanks to LexManos",
+    "3.0.2": "XCartography debugging",
+    "3.0.1": "XCartography debugging",
     "3.0.0": "Ported to 1.14.4"
   },
   "1.12.2": {
