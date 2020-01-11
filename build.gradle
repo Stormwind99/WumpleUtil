@@ -112,6 +112,7 @@ apply from: 'dependencies.gradle'
 // we define a custom artifact that is sourced from the reobfJar output task
 // and then declare that to be published
 // Note you'll need to add a repository here
+
 def reobfFile = file("$buildDir/reobfJar/output.jar")
 def reobfArtifact = artifacts.add('default', reobfFile) {
     type 'jar'
@@ -120,6 +121,7 @@ def reobfArtifact = artifacts.add('default', reobfFile) {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            //artifact jar
             artifact reobfArtifact
         }
     }
@@ -371,11 +373,14 @@ jar {
             "Built-On": config.mc_version // project.minecraft.version
         ])
     }
+
+    finalizedBy('reobfJar') 
 }
+
+jar.finalizedBy('reobfJar') 
 
 
 artifacts {
-//    archives deobfJar
     archives jar
 }
 
