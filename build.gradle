@@ -551,7 +551,7 @@ tasks.superClean.dependsOn clean
 
 // triggers for above functionality
 build {
-    dependsOn 'signJar'
+//    dependsOn 'signJar'
     dependsOn 'saveBuildNumber'
 }
 
