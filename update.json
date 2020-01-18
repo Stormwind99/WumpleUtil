@@ -1,12 +1,13 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.14.4-latest": "3.1.0",
-    "1.14.4-recommended": "3.1.0",
+    "1.14.4-latest": "3.2.0",
+    "1.14.4-recommended": "3.2.0",
     "1.12.2-latest": "2.12.8",
     "1.12.2-recommended": "2.12.8"
   },
   "1.14.4": {
+    "3.2.0": "Moved block repairing library to WumpleUtil",
     "3.1.0": "FML reobf issue causing java.lang.NoSuchFieldError: container exception when opening Pantograph",
     "3.0.4": "Added VoxelShapeUtils from Mekanism thanks to pupnewfster",
     "3.0.3": "Fix to Forge MDK build.gradle thanks to LexManos",

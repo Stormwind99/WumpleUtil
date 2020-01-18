@@ -28,7 +28,8 @@ public class ModConfig
 	public static final String CATEGORY_GENERAL = "General";
     public static final String CATEGORY_MATCHINGCONFIG = "MatchingConfig";
     public static final String CATEGORY_DEBUGGING = "Debugging";
-    
+   
+    /*
     public static class General
     {
     	public static ForgeConfigSpec.IntValue tileEntityPlaceholderEvaluationInterval;
@@ -44,7 +45,32 @@ public class ModConfig
             COMMON_BUILDER.pop();
     	}
     }
-    	
+    */
+    
+	public static class BlockRepairDebugging
+	{
+		public static ForgeConfigSpec.BooleanValue debug;
+		public static ForgeConfigSpec.DoubleValue regrowModifier;
+		public static ForgeConfigSpec.BooleanValue showRepairingBlocks;
+
+		
+		private static void setupConfig()
+		{
+			// @Config.Comment("Debugging options")
+			COMMON_BUILDER.comment("Debugging settings").push(CATEGORY_DEBUGGING);
+
+			// @Name("Debug mode")
+			debug = COMMON_BUILDER.comment("Enable general debug features, display extra debug info").define("debug",
+					false);
+			
+			showRepairingBlocks = COMMON_BUILDER.comment("Make repairing blocks visible").define("showRepairingBlocks",
+					false);
+
+			COMMON_BUILDER.pop();
+		}
+	}
+    
+    /*
     public static class MatchingConfig
     {
     	public static ForgeConfigSpec.BooleanValue addOreDictNames;
@@ -66,6 +92,7 @@ public class ModConfig
             COMMON_BUILDER.pop();
         }
     }
+    */
         
     public static class Debugging
     {
@@ -80,20 +107,23 @@ public class ModConfig
 	        //@Name("Debug mode")
 	     	debug = COMMON_BUILDER.comment("Enable general debug features, display extra debug info")
                     .define("debug", false);
-	        
+	  
+	     	/*
 	        //@Name("Placeholder TileEntity")
 	     	usePlaceholderTileEntity  = COMMON_BUILDER.comment("Use placeholder TileEntity to hold caps if block has none.  May crash.  May not persist.")
                     .define("usePlaceholderTileEntity", false);
-	        	     	
+			*/
+	        	     
 	    	COMMON_BUILDER.pop();
 	    }
     }
     
     static
     {
-    	General.setupConfig();
-    	MatchingConfig.setupConfig();
+    	//General.setupConfig();
+    	//MatchingConfig.setupConfig();
         Debugging.setupConfig();
+        BlockRepairDebugging.setupConfig();
 
         COMMON_CONFIG = COMMON_BUILDER.build();
         CLIENT_CONFIG = CLIENT_BUILDER.build();

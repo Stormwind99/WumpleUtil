@@ -379,7 +379,6 @@ jar {
 
 jar.finalizedBy('reobfJar') 
 
-
 artifacts {
     archives jar
 }
@@ -532,6 +531,8 @@ task reviewSignJar(type: Exec) {
     commandLine "" +  System.getenv('JAVA_HOME') + "/bin/jarsigner", "-verify", "-verbose", "-keystore", project.findProperty('keyStore'), jar.archivePath
 }
 
+// LexManos says use this instead of finalizedBy when using jar signing:
+signJar.dependsOn('reobfJar')
 
 // --------------------------------------------------------------------------
 // Misc
