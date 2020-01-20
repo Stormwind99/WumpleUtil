@@ -36,7 +36,7 @@ import net.minecraft.world.World;
         }
 
  */
-public class ShapelessRecipe implements ICraftingRecipe
+public class XShapelessRecipe implements ICraftingRecipe
 {
 
 	static int MAX_WIDTH = 3;
@@ -64,7 +64,7 @@ public class ShapelessRecipe implements ICraftingRecipe
 	private final NonNullList<Ingredient> recipeItems;
 	private final boolean isSimple;
 
-	public ShapelessRecipe(ResourceLocation idIn, String groupIn, ItemStack recipeOutputIn,
+	public XShapelessRecipe(ResourceLocation idIn, String groupIn, ItemStack recipeOutputIn,
 			NonNullList<Ingredient> recipeItemsIn)
 	{
 		this.id = idIn;
@@ -143,9 +143,9 @@ public class ShapelessRecipe implements ICraftingRecipe
 		return width * height >= this.recipeItems.size();
 	}
 
-	public static class Serializer<T extends ShapelessRecipe>
+	public static class Serializer<T extends XShapelessRecipe>
 			extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>>
-			implements IRecipeSerializer<ShapelessRecipe>
+			implements IRecipeSerializer<XShapelessRecipe>
 	{
 		//private static final ResourceLocation NAME = new ResourceLocation("minecraft", "crafting_shapeless");
 
@@ -157,7 +157,7 @@ public class ShapelessRecipe implements ICraftingRecipe
 			this.function = functionIn;
 		}
 
-		public ShapelessRecipe read(ResourceLocation recipeId, JsonObject json)
+		public XShapelessRecipe read(ResourceLocation recipeId, JsonObject json)
 		{
 			String s = JSONUtils.getString(json, "group", "");
 			NonNullList<Ingredient> nonnulllist = readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
@@ -193,7 +193,7 @@ public class ShapelessRecipe implements ICraftingRecipe
 			return nonnulllist;
 		}
 
-		public ShapelessRecipe read(ResourceLocation recipeId, PacketBuffer buffer)
+		public XShapelessRecipe read(ResourceLocation recipeId, PacketBuffer buffer)
 		{
 			String s = buffer.readString(32767);
 			int i = buffer.readVarInt();
@@ -208,7 +208,7 @@ public class ShapelessRecipe implements ICraftingRecipe
 			return function.apply(recipeId, s, itemstack, nonnulllist);
 		}
 
-		public void write(PacketBuffer buffer, ShapelessRecipe recipe)
+		public void write(PacketBuffer buffer, XShapelessRecipe recipe)
 		{
 			buffer.writeString(recipe.group);
 			buffer.writeVarInt(recipe.recipeItems.size());

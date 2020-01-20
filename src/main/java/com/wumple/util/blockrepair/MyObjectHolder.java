@@ -17,13 +17,13 @@ public class MyObjectHolder
     // Blocks, Items, etc.
 
     //@ObjectHolder("wumpleutil:repairing_block")
-    public static /*final*/ Block blockRepairingBlock = null;
+    public static Block blockRepairingBlock = null;
 
     //@ObjectHolder("wumpleutil:blank")
-    public static /*final*/ Block blockBlank = null;
+    public static Block blockBlank = null;
     
     //@ObjectHolder("wumpleutil:repairing_block")
-    public static /*final*/ BlockItem itemBlockRepairing = null;
+    public static BlockItem itemBlockRepairing = null;
     
     @ObjectHolder("wumpleutil:repairing_block")
 	public static TileEntityType<TileEntityRepairingBlock> RepairingBlock_Tile;

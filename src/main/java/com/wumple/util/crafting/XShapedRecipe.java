@@ -44,7 +44,7 @@ import net.minecraft.world.World;
         }
 
  */
-public class ShapedRecipe
+public class XShapedRecipe
 		implements ICraftingRecipe, net.minecraftforge.common.crafting.IShapedRecipe<CraftingInventory>
 {
 	static int MAX_WIDTH = 3;
@@ -71,7 +71,7 @@ public class ShapedRecipe
 	public final ResourceLocation id;
 	public final String group;
 
-	public ShapedRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
+	public XShapedRecipe(ResourceLocation idIn, String groupIn, int recipeWidthIn, int recipeHeightIn,
 			NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn)
 	{
 		this.id = idIn;
@@ -90,7 +90,7 @@ public class ShapedRecipe
 	@Override
 	public IRecipeSerializer<?> getSerializer()
 	{
-		return new Serializer<>(ShapedRecipe::new);
+		return new Serializer<>(XShapedRecipe::new);
 	}
 
 	/**
@@ -387,7 +387,7 @@ public class ShapedRecipe
 	}
 
 	// WAS public class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>>  implements IRecipeSerializer<ShapedRecipe> {
-	static public class Serializer<T extends ShapedRecipe> extends
+	static public class Serializer<T extends XShapedRecipe> extends
 			net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<T>
 	{
 		// builder that instantiates a new T extends ShapedRecipe 
@@ -402,13 +402,13 @@ public class ShapedRecipe
 		public T read(ResourceLocation recipeId, JsonObject json)
 		{
 			String s = JSONUtils.getString(json, "group", "");
-			Map<String, Ingredient> map = ShapedRecipe.deserializeKey(JSONUtils.getJsonObject(json, "key"));
-			String[] astring = ShapedRecipe
-					.shrink(ShapedRecipe.patternFromJson(JSONUtils.getJsonArray(json, "pattern")));
+			Map<String, Ingredient> map = XShapedRecipe.deserializeKey(JSONUtils.getJsonObject(json, "key"));
+			String[] astring = XShapedRecipe
+					.shrink(XShapedRecipe.patternFromJson(JSONUtils.getJsonArray(json, "pattern")));
 			int i = astring[0].length();
 			int j = astring.length;
-			NonNullList<Ingredient> nonnulllist = ShapedRecipe.deserializeIngredients(astring, map, i, j);
-			ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+			NonNullList<Ingredient> nonnulllist = XShapedRecipe.deserializeIngredients(astring, map, i, j);
+			ItemStack itemstack = XShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
 			return function.apply(recipeId, s, i, j, nonnulllist, itemstack);
 		}
 
