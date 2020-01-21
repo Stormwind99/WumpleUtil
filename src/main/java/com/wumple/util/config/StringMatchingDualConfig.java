@@ -8,7 +8,11 @@ import net.minecraft.item.Item;
 
 public class StringMatchingDualConfig<U> extends DualMatchingConfig<String, U>
 {
-
+	public StringMatchingDualConfig(String falseValue1In, U falseValue2In)
+	{
+		super(falseValue1In, falseValue2In);
+	}
+	
 	public StringMatchingDualConfig(Map<String, String> config1In, String falseValue1In, Map<String, U> config2In,
 			U falseValue2In)
 	{

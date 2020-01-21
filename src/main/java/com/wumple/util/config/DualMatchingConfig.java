@@ -1,6 +1,7 @@
 package com.wumple.util.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,10 +17,26 @@ public class DualMatchingConfig<T, U>
     public final MatchingConfig<T> config1;
     public final MatchingConfig<U> config2;
 
+    public DualMatchingConfig(T falseValue1In, U falseValue2In)
+    {
+        config1 = new MatchingConfig<T>(new HashMap<String, T>(), falseValue1In);
+        config2 = new MatchingConfig<U>(new HashMap<String, U>(), falseValue2In);
+    }
+    
     public DualMatchingConfig(Map<String, T> config1In, T falseValue1In, Map<String, U> config2In, U falseValue2In)
     {
         config1 = new MatchingConfig<T>(config1In, falseValue1In);
         config2 = new MatchingConfig<U>(config2In, falseValue2In);
+    }
+    
+    public MatchingConfig<T> get1()
+    {
+    	return config1;
+    }
+    
+    public MatchingConfig<T> get2()
+    {
+    	return config1;
     }
 
     // ----------------------------------------------------------------------

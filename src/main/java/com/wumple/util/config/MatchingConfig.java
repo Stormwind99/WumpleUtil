@@ -1,5 +1,6 @@
 package com.wumple.util.config;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +24,21 @@ public class MatchingConfig<T> extends NameKeys
     protected final Map<String, T> map;
     public final T FALSE_VALUE;
 
+    public MatchingConfig(T falseValueIn)
+    {
+        map = new HashMap<String, T>();
+        FALSE_VALUE = falseValueIn;
+    }
+    
     public MatchingConfig(Map<String, T> configIn, T falseValueIn)
     {
         map = configIn;
         FALSE_VALUE = falseValueIn;
+    }
+    
+    public Map<String, T> getMap()
+    {
+    	return map;
     }
 
     /*
