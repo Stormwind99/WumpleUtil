@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.wumple.util.adapter.IThing;
 import com.wumple.util.base.misc.Util;
 
 import net.minecraft.block.Block;
@@ -13,8 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-
-//TODO import com.wumple.util.adapter.IThing;
 
 /*
  * Wrapper around Forge HashMap<String, T> configs for (itemstack, item, entity, string)->value configs
@@ -167,13 +166,11 @@ public class MatchingConfig<T> extends NameKeys
         return getProperty(getNameKeys(it));
     }
     
-    /*
     @Nullable
     public T getProperty(IThing it)
     {
         return getProperty(it.getNameKeys());
     }
-    */
 
     @Nullable
     public T getProperty(ResourceLocation loc)
@@ -205,12 +202,10 @@ public class MatchingConfig<T> extends NameKeys
         return Util.getValueOrDefault(getProperty(entity), FALSE_VALUE);
     }
     
-    /*
     public T getValue(IThing it)
     {
         return Util.getValueOrDefault(getProperty(it), FALSE_VALUE);
     }
-    */
 
     public T getValue(ResourceLocation loc)
     {
@@ -245,12 +240,10 @@ public class MatchingConfig<T> extends NameKeys
         return doesIt(getValue(entity));
     }
     
-    /*
     public boolean doesIt(IThing it)
     {
         return doesIt(getValue(it));
     }
-    */
 
     public boolean doesIt(ResourceLocation loc)
     {
