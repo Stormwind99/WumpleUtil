@@ -38,6 +38,12 @@ public class DualMatchingConfig<T, U>
     {
     	return config1;
     }
+    
+    public void clear()
+    {
+    	config1.clear();
+    	config2.clear();
+    }
 
     // ----------------------------------------------------------------------
     // Add default properties to config

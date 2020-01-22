@@ -2,6 +2,7 @@ package com.wumple.util.capability.copier;
 
 import java.util.ArrayList;
 
+import com.wumple.util.crafting.CraftingUtil;
 import com.wumple.util.crafting.XShapelessRecipe;
 
 import net.minecraft.inventory.CraftingInventory;
@@ -150,7 +151,7 @@ public abstract class CapMergeRecipe<T extends ICopyableCap<?> > extends XShapel
 
 		if (results != null)
 		{
-			ItemStack itemstack2 = results.create(null); // PORT CraftingUtil.findWorld(inv));
+			ItemStack itemstack2 = results.create(CraftingUtil.findWorld(inv));
 
 			log("CapMergeRecipe getCraftingResults result " + itemstack2);
 

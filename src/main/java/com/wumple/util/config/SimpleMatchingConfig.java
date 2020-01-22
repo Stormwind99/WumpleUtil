@@ -30,6 +30,11 @@ public class SimpleMatchingConfig<T>
 	{
 		return map;
 	}
+	
+	public void clear()
+	{
+		map.clear();
+	}
 
 	public boolean addDefaultProperty(String name, T amountIn)
 	{
