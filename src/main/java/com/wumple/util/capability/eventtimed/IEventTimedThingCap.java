@@ -98,7 +98,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
     default boolean checkInitialized(World world, W stack)
     {
         IThing owner = getOwner();
-        boolean initedAlready = getInfo().checkInitialized(owner.getWorldBackup(world), stack);
+        boolean initedAlready = (owner != null) ? getInfo().checkInitialized(owner.getWorldBackup(world), stack) : false;
         if (!initedAlready) { forceUpdate(); }
         return initedAlready;
     }
