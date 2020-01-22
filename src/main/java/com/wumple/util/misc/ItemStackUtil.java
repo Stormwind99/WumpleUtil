@@ -5,6 +5,11 @@ import net.minecraft.item.ItemStack;
 
 public class ItemStackUtil
 {
+    static public boolean isEmpty(ItemStack stack)
+    {
+        return ((stack == null) || (stack.isEmpty()));
+    }
+    
 	/*
 	 * Copy the ItemStack but change its Item to srcItem
 	 */

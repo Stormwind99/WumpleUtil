@@ -2,7 +2,7 @@ package com.wumple.util.adapter;
 
 import java.util.ArrayList;
 
-import com.wumple.util.config.MatchingConfig;
+import com.wumple.util.config.NameKeys;
 
 import net.minecraft.tileentity.TileEntity;
 
@@ -15,6 +15,6 @@ public class TileEntityThing extends TileEntityThingBase implements IThing
     
     public ArrayList<String> getNameKeys()
     {
-        return MatchingConfig.getNameKeys(owner);
+        return NameKeys.getNameKeys(owner);
     }
 }

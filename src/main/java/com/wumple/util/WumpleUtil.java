@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 
 @Mod(Reference.MOD_ID)
-public class WumpleUtil /* PORT extends ModBase */ 
+public class WumpleUtil
 {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();

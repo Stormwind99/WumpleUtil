@@ -1,7 +1,5 @@
 package com.wumple.util.config;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -19,26 +17,16 @@ import net.minecraft.util.ResourceLocation;
 /*
  * Wrapper around Forge HashMap<String, T> configs for (itemstack, item, entity, string)->value configs
  */
-public class MatchingConfig<T> extends NameKeys
+public class MatchingConfig<T> extends SimpleMatchingConfig<T>
 {
-    protected final Map<String, T> map;
-    public final T FALSE_VALUE;
-
     public MatchingConfig(T falseValueIn)
     {
-        map = new HashMap<String, T>();
-        FALSE_VALUE = falseValueIn;
+    	super(falseValueIn);
     }
     
     public MatchingConfig(Map<String, T> configIn, T falseValueIn)
     {
-        map = configIn;
-        FALSE_VALUE = falseValueIn;
-    }
-    
-    public Map<String, T> getMap()
-    {
-    	return map;
+    	super(configIn, falseValueIn);
     }
 
     /*
@@ -52,29 +40,7 @@ public class MatchingConfig<T> extends NameKeys
 
     // --- add by String
 
-    public boolean addDefaultProperty(String name, T amountIn)
-    {
-        if (name == null)
-        {
-            name = "";
-        }
-
-        map.putIfAbsent(name, amountIn);
-
-        return true;
-    }
-
-    public boolean addDefaultProperty(String[] items, T amountIn)
-    {
-        boolean success = true;
-
-        for (String item : items)
-        {
-            success &= addDefaultProperty(item, amountIn);
-        }
-
-        return success;
-    }
+    
 
     // --- add by Item
 
@@ -114,35 +80,6 @@ public class MatchingConfig<T> extends NameKeys
     // ----------------------------------------------------------------------
     // Get value for different types
 
-    protected T getProperty(String key)
-    {
-        T amount = null;
-
-        if ((key != null) && map.containsKey(key))
-        {
-            amount = map.get(key);
-        }
-
-        return amount;
-    }
-
-    @Nullable
-    protected T getProperty(List<String> keys)
-    {
-        T amount = null;
-
-        for (String key : keys)
-        {
-            amount = getProperty(key);
-            if (amount != null)
-            {
-                break;
-            }
-        }
-
-        return amount;
-    }
-
     /**
      * Get the highest priority value we match for stack Checks all keys for stack - expands to multiple keys in defined order: id@meta, id, minecraft:food
      * 
@@ -151,31 +88,31 @@ public class MatchingConfig<T> extends NameKeys
     @Nullable
     public T getProperty(ItemStack itemStack)
     {
-        return getProperty(getNameKeys(itemStack));
+        return getProperty(NameKeys.getNameKeys(itemStack));
     }
     
     @Nullable
     public T getProperty(Item it)
     {
-        return getProperty(getNameKeys(it));
+        return getProperty(NameKeys.getNameKeys(it));
     }
     
     @Nullable
     public T getProperty(Block it)
     {
-        return getProperty(getNameKeys(it));
+        return getProperty(NameKeys.getNameKeys(it));
     }
 
     @Nullable
     public T getProperty(Entity entity)
     {
-        return getProperty(getNameKeys(entity));
+        return getProperty(NameKeys.getNameKeys(entity));
     }
     
     @Nullable
     public T getProperty(TileEntity it)
     {
-        return getProperty(getNameKeys(it));
+        return getProperty(NameKeys.getNameKeys(it));
     }
     
     @Nullable

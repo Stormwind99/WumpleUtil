@@ -29,12 +29,12 @@ public class DualMatchingConfig<T, U>
         config2 = new MatchingConfig<U>(config2In, falseValue2In);
     }
     
-    public MatchingConfig<T> get1()
+    public SimpleMatchingConfig<T> get1()
     {
     	return config1;
     }
     
-    public MatchingConfig<T> get2()
+    public SimpleMatchingConfig<T> get2()
     {
     	return config1;
     }
@@ -79,7 +79,7 @@ public class DualMatchingConfig<T, U>
 
     public Pair<T, U> getProperty(ItemStack itemStack)
     {
-        ArrayList<String> nameKeys = MatchingConfig.getNameKeys(itemStack);
+        ArrayList<String> nameKeys = NameKeys.getNameKeys(itemStack);
 
         return Pair.of(config1.getProperty(nameKeys), config2.getProperty(nameKeys));
     }
