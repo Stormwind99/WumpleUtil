@@ -1,6 +1,6 @@
 package com.wumple.util.blockrepair;
 
-import com.wumple.util.ModConfig;
+import com.wumple.util.ModConfiguration;
 import com.wumple.util.base.misc.Util;
 
 import net.minecraft.client.Minecraft;
@@ -18,7 +18,7 @@ public class RepairDebug
 	// @SubscribeEvent(priority = EventPriority.HIGH)
 	static public void onDrawOverlay(final RenderGameOverlayEvent.Text e)
 	{
-		if (ModConfig.BlockRepairDebugging.debug.get() == true)
+		if (ModConfiguration.BlockRepairDebugging.debug.get() == true)
 		{
 			Minecraft mc = Minecraft.getInstance();
 			if (mc.gameSettings.showDebugInfo == true)

@@ -1,23 +1,26 @@
 package com.wumple.util;
 
+import java.nio.file.Path;
+
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig.ConfigReloading;
+import net.minecraftforge.fml.config.ModConfig.Loading;
 //Name conflict: import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
-
-import java.nio.file.Path;
 
 // See
 // https://github.com/McJty/YouTubeModding14/blob/master/src/main/java/com/mcjty/mytutorial/Config.java
 // https://wiki.mcjty.eu/modding/index.php?title=Tut14_Ep6
 
 
-@Mod.EventBusSubscriber
-public class ModConfig
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+public class ModConfiguration
 {
 	private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
 	private static final ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
@@ -143,21 +146,21 @@ public class ModConfig
     }
 
     @SubscribeEvent
-    public static void onLoad(final net.minecraftforge.fml.config.ModConfig.Loading configEvent) {
+    public static void onLoad(final Loading configEvent) {
 
     }
 
     @SubscribeEvent
-    public static void onReload(final net.minecraftforge.fml.config.ModConfig.ConfigReloading configEvent) {
+    public static void onReload(final ConfigReloading configEvent) {
     }
     
-    public static void setupConfig()
+    public static void setupConfig(ModLoadingContext context)
     {
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.CLIENT, CLIENT_CONFIG);
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, COMMON_CONFIG);
 
-        loadConfig(ModConfig.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(Reference.MOD_ID + "-client.toml"));
-        loadConfig(ModConfig.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(Reference.MOD_ID + "-common.toml"));
+        loadConfig(ModConfiguration.CLIENT_CONFIG, FMLPaths.CONFIGDIR.get().resolve(Reference.MOD_ID + "-client.toml"));
+        loadConfig(ModConfiguration.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(Reference.MOD_ID + "-common.toml"));
     }
 
 }

@@ -20,6 +20,7 @@ public interface IThingBase extends ICapabilityProvider
     BlockPos getPos();
 
     boolean isInvalid();
+    default boolean isValid() { return !isInvalid(); } 
 
     void markDirty();
 

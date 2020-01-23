@@ -2,12 +2,14 @@ package com.wumple.util.crafting;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -35,6 +37,26 @@ public class CraftingUtil
 			}
 		}
 	}
+	
+    public static boolean isItemBeingCraftedBy(ItemStack stack, Entity entity)
+    {
+        boolean beingCrafted = false;
+
+        PlayerEntity player = (PlayerEntity) (entity);
+        if (player != null)
+        {
+            if (player.openContainer != null)
+            {
+                Slot slot = player.openContainer.getSlot(0);
+                if ((slot != null) && (slot instanceof CraftingResultSlot) && (slot.getStack() == stack))
+                {
+                    beingCrafted = true;
+                }
+            }
+        }
+
+        return beingCrafted;
+    }
 	
     // adapted from http://www.minecraftforge.net/forum/topic/22927-player-based-crafting-recipes/
     protected static final Field eventHandlerField = ObfuscationReflectionHelper.findField(CraftingInventory.class, "field_70465_c");// was "eventHandler"

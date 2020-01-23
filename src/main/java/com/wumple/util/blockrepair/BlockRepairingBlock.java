@@ -2,7 +2,7 @@ package com.wumple.util.blockrepair;
 
 import javax.annotation.Nullable;
 
-import com.wumple.util.ModConfig;
+import com.wumple.util.ModConfiguration;
 
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
@@ -45,7 +45,7 @@ public class BlockRepairingBlock extends AirBlock implements ITileEntityProvider
 	public BlockRenderType getRenderType(BlockState state)
 	{
 		// show debug model if debugging, invisible if not debugging
-		if (ModConfig.BlockRepairDebugging.showRepairingBlocks.get())
+		if (ModConfiguration.BlockRepairDebugging.showRepairingBlocks.get())
 		{
 			return BlockRenderType.MODEL;
 		}
@@ -59,7 +59,7 @@ public class BlockRepairingBlock extends AirBlock implements ITileEntityProvider
 	@OnlyIn(Dist.CLIENT)
 	public BlockRenderLayer getRenderLayer()
 	{
-		if (ModConfig.BlockRepairDebugging.showRepairingBlocks.get())
+		if (ModConfiguration.BlockRepairDebugging.showRepairingBlocks.get())
 		{
 			return BlockRenderLayer.CUTOUT;
 		}

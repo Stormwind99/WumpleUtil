@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 
-import com.wumple.util.ModConfig;
+import com.wumple.util.ModConfiguration;
 import com.wumple.util.Reference;
 import com.wumple.util.base.misc.Util;
 
@@ -41,7 +41,7 @@ public class RepairManager
 
 	public static boolean isDebugEnabled()
 	{
-		return ModConfig.BlockRepairDebugging.debug.get();
+		return ModConfiguration.BlockRepairDebugging.debug.get();
 	}
 
 	public RepairManager()

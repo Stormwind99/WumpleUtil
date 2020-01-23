@@ -2,7 +2,7 @@ package com.wumple.util.config;
 
 import java.util.ArrayList;
 
-import com.wumple.util.ModConfig;
+import com.wumple.util.ModConfiguration;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ public class NameKeyDebug
 {
 	public static boolean isDebugging()
 	{
-		return ModConfig.Debugging.debug.get();
+		return ModConfiguration.Debugging.debug.get();
 	}
 	
     @SubscribeEvent
