@@ -32,6 +32,11 @@ abstract public class ThingTimerHandler<W extends IThing, T extends IEventTimedT
     
     public W evaluateTimer(World world, W thing)
     {
+    	if (thing.isInvalid())
+    	{
+    		return null;
+    	}
+    	
         evaluateTimerContents(world, thing);
         return evaluateTimerSelf(world, thing);
     }
@@ -40,9 +45,14 @@ abstract public class ThingTimerHandler<W extends IThing, T extends IEventTimedT
     {
         LazyOptional<? extends T> lcap = getCap(thing);
         
-        W newThing = lcap.map(cap->{return cap.evaluate(world, thing);}).orElse(null);
+        W newThing = lcap.map(cap->{return evaluateInternal(cap, world, thing);}).orElse(null);
         
         return newThing;
+    }
+    
+    protected W evaluateInternal(T cap, World world, W thing)
+    {
+    	return cap.evaluate(world, thing);
     }
     
     public void evaluateTimerContents(World world, W thing)
@@ -68,6 +78,9 @@ abstract public class ThingTimerHandler<W extends IThing, T extends IEventTimedT
     // ----------------------------------------------------------------------
     // Convenience methods
     
+    /*
+     * Returns true if timer expired and thing changed, false if not
+     */
     @SuppressWarnings("unchecked")
     public boolean evaluateTimer(World world, BlockPos pos)
     {

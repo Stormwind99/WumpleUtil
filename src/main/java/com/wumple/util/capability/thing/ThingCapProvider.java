@@ -1,6 +1,5 @@
 package com.wumple.util.capability.thing;
 
-
 import javax.annotation.Nullable;
 
 import com.wumple.util.adapter.IThing;
@@ -8,27 +7,43 @@ import com.wumple.util.capability.listener.SimpleCapabilityProvider;
 
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
-public class ThingCapProvider<T extends IThing, W extends IThingCap<T> > extends SimpleCapabilityProvider<W>
+public class ThingCapProvider<I extends IThing, W extends IThingCap<I>> extends SimpleCapabilityProvider<W>
 {
-    protected T owner = null;
+	protected I owner = null;
 
-    public ThingCapProvider(Capability<W> capability, @Nullable Direction facing, T ownerIn)
-    {
-        super(capability, facing, (capability != null) ? capability.getDefaultInstance() : null);
-        owner = ownerIn;
-    }
+	public ThingCapProvider(Capability<W> capability, @Nullable Direction facing, I ownerIn)
+	{
+		super(capability, facing, (capability != null) ? capability.getDefaultInstance() : null);
+		assert (ownerIn != null);
+		owner = ownerIn;
+	}
 
-    public ThingCapProvider(Capability<W> capability, @Nullable Direction facing, W instance, T ownerIn)
-    {
-        super(capability, facing, instance);
-        owner = ownerIn;
-    }
+	public ThingCapProvider(Capability<W> capability, @Nullable Direction facing, W instance, I ownerIn)
+	{
+		super(capability, facing, instance);
+		assert (ownerIn != null);
+		owner = ownerIn;
+		instance.checkInit(owner);
+	}
 
-    public W getInstance()
-    {
-        W cap = super.getInstance();
-        cap.checkInit(owner);
-        return cap;
-    }
+	@Override
+	public W getInstance()
+	{
+		instance.checkInit(owner);
+		return instance;
+	}
+
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> capabilityIn, Direction facing)
+	{
+		// super.getCapability() takes care of (capabilityIn == capability)
+		LazyOptional<W> lo = super.getCapability(capability, facing);
+		lo.ifPresent(xcap -> {
+			xcap.checkInit(owner);
+		});
+
+		return lo.cast();
+	}
 }

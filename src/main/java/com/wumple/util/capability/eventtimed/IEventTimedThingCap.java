@@ -2,7 +2,7 @@ package com.wumple.util.capability.eventtimed;
 
 import java.util.List;
 
-import com.wumple.util.ModConfig;
+import com.wumple.util.ModConfiguration;
 import com.wumple.util.adapter.IThing;
 import com.wumple.util.adapter.TUtil;
 import com.wumple.util.capability.copier.ICopyableCap;
@@ -90,7 +90,8 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
     default boolean checkInitialized(World world)
     {
         IThing owner = getOwner();
-        boolean initedAlready = getInfo().checkInitialized(owner.getWorldBackup(world), owner);
+        World worldOut = (owner != null) ? owner.getWorldBackup(world) : world;
+        boolean initedAlready = getInfo().checkInitialized(worldOut, owner);
         if (!initedAlready) { forceUpdate(); }
         return initedAlready;
     }
@@ -98,7 +99,8 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
     default boolean checkInitialized(World world, W stack)
     {
         IThing owner = getOwner();
-        boolean initedAlready = (owner != null) ? getInfo().checkInitialized(owner.getWorldBackup(world), stack) : false;
+        World worldOut = (owner != null) ? owner.getWorldBackup(world) : world;
+        boolean initedAlready = getInfo().checkInitialized(worldOut, stack);
         if (!initedAlready) { forceUpdate(); }
         return initedAlready;
     }
@@ -276,7 +278,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         // Crafting: Ingredients 5/14, 6/14 -> Results 0/7 days
         // Crafting: Ingredients 6/14, 9/14 -> Results 2/7 days
         
-        if (ModConfig.Debugging.debug.get()) { log("copyFrom: other " + other + " this " + this); }
+        if (ModConfiguration.Debugging.debug.get()) { log("copyFrom: other " + other + " this " + this); }
 
         // world might be null
         this.checkInitialized(world);
@@ -286,7 +288,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         {
             if (other.isExpirationTimestampSet())
             {
-                if (ModConfig.Debugging.debug.get()) { log("copyFrom: uninit this, copying " + other.getDate() + " " + other.getTime()); }
+                if (ModConfiguration.Debugging.debug.get()) { log("copyFrom: uninit this, copying " + other.getDate() + " " + other.getTime()); }
                 setExpiration(other.getDate(), other.getTime());
             }
         }
@@ -295,7 +297,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         {
             // handle uninitialized src
             // should never happen - but for now just skip this operation
-            if (ModConfig.Debugging.debug.get()) { log("copyFrom: skipping uninit other " + other.isExpirationTimestampSet() + " this " + this.isExpirationTimestampSet()); }
+            if (ModConfiguration.Debugging.debug.get()) { log("copyFrom: skipping uninit other " + other.isExpirationTimestampSet() + " this " + this.isExpirationTimestampSet()); }
             assert(other.isExpirationTimestampSet());
             return;              
         }         
@@ -313,7 +315,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
             long new_d_i = Math.min(d_o, d_i);
             long t_i = ExpirationBase.NO_EXPIRATION;
             
-            if (ModConfig.Debugging.debug.get())
+            if (ModConfiguration.Debugging.debug.get())
             { 
                 long t_o = other.getTime();
                 
@@ -344,7 +346,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
                 new_d_i = e_o - t_i;
             }
             
-            if (ModConfig.Debugging.debug.get()) { log("copyFrom: setting"
+            if (ModConfiguration.Debugging.debug.get()) { log("copyFrom: setting"
                     + " new_d_i " + new_d_i
                     + " d_o " + d_o
                     + " t_o " + t_o
@@ -358,7 +360,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
         }
         else
         {
-            if (ModConfig.Debugging.debug.get()) { log("copyFrom: skipping isNotExpiring this " + this.isNonExpiring() + " other " + other.isNonExpiring()); }
+            if (ModConfiguration.Debugging.debug.get()) { log("copyFrom: skipping isNotExpiring this " + this.isNonExpiring() + " other " + other.isNonExpiring()); }
         }
     }
 

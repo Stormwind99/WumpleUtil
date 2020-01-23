@@ -67,7 +67,7 @@ public class SimpleCapabilityProvider<HANDLER> implements ICapabilityProvider {
 	 *
 	 * @return The Capability instance
 	 */
-	public final Capability<HANDLER> getCapability() {
+	public Capability<HANDLER> getCapability() {
 		return capability;
 	}
 
