@@ -201,8 +201,9 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 		if (worldIn instanceof ServerWorld)
 		{
 			String mapName = getMapName(getMapId(stack));
-
-			return worldIn.getServer().getWorld(DimensionType.OVERWORLD).getSavedData().get(() -> {
+			
+			// func_71218_a() was getWorld()
+			return worldIn.getServer().func_71218_a(DimensionType.OVERWORLD).getSavedData().get(() -> {
 				return XMapAPI.getInstance().createMapData(mapName);
 			}, mapName);
 		}

@@ -48,6 +48,12 @@ abstract public class ThingCap<T extends IThing> implements IThingCap<T>
     {
         return (owner != null) ? owner.as(x) : null;
     }
+    
+    @Override
+    public void setOwner(T ownerIn)
+    {
+    	owner = ownerIn;
+    }
 
     // ----------------------------------------------------------------------
     // Init

@@ -10,4 +10,5 @@ public interface IThingCap<T extends IThing>
     
     public void forceUpdate();
     public T getOwner();
+    public void setOwner(T ownerIn);
 }

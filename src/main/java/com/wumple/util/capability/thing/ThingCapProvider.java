@@ -3,13 +3,13 @@ package com.wumple.util.capability.thing;
 import javax.annotation.Nullable;
 
 import com.wumple.util.adapter.IThing;
-import com.wumple.util.capability.listener.SimpleCapabilityProvider;
+import com.wumple.util.capability.listener.SerializableCapabilityProvider;
 
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class ThingCapProvider<I extends IThing, W extends IThingCap<I>> extends SimpleCapabilityProvider<W>
+public class ThingCapProvider<I extends IThing, W extends IThingCap<I>> extends SerializableCapabilityProvider<W>
 {
 	protected I owner = null;
 

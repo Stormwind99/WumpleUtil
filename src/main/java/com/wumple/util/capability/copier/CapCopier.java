@@ -2,6 +2,9 @@ package com.wumple.util.capability.copier;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+
+import com.wumple.util.Reference;
 import com.wumple.util.base.misc.Util;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -64,6 +67,7 @@ public interface CapCopier<T extends ICopyableCap<T> >
         
         BlockPos pos = event.getPos();
         TileEntity tileentity = world.getTileEntity(pos);
+        
         setLastTileEntity(tileentity);
     }
 
@@ -76,7 +80,7 @@ public interface CapCopier<T extends ICopyableCap<T> >
         PlayerEntity pentity = Util.as(event.getEntity(), PlayerEntity.class);
         ItemStack stack = (pentity != null) ? pentity.getHeldItemMainhand() : null;
         BlockPos pos = event.getPos();
-        
+                
         // this can fail if pos (aka Block at pos) has no TileEntity!
         copyToFrom(pos, stack, world.getWorld());
     }
