@@ -1,0 +1,33 @@
+/*
+ * Vanilla Minecraft chests:
+ * ChestBlock
+ * ChestTileEntity
+ * ChestTileEntityRenderer
+ * ChestContainer
+ * ChestScreen
+ * ChestRenderer
+ * ChestModel and LargeChestModel
+ * ChestType
+ * 
+ * Registration:
+ * Blocks: public static final Block CHEST = register("chest", new ChestBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));
+ * TileEntityType: public static final TileEntityType<ChestTileEntity> CHEST = register("chest", TileEntityType.Builder.create(ChestTileEntity::new, Blocks.CHEST));
+ * TileEntityRendererDispatcher: this.renderers.put(ChestTileEntity.class, new ChestTileEntityRenderer<>());
+ * ScreenManager: registerFactory(ContainerType.GENERIC_9X1, ChestScreen::new);
+ * 
+ * TrappedChest:
+ * TrappedChestBlock
+ * TrappedChestTileEntity
+ * DataFixer: TrappedChestTileEntitySplit
+ * 
+ * Registration:
+ * Block: public static final TRAPPED_CHEST = register("trapped_chest", new TrappedChestBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));
+ * TileEntityType: public static final TileEntityType<TrappedChestTileEntity> TRAPPED_CHEST = register("trapped_chest", TileEntityType.Builder.create(TrappedChestTileEntity::new, Blocks.TRAPPED_CHEST));
+ *
+ * EnderChest:
+ * EnderChestBlock
+ * EnderChestInventory
+ * EnderChestTileEntity
+ *
+ * Registration: TODO
+ */

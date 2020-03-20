@@ -2,6 +2,9 @@ package com.wumple.util.capability.copier;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+
+import com.wumple.util.Reference;
 import com.wumple.util.crafting.CraftingUtil;
 import com.wumple.util.crafting.XShapelessRecipe;
 
@@ -73,6 +76,7 @@ public abstract class CapMergeRecipe<T extends ICopyableCap<?> > extends XShapel
 
 	public void log(String msg)
 	{
+		// LogManager.getLogger(Reference.MOD_ID).info(msg);
 	}
 
 	/**

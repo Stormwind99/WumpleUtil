@@ -146,43 +146,29 @@ public class NameKeys
         return nameKeys;
     }
     
+    static public ArrayList<String> addNameKeys(ArrayList<String> nameKeys, Collection<ResourceLocation> tags)
+    {
+    	for (ResourceLocation tag : tags)
+        {
+            nameKeys.add("#" + tag.toString());
+        }
+
+        return nameKeys;
+    }
+    
     static public ArrayList<String> addNameKeysItemTags(ArrayList<String> nameKeys, Item item)
     {
-        if (item != null)
-        {
-        	Collection<ResourceLocation> tags = ItemTags.getCollection().getOwningTags(item);
-        	
-        	for (ResourceLocation tag : tags)
-            {
-                nameKeys.add("#" + tag.toString());
-            }
-        }
-        
-        return nameKeys;
+    	return (item != null) ? addNameKeys(nameKeys, ItemTags.getCollection().getOwningTags(item) ) : nameKeys;
     }
     
     static public ArrayList<String> addNameKeysBlockTags(ArrayList<String> nameKeys, Block block)
     {
-    	Collection<ResourceLocation> tags = BlockTags.getCollection().getOwningTags(block);
-    	
-    	for (ResourceLocation tag : tags)
-        {
-            nameKeys.add("#" + tag.toString());
-        }
-        
-        return nameKeys;
+    	return addNameKeys(nameKeys, BlockTags.getCollection().getOwningTags(block));
     }
     
     static public ArrayList<String> addNameKeysEntityTags(ArrayList<String> nameKeys, Entity it)
     {
-    	Collection<ResourceLocation> tags = EntityTypeTags.getCollection().getOwningTags(it.getType());
-    	
-    	for (ResourceLocation tag : tags)
-        {
-            nameKeys.add("#" + tag.toString());
-        }
-        
-        return nameKeys;
+    	return addNameKeys(nameKeys, EntityTypeTags.getCollection().getOwningTags(it.getType()));
     }
     
     static protected boolean ConfigAddClassNames()

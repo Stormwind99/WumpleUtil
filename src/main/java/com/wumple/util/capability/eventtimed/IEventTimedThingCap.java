@@ -2,7 +2,10 @@ package com.wumple.util.capability.eventtimed;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+
 import com.wumple.util.ModConfiguration;
+import com.wumple.util.Reference;
 import com.wumple.util.adapter.IThing;
 import com.wumple.util.adapter.TUtil;
 import com.wumple.util.capability.copier.ICopyableCap;
@@ -260,9 +263,9 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
     }
     */
     
-    default public void log(String out)
+    default public void log(String msg)
     {
-    	
+		// LogManager.getLogger(Reference.MOD_ID).info(msg);
     }
     
     @Override
