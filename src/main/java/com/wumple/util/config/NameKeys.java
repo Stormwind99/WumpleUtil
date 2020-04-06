@@ -23,6 +23,11 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
  */
 public class NameKeys
 {
+	// ----------------------------------------------------------------------
+    // Constants
+	
+	public static String foodSpecial = "$food";
+ 
     // ----------------------------------------------------------------------
     // Utility
     
@@ -206,7 +211,15 @@ public class NameKeys
     static public ArrayList<String> addNameKeysSpecial(ArrayList<String> nameKeys, Object object)
     {   
         // special tags for backwards compatibility 
-    	// no longer needed!
+    	
+    	if (object instanceof Item)
+    	{
+    		Item item = (Item)object;
+    		if (item.isFood())
+    		{
+    			nameKeys.add(foodSpecial);
+    		}
+    	}
         
         return nameKeys;
     }
