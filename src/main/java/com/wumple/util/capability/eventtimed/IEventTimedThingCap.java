@@ -2,15 +2,13 @@ package com.wumple.util.capability.eventtimed;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-
 import com.wumple.util.ModConfiguration;
-import com.wumple.util.Reference;
 import com.wumple.util.adapter.IThing;
 import com.wumple.util.adapter.TUtil;
 import com.wumple.util.capability.copier.ICopyableCap;
 import com.wumple.util.capability.thing.IThingCap;
 import com.wumple.util.container.ContainerUtil;
+import com.wumple.util.crafting.CraftingUtil;
 import com.wumple.util.tooltip.ITooltipProvider;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -421,7 +419,7 @@ public interface IEventTimedThingCap<W extends IThing, T extends Expiration> ext
                 checkInitialized(world);
                 
                 // Rot state
-                boolean beingCrafted = false; // PORT (stack != null) ? CraftingUtil.isItemBeingCraftedBy(stack, entity) : false;
+                boolean beingCrafted = (stack != null) ? CraftingUtil.isItemBeingCraftedBy(stack, entity) : false;
                 String key = getStateTooltipKey(myinfo, beingCrafted);
 
                 if (key != null)
