@@ -75,6 +75,26 @@ public class XChestTileEntity extends LockableLootTileEntity implements IChestLi
 	{
 		return new TranslationTextComponent("container.chest");
 	}
+	
+	protected SoundEvent getOpenSoundEvent()
+	{
+		return SoundEvents.BLOCK_CHEST_OPEN;
+	}
+	
+	protected void playOpenSound()
+	{
+		this.playSound(getOpenSoundEvent());
+	}
+	
+	protected SoundEvent getCloseSoundEvent()
+	{
+		return SoundEvents.BLOCK_CHEST_CLOSE;
+	}
+	
+	protected void playCloseSound()
+	{
+		this.playSound(getCloseSoundEvent());
+	}
 
 	public void read(CompoundNBT compound)
 	{
@@ -110,7 +130,7 @@ public class XChestTileEntity extends LockableLootTileEntity implements IChestLi
 		float f = 0.1F;
 		if (this.numPlayersUsing > 0 && this.lidAngle == 0.0F)
 		{
-			this.playSound(SoundEvents.BLOCK_CHEST_OPEN);
+			playOpenSound();
 		}
 
 		if (this.numPlayersUsing == 0 && this.lidAngle > 0.0F || this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
@@ -133,7 +153,7 @@ public class XChestTileEntity extends LockableLootTileEntity implements IChestLi
 			float f2 = 0.5F;
 			if (this.lidAngle < 0.5F && f1 >= 0.5F)
 			{
-				this.playSound(SoundEvents.BLOCK_CHEST_CLOSE);
+				playCloseSound();
 			}
 
 			if (this.lidAngle < 0.0F)
