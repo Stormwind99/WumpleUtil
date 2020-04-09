@@ -15,6 +15,6 @@ public class ItemStackThing extends ItemStackThingBase implements IThing
     
     public ArrayList<String> getNameKeys()
     {
-        return NameKeys.getNameKeys(owner);
+        return NameKeys.getNameKeys(get());
     }
 }

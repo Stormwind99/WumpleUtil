@@ -160,7 +160,7 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
             {
                 invalidate();
             }
-            else
+            else 
             {
                 boolean eval = updateAndCache();
                 always();
@@ -178,7 +178,7 @@ abstract public class TickingThingCap<T extends IThing> extends ThingCap<T> impl
     @SubscribeEvent
     public void onTick(TickEvent.WorldTickEvent event)
     {
-        handleOnTick(event.world);
+   		handleOnTick(event.world);
     }
 
     @SubscribeEvent

@@ -5,31 +5,29 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class EntityThingBase implements IThingBase
+public class EntityThingBase extends ThingBase<Entity>
 {
-    public Entity owner = null;
-
     public EntityThingBase(Entity ownerIn)
     {
-        owner = ownerIn;
+        super(ownerIn);
     }
-
+    
     @Override
     public World getWorld()
     {
-        return (owner != null) ? owner.getEntityWorld() : null;
+        return isValid() ? get().getEntityWorld() : null;
     }
     
     @Override
     public BlockPos getPos()
     {
-        return (owner != null) ? owner.getPosition() : null;
+        return isValid() ? get().getPosition() : null;
     }
     
     @Override
     public boolean isInvalid()
     {
-        return (owner == null) || !owner.isAlive();
+        return super.isInvalid() || !get().isAlive();
     }
 
     @Override
@@ -40,8 +38,8 @@ public class EntityThingBase implements IThingBase
     @Override
     public void invalidate()
     {
-        if (owner != null) { owner.remove(); }
-        owner = null;
+        if (get() != null) { get().remove(); }
+        super.invalidate();
     }
 
     @Override
@@ -49,28 +47,22 @@ public class EntityThingBase implements IThingBase
     {
         if (entity instanceof EntityThingBase)
         {
-            return owner == ((EntityThingBase) entity).owner;
+            return get() == ((EntityThingBase) entity).get();
         }
         return false;
     }
     
     @Override
-    public Object object()
-    {
-        return owner;
-    }
-    
-    @Override
     public ICapabilityProvider capProvider()
-    { return owner; }
+    { return get(); }
     
     @Override
     public void forceUpdate()
     { 
-        if (owner != null)
+        if (isValid())
         {
             BlockPos pos = getPos();
-            owner.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+            get().setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
         }
     }
 }

@@ -5,15 +5,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class ItemStackThingBase implements IThingBase
+public class ItemStackThingBase extends ThingBase<ItemStack>
 {
-    public ItemStack owner = null;
-
     public ItemStackThingBase(ItemStack ownerIn)
     {
-        owner = ownerIn;
+        super(ownerIn);
     }
-
+    
     @Override
     public World getWorld()
     {
@@ -27,20 +25,8 @@ public class ItemStackThingBase implements IThingBase
     }
 
     @Override
-    public boolean isInvalid()
-    {
-        return false;
-    }
-
-    @Override
     public void markDirty()
     {
-    }
-
-    @Override
-    public void invalidate()
-    {
-        owner = null;
     }
 
     @Override
@@ -48,26 +34,20 @@ public class ItemStackThingBase implements IThingBase
     {
         if (entity instanceof ItemStackThingBase)
         {
-            return owner == ((ItemStackThingBase) entity).owner;
+            return get() == ((ItemStackThingBase) entity).get();
         }
         return false;
     }
     
     @Override
-    public Object object()
-    {
-        return owner;
-    }
-    
-    @Override
     public int getCount()
     {
-        return (owner != null) ? owner.getCount() : 0;
+        return isValid() ? get().getCount() : 0;
     }
     
     @Override
     public ICapabilityProvider capProvider()
-    { return owner; }
+    { return get(); }
     
     @Override
     public void forceUpdate()

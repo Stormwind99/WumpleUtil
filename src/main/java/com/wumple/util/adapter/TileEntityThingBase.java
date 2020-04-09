@@ -6,43 +6,49 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
-public class TileEntityThingBase implements IThingBase
+public class TileEntityThingBase extends ThingBase<TileEntity>
 {
-    public TileEntity owner = null;
-
     public TileEntityThingBase(TileEntity ownerIn)
     {
-        owner = ownerIn;
+        super(ownerIn);
     }
-
+    
     @Override
     public World getWorld()
     {
-        return (owner != null) ? owner.getWorld() : null;
+        return isValid() ? get().getWorld() : null;
     }
     
     @Override
     public BlockPos getPos()
     {
-        return (owner != null) ? owner.getPos() : null;
+        return isValid() ? get().getPos() : null;
     }
 
     @Override
     public boolean isInvalid()
     {
-        return (owner == null) || owner.isRemoved();
+        return super.isInvalid() || get().isRemoved()
+        	// HACK to avoid tick on cap owned by unloaded chunk
+        	|| (get().getWorld() == null)
+        	|| (get().getPos() == null)
+            || (!get().getWorld().isAreaLoaded(get().getPos(), 1))
+        	;
     }
 
     @Override
     public void markDirty()
     {
-        if (owner != null) { owner.markDirty(); }
+        if (isValid())
+        {
+        	get().markDirty();
+        }
     }
 
     @Override
     public void invalidate()
     {
-        if (owner != null)
+        if (isValid())
         {
             World world = getWorld();
             BlockPos pos = getPos();
@@ -51,10 +57,10 @@ public class TileEntityThingBase implements IThingBase
             	world.removeBlock(pos, false);
                 world.removeTileEntity(pos);
             }
-            owner.remove();
-            owner.updateContainingBlockInfo();
+            get().remove();
+            get().updateContainingBlockInfo();
         }
-        owner = null;
+        super.invalidate();
     }
 
     @Override
@@ -62,23 +68,19 @@ public class TileEntityThingBase implements IThingBase
     {
         if (entity instanceof TileEntityThingBase)
         {
-            return owner == ((TileEntityThingBase) entity).owner;
+            return get() == ((TileEntityThingBase) entity).get();
         }
         return false;
     }
     
     @Override
-    public Object object()
-    { return owner; }
-        
-    @Override
     public ICapabilityProvider capProvider()
-    { return owner; }
+    { return get(); }
     
     @Override
     public void forceUpdate()
     {
-        if (owner != null)
+        if (isValid())
         {
             BlockPos pos = getPos();
             World world = getWorld();
@@ -89,7 +91,7 @@ public class TileEntityThingBase implements IThingBase
                 world.notifyBlockUpdate(pos, state, state, 3);
                 // PORT world.scheduleBlockUpdate(pos,owner.getBlockType(),0,0);
             }
-            owner.markDirty();
+            get().markDirty();
         }
     }
 }
