@@ -48,13 +48,13 @@ abstract public class TimerRefreshingCap<T extends IThing, W extends Expiration,
     public TimerRefreshingCap()
     {
         super();
-        MinecraftForge.EVENT_BUS.register(this);
+        // super does MinecraftForge.EVENT_BUS.register(this);
     }
 
     public TimerRefreshingCap(T ownerIn)
     {
         super(ownerIn);
-        MinecraftForge.EVENT_BUS.register(this);
+        // super does MinecraftForge.EVENT_BUS.register(this);
     }
     
     // ----------------------------------------------------------------------

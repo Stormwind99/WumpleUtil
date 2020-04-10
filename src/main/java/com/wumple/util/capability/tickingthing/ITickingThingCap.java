@@ -21,4 +21,9 @@ public interface ITickingThingCap<T extends IThing> extends IThingCap<T>
      * Do only so often
      */
     void evaluate();
+    
+    /**
+     * unsubscribe from event bus, etc when invalidated
+     */
+    void invalidateCap();
 }
