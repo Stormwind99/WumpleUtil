@@ -42,7 +42,7 @@ public class TileEntityThingBase extends ThingBase<TileEntity>
 		// HACK to avoid tick on cap owned by unloaded chunk followed with a crash/hang
 		if ((get().getWorld() == null)
 				|| (get().getPos() == null)
-				|| (!get().getWorld().isAreaLoaded(get().getPos(), 1)))
+				|| (!get().getWorld().isAreaLoaded(get().getPos(), 0)))
 		{
 			if (ModConfiguration.Debugging.debug.get())
 			{
