@@ -171,7 +171,7 @@ public class ContainerUseTracker
                 // check TileEntities, such as for Chest
                 if (!cap.isPresent())
                 {
-                    // Client doesn't have container contents. so wwe don't check if
+                    // Client doesn't have container contents. so we don't check if
                     // ContainerUtil.doesContain(lastUsedTileEntity, stack)
                     cap = CapabilityUtils.fetchCapability(lastUsedTileEntity, capability, facing);
                 }
