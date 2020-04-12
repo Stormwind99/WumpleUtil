@@ -57,12 +57,12 @@ public class CraftingUtil
 
         return beingCrafted;
     }
-	
+    
     // adapted from http://www.minecraftforge.net/forum/topic/22927-player-based-crafting-recipes/
-    protected static final Field eventHandlerField = ObfuscationReflectionHelper.findField(CraftingInventory.class, "field_70465_c");// was "eventHandler"
-    protected static final Field PlayerContainerPlayerField = ObfuscationReflectionHelper.findField(PlayerContainer.class, "player");
-    protected static final Field slotCraftingPlayerField = ObfuscationReflectionHelper.findField(CraftingResultSlot.class, "player");
-
+    public static Field eventHandlerField = ObfuscationReflectionHelper.findField(CraftingInventory.class, "field_70465_c"); // "eventHandler"
+    public static Field PlayerContainerPlayerField = ObfuscationReflectionHelper.findField(PlayerContainer.class, "field_82862_h"); // "player"
+    public static Field slotCraftingPlayerField = ObfuscationReflectionHelper.findField(CraftingResultSlot.class, "field_75238_b"); // "player"
+	
     public static PlayerEntity findPlayer(CraftingInventory inv)
     {
         try
