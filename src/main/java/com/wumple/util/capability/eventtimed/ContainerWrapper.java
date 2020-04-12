@@ -10,7 +10,7 @@ public class ContainerWrapper extends ItemStackHandler
     
     public ContainerWrapper(Container containerIn)
     {
-    	super( ObfuscationReflectionHelper.getPrivateValue(Container.class, containerIn, "inventoryItemStacks") );
+    	super( ObfuscationReflectionHelper.getPrivateValue(Container.class, containerIn, "field_75153_a") ) ; // "inventoryItemStacks"
         container = containerIn;
     }
 
