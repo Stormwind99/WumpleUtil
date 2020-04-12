@@ -2,6 +2,11 @@ package com.wumple.util.config;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
+
+import com.wumple.util.base.misc.Util;
+import com.wumple.util.misc.TypeIdentifier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -23,11 +28,6 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
  */
 public class NameKeys
 {
-	// ----------------------------------------------------------------------
-    // Constants
-	
-	public static String foodSpecial = "$food";
- 
     // ----------------------------------------------------------------------
     // Utility
     
@@ -210,17 +210,43 @@ public class NameKeys
 
     static public ArrayList<String> addNameKeysSpecial(ArrayList<String> nameKeys, Object object)
     {   
-        // special tags for backwards compatibility 
     	
-    	if (object instanceof Item)
+    	for (Function<Object, String> func : specialFuncs)
     	{
-    		Item item = (Item)object;
-    		if (item.isFood())
+    		String nameKey = func.apply(object);
+    		if (nameKey != null)
     		{
-    			nameKeys.add(foodSpecial);
+    			nameKeys.add(nameKey);
     		}
     	}
         
         return nameKeys;
+    }
+    
+    // ------------------------------------------------------------------------
+    // User definable builder support
+    
+    static public List< Function<Object, String> > specialFuncs = new ArrayList< Function<Object, String> >();
+        
+    static public void addNameKeySpecialCheck(Function<Object, String> func)
+    {
+    	specialFuncs.add(func);
+    }
+    
+    // ------------------------------------------------------------------------
+    // Special user defined builder example
+
+    // Constants
+	public static String foodSpecial = "$food";
+    
+    static public String checkFoodNameKey(Object x)
+    {
+		Item item = Util.as(x, Item.class);
+		return (item != null) && (item.isFood()) ? foodSpecial : null;
+    }
+    
+    static 
+    {
+    	addNameKeySpecialCheck( NameKeys::checkFoodNameKey );
     }
 }
