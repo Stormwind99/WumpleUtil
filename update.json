@@ -1,12 +1,13 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
-    "1.14.4-latest": "3.4.0",
-    "1.14.4-recommended": "3.4.0",
+    "1.14.4-latest": "3.5.0",
+    "1.14.4-recommended": "3.5.0",
     "1.12.2-latest": "2.12.8",
     "1.12.2-recommended": "2.12.8"
   },
   "1.14.4": {
+    "3.5.0": "Fix for CraftingUtil init crash",
     "3.4.0": "First 1.14.4 release",
     "3.3.2": "Force update",
     "3.3.1": "Force update",
