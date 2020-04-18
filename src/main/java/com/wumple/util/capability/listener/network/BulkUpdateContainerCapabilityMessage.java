@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -205,7 +205,7 @@ public abstract class BulkUpdateContainerCapabilityMessage<HANDLER, DATA> {
 		}
 
 		ctx.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			final PlayerEntity player = Minecraft.getInstance().player;
+			final ClientPlayerEntity player = Minecraft.getInstance().player;
 
 			final Container container;
 			if (message.windowID == 0) {
