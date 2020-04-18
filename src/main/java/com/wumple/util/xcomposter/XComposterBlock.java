@@ -13,6 +13,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
@@ -53,10 +54,25 @@ public class XComposterBlock extends ComposterBlock
 	{
 		return CHANCES.getFloat(itemstack.getItem());
 	}
+	
+	protected Item getCompostItem()
+	{
+		return Items.BONE_MEAL;
+	}
+	
+	protected boolean isCompostItem(Item item)
+	{
+		return item == getCompostItem();
+	}
+	
+	protected boolean isCompostItem(ItemStack itemStack)
+	{
+		return isCompostItem(itemStack.getItem());
+	}
 
 	protected ItemStack makeCompost()
 	{
-		return new ItemStack(Items.BONE_MEAL);
+		return new ItemStack(getCompostItem());
 	}
 	
 	protected int getWaitTicks(IWorld worldIn)
@@ -148,7 +164,7 @@ public class XComposterBlock extends ComposterBlock
 		if (i == 8)
 		{
 			return new XComposterBlock.XFullInventory(p_219966_1_, p_219966_2_, p_219966_3_,
-					new ItemStack(Items.BONE_MEAL));
+					makeCompost());
 		}
 		else
 		{
@@ -233,7 +249,15 @@ public class XComposterBlock extends ComposterBlock
 		 */
 		public boolean canExtractItem(int index, ItemStack stack, Direction direction)
 		{
-			return !this.extracted && direction == Direction.DOWN && stack.getItem() == Items.BONE_MEAL;
+			Block block = this.world.getBlockState(pos).getBlock();
+			if (block instanceof XComposterBlock)
+			{
+				XComposterBlock xblock = (XComposterBlock)block;
+				
+				return !this.extracted && direction == Direction.DOWN && xblock.isCompostItem(stack);
+			}
+
+			return false;
 		}
 
 		/**
