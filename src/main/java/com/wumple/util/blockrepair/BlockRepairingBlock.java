@@ -13,13 +13,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 /*
  * Originally based on CoroUtil's BlockRepairingBlock
@@ -53,21 +50,6 @@ public class BlockRepairingBlock extends AirBlock implements ITileEntityProvider
 		{
 			return super.getRenderType(state);
 		}
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public BlockRenderLayer getRenderLayer()
-	{
-		if (ModConfiguration.BlockRepairDebugging.showRepairingBlocks.get())
-		{
-			return BlockRenderLayer.CUTOUT;
-		}
-		else
-		{
-			return super.getRenderLayer();
-		}
-
 	}
 
 	/*
@@ -127,7 +109,7 @@ public class BlockRepairingBlock extends AirBlock implements ITileEntityProvider
 	 * as sounds or particles
 	 * 
 	 * @deprecated call via
-	 *             {@link IBlockState#onBlockEventReceived(World,BlockPos,int,int)}
+	 *             {@link BlockState#onBlockEventReceived(World,BlockPos,int,int)}
 	 *             whenever possible. Implementing/overriding is fine.
 	 */
 	@Override
