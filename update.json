@@ -1,10 +1,15 @@
 {
   "homepage": "https://github.com/Stormwind99/WumpleUtil",
   "promos": {
+    "1.15.2-latest": "3.6.0",
+    "1.15.2-recommended": "3.6.0",
     "1.14.4-latest": "3.6.0",
     "1.14.4-recommended": "3.6.0",
     "1.12.2-latest": "2.12.8",
     "1.12.2-recommended": "2.12.8"
+  },
+  "1.15.2": {
+    "3.6.0": "XComposter improvements/bug fixes"
   },
   "1.14.4": {
     "3.6.0": "XComposter improvements/bug fixes",
