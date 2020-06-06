@@ -31,8 +31,7 @@ public class XMapItem extends MapItem implements IXMapItem
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
 	{
 		int scale = XMapAPI.getInstance().getDefaultScale();
-		ItemStack itemstack = XMapAPI.getInstance().setupNewMap(worldIn, MathHelper.floor(playerIn.posX),
-				MathHelper.floor(playerIn.posZ), (byte)scale, true, false);
+		ItemStack itemstack = XMapAPI.getInstance().setupNewMap(worldIn, MathHelper.floor(playerIn.getPosX()), MathHelper.floor(playerIn.getPosZ()), (byte)scale, true, false);
 		ItemStack itemstack1 = playerIn.getHeldItem(handIn);
 		if (!playerIn.abilities.isCreativeMode)
 		{
