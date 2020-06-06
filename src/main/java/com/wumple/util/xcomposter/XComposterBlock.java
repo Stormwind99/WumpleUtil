@@ -16,10 +16,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IWorld;
@@ -84,8 +81,7 @@ public class XComposterBlock extends ComposterBlock
 	// From ComposterBlock
 
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit)
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
 	{
 		int i = state.get(LEVEL);
 		ItemStack itemstack = player.getHeldItem(handIn);
@@ -101,7 +97,7 @@ public class XComposterBlock extends ComposterBlock
 				}
 			}
 
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 		else if (i == 8)
 		{
@@ -120,11 +116,11 @@ public class XComposterBlock extends ComposterBlock
 			clear(state, worldIn, pos);
 			worldIn.playSound((PlayerEntity) null, pos, SoundEvents.BLOCK_COMPOSTER_EMPTY, SoundCategory.BLOCKS, 1.0F,
 					1.0F);
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 		else
 		{
-			return false;
+			return ActionResultType.FAIL;
 		}
 	}
 
