@@ -58,7 +58,7 @@ public class XBoneMealItem extends BoneMealItem
 		else
 		{
 			BlockState blockstate = world.getBlockState(blockpos);
-			boolean flag = blockstate.func_224755_d(world, blockpos, context.getFace());
+			boolean flag = blockstate.isSolidSide(world, blockpos, context.getFace());
 			if (flag && growSomeSeagrass(context.getItem(), world, blockpos1, context.getFace()))
 			{
 				/*
@@ -117,13 +117,14 @@ public class XBoneMealItem extends BoneMealItem
 			IGrowable igrowable = (IGrowable) blockstate.getBlock();
 			if (igrowable.canGrow(worldIn, pos, blockstate, worldIn.isRemote))
 			{
-				if (!worldIn.isRemote)
+				if(worldIn instanceof ServerWorld)
 				{
+					ServerWorld serverWorld = (ServerWorld) worldIn;
 					if (tryUse(worldIn))
 					{
 						if (igrowable.canUseBonemeal(worldIn, worldIn.rand, pos, blockstate))
 						{
-							igrowable.grow(worldIn, worldIn.rand, pos, blockstate);
+							igrowable.grow(serverWorld, worldIn.rand, pos, blockstate);
 						}
 
 						stack.shrink(1);
@@ -147,8 +148,9 @@ public class XBoneMealItem extends BoneMealItem
 	{
 		if (worldIn.getBlockState(pos).getBlock() == Blocks.WATER && worldIn.getFluidState(pos).getLevel() == 8)
 		{
-			if (!worldIn.isRemote)
+			if(worldIn instanceof ServerWorld)
 			{
+				ServerWorld serverWorld = (ServerWorld) worldIn;
 				if (!tryUse(worldIn))
 				{
 					stack.shrink(1);
@@ -167,7 +169,7 @@ public class XBoneMealItem extends BoneMealItem
 						blockpos = blockpos.add(random.nextInt(3) - 1, (random.nextInt(3) - 1) * random.nextInt(3) / 2,
 								random.nextInt(3) - 1);
 						biome = worldIn.getBiome(blockpos);
-						if (worldIn.getBlockState(blockpos).func_224756_o(worldIn, blockpos))
+						if (worldIn.getBlockState(blockpos).isCollisionShapeOpaque(worldIn, blockpos))
 						{
 							continue label79;
 						}
@@ -208,7 +210,7 @@ public class XBoneMealItem extends BoneMealItem
 						}
 						else if (blockstate1.getBlock() == Blocks.SEAGRASS && random.nextInt(10) == 0)
 						{
-							((IGrowable) Blocks.SEAGRASS).grow(worldIn, random, blockpos, blockstate1);
+							((IGrowable) Blocks.SEAGRASS).grow(serverWorld, random, blockpos, blockstate1);
 						}
 					}
 				}
