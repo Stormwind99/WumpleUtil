@@ -1,6 +1,7 @@
 package com.wumple.util.xmap;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiFunction;
 
 import javax.annotation.Nullable;
@@ -34,9 +35,11 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.AbstractChunkProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.api.distmarker.Dist;
@@ -202,8 +205,7 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 		{
 			String mapName = getMapName(getMapId(stack));
 			
-			// func_71218_a() was getWorld()
-			return worldIn.getServer().func_71218_a(DimensionType.OVERWORLD).getSavedData().get(() -> {
+			return worldIn.getServer().getWorld(DimensionType.OVERWORLD).getSavedData().get(() -> {
 				return XMapAPI.getInstance().createMapData(mapName);
 			}, mapName);
 		}
@@ -253,8 +255,8 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 		int scaleNum = 1 << data.scale; // blocks per pixel?
 		int xCenter = data.xCenter;
 		int zCenter = data.zCenter;
-		int viewerPixelX = MathHelper.floor(viewer.posX - (double) xCenter) / scaleNum + 64;
-		int viewerPixelZ = MathHelper.floor(viewer.posZ - (double) zCenter) / scaleNum + 64;
+		int viewerPixelX = MathHelper.floor(viewer.getPosX() - (double) xCenter) / scaleNum + 64;
+		int viewerPixelZ = MathHelper.floor(viewer.getPosZ() - (double) zCenter) / scaleNum + 64;
 		int pixelViewRangeTemp = 128 / scaleNum;
 
 		if (worldIn.dimension.isNether())
@@ -363,8 +365,8 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 								}
 								else
 								{
-									BlockPos.MutableBlockPos blockpos$mutableblockpos1 = new BlockPos.MutableBlockPos();
-									BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+									BlockPos.Mutable blockpos$mutableblockpos1 = new BlockPos.Mutable();
+									BlockPos.Mutable blockpos$mutableblockpos = new BlockPos.Mutable();
 
 									for (int i4 = 0; i4 < i; ++i4)
 									{
@@ -488,8 +490,7 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 	protected BlockState func_211698_a(World worldIn, BlockState state, BlockPos pos)
 	{
 		IFluidState ifluidstate = state.getFluidState();
-		return !ifluidstate.isEmpty() && !state.func_224755_d(worldIn, pos, Direction.UP) ? ifluidstate.getBlockState()
-				: state;
+		return !ifluidstate.isEmpty() && !state.isSolidSide(worldIn, pos, Direction.UP) ? ifluidstate.getBlockState() : state;
 	}
 
 	// PRIVPARENT
@@ -514,8 +515,13 @@ public class XFilledMapItem extends FilledMapItem implements IXFilledMapItem
 				int i = 1 << mapdata.scale;
 				int j = mapdata.xCenter;
 				int k = mapdata.zCenter;
-				Biome[] abiome = worldIn.getChunkProvider().getChunkGenerator().getBiomeProvider()
-						.getBiomes((j / i - 64) * i, (k / i - 64) * i, 128 * i, 128 * i, false);
+				AbstractChunkProvider chunkProvider = worldIn.getChunkProvider();
+				if (!(chunkProvider instanceof ServerChunkProvider)) {
+					return;
+				}
+				ServerChunkProvider serverChunkProvider = (ServerChunkProvider) chunkProvider;
+				Set<Biome> biomes = serverChunkProvider.getChunkGenerator().getBiomeProvider().getBiomes((j / i - 64) * i, (k / i - 64) * i, 128 * i, 128 * i);
+				Biome[] abiome = (Biome[]) biomes.toArray();
 
 				for (int l = 0; l < 128; ++l)
 				{
