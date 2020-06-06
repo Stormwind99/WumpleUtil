@@ -29,11 +29,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -150,12 +146,11 @@ public class XChestBlock extends ContainerBlock implements IWaterLoggable
 		}
 	}
 
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit)
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
 	{
 		if (worldIn.isRemote)
 		{
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 		else
 		{
@@ -166,7 +161,7 @@ public class XChestBlock extends ContainerBlock implements IWaterLoggable
 				player.addStat(this.getOpenStat());
 			}
 
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 	}
 
