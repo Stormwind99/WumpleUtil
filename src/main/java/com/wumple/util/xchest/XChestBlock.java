@@ -7,7 +7,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.state.properties.ChestType;
+import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 
@@ -16,7 +19,7 @@ public class XChestBlock extends ChestBlock
 	//private final BaseChestType chestType;
 
 	public XChestBlock(Block.Properties properties) {
-		super(properties);
+		super(properties, () -> TileEntityType.CHEST);
 	}
 
 
