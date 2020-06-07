@@ -97,7 +97,7 @@ public class XCartographyContainer extends Container
 
 	public XCartographyContainer(int idIn, PlayerInventory playerInventoryIn)
 	{
-		this(ContainerType.CARTOGRAPHY, idIn, playerInventoryIn, IWorldPosCallable.DUMMY);
+		this(ContainerType.CARTOGRAPHY_TABLE, idIn, playerInventoryIn, IWorldPosCallable.DUMMY);
 	}
 
 	protected void init(int idIn, PlayerInventory playerInventoryIn, final IWorldPosCallable worldPosIn)
