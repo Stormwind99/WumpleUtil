@@ -45,7 +45,7 @@ abstract public class TimerRefreshingEventHandler<T extends ITimerRefreshingCap<
         
         lcap.ifPresent(cap->
         {
-            cap.doTooltip(stack, event.getEntityPlayer(), event.getFlags().isAdvanced(), event.getToolTip());
+            cap.doTooltip(stack, event.getPlayer(), event.getFlags().isAdvanced(), event.getToolTip());
         });
     }
 
