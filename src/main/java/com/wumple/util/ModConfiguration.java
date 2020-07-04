@@ -9,7 +9,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig.ConfigReloading;
+import net.minecraftforge.fml.config.ModConfig.Reloading;
 import net.minecraftforge.fml.config.ModConfig.Loading;
 //Name conflict: import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -151,7 +151,7 @@ public class ModConfiguration
     }
 
     @SubscribeEvent
-    public static void onReload(final ConfigReloading configEvent) {
+    public static void onReload(final Reloading configEvent) {
     }
     
     public static void setupConfig(ModLoadingContext context)

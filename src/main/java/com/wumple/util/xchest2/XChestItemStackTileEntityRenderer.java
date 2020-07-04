@@ -1,10 +1,11 @@
 package com.wumple.util.xchest2;
 
-import net.minecraft.block.Block;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.block.*;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 
 public class XChestItemStackTileEntityRenderer<T extends Block> extends ItemStackTileEntityRenderer
@@ -15,20 +16,20 @@ public class XChestItemStackTileEntityRenderer<T extends Block> extends ItemStac
 		//return (block instanceof T);
 		return false;
 	}
-	
-	@Override
-    public void renderByItem(ItemStack itemStackIn)
+
+    @Override
+    public void render(ItemStack itemStackIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)
     {
 		Item item = itemStackIn.getItem();
 		Block block = Block.getBlockFromItem(item);
 		
         if (shouldRender(block))
         {
-        	TileEntityRendererDispatcher.instance.renderAsItem(getTileEntity());
+            TileEntityRendererDispatcher.instance.renderItem(getTileEntity(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         }
         else
         {
-            super.renderByItem(itemStackIn);
+            super.render(itemStackIn, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         }
     }
 }

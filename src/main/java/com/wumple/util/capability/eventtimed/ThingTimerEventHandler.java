@@ -74,7 +74,7 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     {
         if (event instanceof RightClickBlock)
         {
-            evaluateTimer(event.getEntityPlayer().getEntityWorld(), event.getPos());
+            evaluateTimer(event.getPlayer().getEntityWorld(), event.getPos());
         }
     }
 
@@ -83,7 +83,7 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     public void onEntityInteract(EntityInteract event)
     {
         // think it is safe to rot even if (event.isCanceled())
-        evaluateTimer(event.getEntityPlayer().getEntityWorld(), event.getTarget());
+        evaluateTimer(event.getPlayer().getEntityWorld(), event.getTarget());
     }
 
     // likely duplicates onPlayerInteract - remove if so
@@ -91,7 +91,7 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     public void onPlayerContainerOpen(PlayerContainerEvent.Open event)
     {
         // think it is safe to rot even if (event.isCanceled())
-        evaluateTimerContents(event.getEntityPlayer().getEntityWorld(), event.getContainer());
+        evaluateTimerContents(event.getPlayer().getEntityWorld(), event.getContainer());
         // ContainerWrapper isn't working:
         //ContainerWrapper wrapper = new ContainerWrapper(event.getContainer());
         //evaluateTimerContents(event.getEntityPlayer().world, wrapper);
@@ -118,7 +118,7 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
 
         lrot.ifPresent(rot->
         {
-            rot.doTooltip(stack, event.getEntityPlayer(), event.getFlags().isAdvanced(), event.getToolTip());
+            rot.doTooltip(stack, event.getPlayer(), event.getFlags().isAdvanced(), event.getToolTip());
         });
     }
     
@@ -131,7 +131,7 @@ abstract public class ThingTimerEventHandler<W extends IThing, T extends IEventT
     @SubscribeEvent
     public void onDimensionChange(PlayerChangedDimensionEvent event)
     {
-        dimensionShift(event.getEntityPlayer(), event.getFrom().getId(), event.getTo().getId());
+        dimensionShift(event.getPlayer(), event.getFrom().getId(), event.getTo().getId());
     }
 
     // PlayerChangedDimensionEvent does not fire when traveling from end!

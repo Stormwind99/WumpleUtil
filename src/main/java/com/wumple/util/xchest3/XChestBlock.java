@@ -108,7 +108,8 @@ public class XChestBlock extends com.wumple.util.xchest2.XChestBlock
 		ChestType chesttype = ChestType.SINGLE;
 		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
 		IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
-		boolean flag = context.isPlacerSneaking();
+		//boolean flag = context.isPlacerSneaking();
+		boolean flag = context.func_225518_g_();
 		Direction direction1 = context.getFace();
 		if (direction1.getAxis().isHorizontal() && flag)
 		{

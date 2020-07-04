@@ -1,6 +1,8 @@
 package com.wumple.util.blockrepair;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
@@ -46,6 +48,7 @@ public class MyObjectHolder
             
             blockRepairingBlock = new BlockRepairingBlock();
             blockRepairingBlock.setRegistryName("wumpleutil:repairing_block");
+            RenderTypeLookup.setRenderLayer(blockRepairingBlock, RenderType.getCutout());
             registry.register(blockRepairingBlock);
         }
     
